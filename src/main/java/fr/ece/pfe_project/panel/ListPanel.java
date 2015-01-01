@@ -27,11 +27,6 @@ public class ListPanel extends javax.swing.JPanel implements ToolbarEntityPanel.
     public ListPanel() {
         initComponents();
 
-        // Graphics
-        this.setLayout(new BorderLayout());
-        this.add(this.itemsTable.getTableHeader(), BorderLayout.PAGE_START);
-        this.add(this.itemsTable, BorderLayout.CENTER);
-
         // Listener
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -96,47 +91,25 @@ public class ListPanel extends javax.swing.JPanel implements ToolbarEntityPanel.
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
         itemsTable = new javax.swing.JTable();
 
-        setBackground(new java.awt.Color(255, 255, 255));
-        setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        setMinimumSize(new java.awt.Dimension(600, 400));
-        setPreferredSize(new java.awt.Dimension(0, 0));
-
-        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        setLayout(new java.awt.BorderLayout());
 
         itemsTable.setAutoCreateRowSorter(true);
         itemsTable.setModel(new MyTableModel());
-        itemsTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         itemsTable.setFillsViewportHeight(true);
         itemsTable.setShowVerticalLines(false);
         itemsTable.getTableHeader().setReorderingAllowed(false);
-        jScrollPane2.setViewportView(itemsTable);
+        jScrollPane1.setViewportView(itemsTable);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        add(jScrollPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable itemsTable;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
     @Override
