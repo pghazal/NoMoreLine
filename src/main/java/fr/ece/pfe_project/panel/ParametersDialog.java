@@ -12,6 +12,7 @@ import static fr.ece.pfe_project.utils.ExcelUtils.getSheet;
 import static fr.ece.pfe_project.utils.ExcelUtils.getWorkbook;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.utils.ParametersUtils;
+import fr.ece.pfe_project.widget.ProgressDialog;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -200,18 +201,27 @@ public class ParametersDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_buttonCancelActionPerformed
 
     private void buttonValiderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonValiderActionPerformed
-        // TODO : Sauvegarder avec la classe ParametersUtils
-        // TODO : fermer ensuite
-        if (this.textFieldPathExcel.getText() != null && this.textFieldPathExcel.getText().length() > 0) {
-            ParametersUtils.set(ParametersUtils.PARAM_PATH_EXCEL, this.textFieldPathExcel.getText());
-        }
+        Runnable r = new Runnable() {
 
-        ParametersUtils.saveParameters();
+            @Override
+            public void run() {
+                // Saving parameters in memory
+                if (textFieldPathExcel.getText() != null && textFieldPathExcel.getText().length() > 0) {
+                    ParametersUtils.set(ParametersUtils.PARAM_PATH_EXCEL, textFieldPathExcel.getText());
+                }
 
-        // Todo in bkgd
-        loadExcel();
+                // Saving parameters in file parameter
+                ParametersUtils.saveParameters();
 
-        this.dispose();
+                loadExcel();
+
+                // Dispose the parameter window
+                dispose();
+            }
+        };
+
+        ProgressDialog progressDialog = new ProgressDialog(this, r, "Veuillez patienter...");
+        progressDialog.setVisible(true);
     }//GEN-LAST:event_buttonValiderActionPerformed
 
 

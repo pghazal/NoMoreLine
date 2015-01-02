@@ -15,7 +15,7 @@ import javax.swing.SwingUtilities;
 
 public class ProgressDialog extends JDialog {
 
-    private static final int PROGRESS_BAR_WIDTH = 200;
+    private static final int PROGRESS_BAR_WIDTH = 300;
 
     private Runnable runnable;
 
@@ -33,6 +33,8 @@ public class ProgressDialog extends JDialog {
     public ProgressDialog(JFrame parent, Runnable runnable, String message) {
         super(parent);
         init(runnable, message);
+
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -46,6 +48,8 @@ public class ProgressDialog extends JDialog {
     public ProgressDialog(JDialog parent, Runnable runnable, String message) {
         super(parent);
         init(runnable, message);
+
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -86,6 +90,7 @@ public class ProgressDialog extends JDialog {
     private void setupControls() {
 
         progressBar = new JProgressBar();
+        progressBar.setIndeterminate(true);
         Dimension preferredSize = progressBar.getPreferredSize();
         preferredSize.width = PROGRESS_BAR_WIDTH;
         progressBar.setPreferredSize(preferredSize);
@@ -95,7 +100,7 @@ public class ProgressDialog extends JDialog {
     private void setupComponent() {
 
         JPanel contentPane = (JPanel) getContentPane();
-        contentPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        contentPane.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         contentPane.setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
         gc.gridx = 0;
@@ -108,6 +113,8 @@ public class ProgressDialog extends JDialog {
 
         setTitle("");
         setModal(true);
+        setResizable(false);
+        setUndecorated(true);
         pack();
     }
 
