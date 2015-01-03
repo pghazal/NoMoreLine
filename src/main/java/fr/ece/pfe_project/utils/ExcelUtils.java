@@ -1,6 +1,5 @@
 package fr.ece.pfe_project.utils;
 
-import fr.ece.pfe_project.formatter.DateLabelFormatter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +15,8 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jdatepicker.ComponentManager;
+import org.jdatepicker.impl.DateComponentFormatter;
 
 /**
  *
@@ -48,7 +49,9 @@ public class ExcelUtils {
                 case Cell.CELL_TYPE_NUMERIC:
                     return cell.getNumericCellValue();
                 case Cell.CELL_TYPE_STRING:
-                    return (new DateLabelFormatter()).stringToValue(cell.getStringCellValue());
+                    return (new DateComponentFormatter(
+                            ComponentManager.getInstance().getComponentFormatDefaults().getSelectedDateFormat()))
+                            .stringToValue(cell.getStringCellValue());
             }
 
         } catch (ParseException e) {

@@ -5,17 +5,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import fr.ece.pfe_project.formatter.DateLabelFormatter;
 import java.awt.Dimension;
 import java.text.ParseException;
 import java.util.Calendar;
-import java.util.Locale;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
-import org.jdatepicker.JDateComponentFactory;
+import org.jdatepicker.ComponentManager;
+import org.jdatepicker.DefaultComponentFactory;
+import org.jdatepicker.impl.DateComponentFormatter;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilCalendarModel;
 
@@ -60,7 +60,7 @@ public class StatisticPanel extends javax.swing.JPanel {
 
         UtilCalendarModel model = new UtilCalendarModel();
         model.setSelected(true);
-        JDateComponentFactory componentFactory = new JDateComponentFactory(UtilCalendarModel.class, new DateLabelFormatter(), Locale.FRENCH);
+        DefaultComponentFactory componentFactory = new DefaultComponentFactory();//UtilCalendarModel.class, new DateLabelFormatter(), Locale.FRENCH);
         datePicker = (JDatePickerImpl) componentFactory.createJDatePicker();
         datePicker.setDoubleClickAction(false);
         datePicker.setButtonFocusable(false);
@@ -94,7 +94,9 @@ public class StatisticPanel extends javax.swing.JPanel {
         try {
             Calendar selectedValue = (Calendar) datePicker.getModel().getValue();
 
-            return (new DateLabelFormatter()).valueToString(selectedValue);
+            return (new DateComponentFormatter(
+                    ComponentManager.getInstance().getComponentFormatDefaults().getSelectedDateFormat()))
+                    .valueToString(selectedValue);
 
         } catch (ParseException ex) {
             ex.printStackTrace();
