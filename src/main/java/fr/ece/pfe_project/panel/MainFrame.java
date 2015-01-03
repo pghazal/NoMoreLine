@@ -8,6 +8,7 @@ package fr.ece.pfe_project.panel;
 import java.awt.Component;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -89,13 +90,18 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuParameter = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        jMenuQuitter = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(810, 600));
         setPreferredSize(new java.awt.Dimension(810, 600));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
-        jMenu1.setText("File");
+        jMenu1.setText("Fichier");
 
         jMenuParameter.setText("Paramètres");
         jMenuParameter.addActionListener(new java.awt.event.ActionListener() {
@@ -105,10 +111,15 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuParameter);
 
-        jMenuBar1.add(jMenu1);
+        jMenuQuitter.setText("Quitter");
+        jMenuQuitter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuQuitterActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuQuitter);
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
 
@@ -137,10 +148,26 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuParameterActionPerformed
 
+    private void jMenuQuitterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuQuitterActionPerformed
+        formWindowClosing(null);
+    }//GEN-LAST:event_jMenuQuitterActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+
+        if (JOptionPane.showConfirmDialog(this,
+                "Êtes-vous sûr(e) de vouloir quitter l'application ?", "Fermeture de l'application",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+            // TODO : sauvegarde de l'état du logiciel
+            
+            System.exit(0);
+        }
+    }//GEN-LAST:event_formWindowClosing
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuParameter;
+    private javax.swing.JMenuItem jMenuQuitter;
     // End of variables declaration//GEN-END:variables
 }
