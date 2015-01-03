@@ -77,10 +77,12 @@ public abstract class AbstractDateModel<T> implements DateModel<T> {
         }
     }
     
+    @Override
     public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeListeners.add(listener);
     }
 
+    @Override
     public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeListeners.remove(listener);
     }

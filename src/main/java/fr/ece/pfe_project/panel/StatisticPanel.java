@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.awt.Dimension;
+import java.awt.PopupMenu;
 import java.text.ParseException;
 import java.util.Calendar;
 import javax.swing.Box;
@@ -41,8 +42,9 @@ public class StatisticPanel extends javax.swing.JPanel {
         JLabel label2 = new JLabel("Autres", SwingConstants.CENTER);
 
         vBox.add((JComponent) datePicker);
+        //vBox.add((JComponent) datePicker.getJDateInstantPanel());
 
-        vBox2.add(Box.createRigidArea(new Dimension(0, 50)));
+        vBox2.add(Box.createRigidArea(new Dimension(0, 10)));
 
         vBox2.add(new JSeparator(SwingConstants.HORIZONTAL));
         vBox2.add(label);

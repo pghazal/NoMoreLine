@@ -115,7 +115,8 @@ public class JDatePickerImpl extends JPanel implements JDatePicker {
         formattedTextField = new JFormattedTextField(new DateComponentFormatter(ComponentManager.getInstance().getComponentFormatDefaults().getSelectedDateFormat()));
         DateModel<?> model = datePanel.getModel();
         setTextFieldValue(formattedTextField, model.getYear(), model.getMonth(), model.getDay(), model.isSelected());
-        formattedTextField.setEditable(false);        
+        formattedTextField.setEditable(false);  
+        formattedTextField.setFocusable(false);
         add(formattedTextField);
         layout.putConstraint(SpringLayout.WEST, formattedTextField, 0, SpringLayout.WEST, this);
         layout.putConstraint(SpringLayout.SOUTH, this, 0, SpringLayout.SOUTH, formattedTextField);
@@ -324,6 +325,7 @@ public class JDatePickerImpl extends JPanel implements JDatePicker {
             }
         }
 
+        @Override
         public void stateChanged(ChangeEvent arg0) {
             if (arg0.getSource() == datePanel.getModel()) {
                 DateModel<?> model = datePanel.getModel();
@@ -331,6 +333,7 @@ public class JDatePickerImpl extends JPanel implements JDatePicker {
             }
         }
 
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             // Short circuit if the following cases are found
             if (evt.getOldValue() == null && evt.getNewValue() == null) {
@@ -364,6 +367,7 @@ public class JDatePickerImpl extends JPanel implements JDatePicker {
             }
         }
 
+        @Override
         public void eventDispatched(AWTEvent event) {
             if (MouseEvent.MOUSE_CLICKED == event.getID() && event.getSource() != button) {
                 Set<Component> components = getAllComponents(datePanel);
@@ -378,7 +382,5 @@ public class JDatePickerImpl extends JPanel implements JDatePicker {
                 }
             }
         }
-
     }
-
 }
