@@ -40,22 +40,21 @@ public class ComponentColorDefaults {
     public Color fgMonthSelector() { return SystemColor.activeCaptionText; }
     public Color bgMonthSelector() { return SystemColor.activeCaption; }
 
-    public Color fgGridHeader() { return new Color(10, 36, 106); }
-    public Color bgGridHeader() { return Color.LIGHT_GRAY; }
+    public Color fgGridHeader() { return Color.BLACK; }
+    public Color bgGridHeader() { return Color.WHITE; }
 
     public Color fgGridThisMonth() { return Color.BLACK; }
     public Color fgGridOtherMonth() { return Color.LIGHT_GRAY; }
     public Color fgGridToday() { return Color.RED; }
-    public Color bgGrid() { return Color.WHITE; }
+    public Color bgGrid() { return new Color(245, 245, 245); }
     public Color bgGridNotSelectable() { return new Color(240, 240, 240); }
 
     public Color fgGridSelected() { return Color.WHITE; }
-    public Color bgGridSelected() { return new Color(10, 36, 106); }
+    public Color bgGridSelected() { return Color.BLACK; }
 
-    public Color fgGridTodaySelected() { return Color.RED; }
-    public Color bgGridTodaySelected() { return new Color(10, 36, 106); }
+    public Color fgGridTodaySelected() { return Color.WHITE; }
+    public Color bgGridTodaySelected() { return Color.RED; }
 
     public Color fgTodaySelector() { return Color.BLACK; }
     public Color bgTodaySelector() { return Color.WHITE; }
-    
 }
