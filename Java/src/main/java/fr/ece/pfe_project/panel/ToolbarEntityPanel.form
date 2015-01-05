@@ -34,7 +34,6 @@
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="comptoirButton" min="-2" pref="75" max="-2" attributes="0"/>
                   <Component id="cameraButton" alignment="0" min="-2" pref="75" max="-2" attributes="0"/>
-                  <Component id="employeeButton" alignment="0" min="-2" pref="75" max="-2" attributes="0"/>
                   <Component id="excelButton" alignment="0" pref="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
@@ -48,11 +47,9 @@
               <Component id="comptoirButton" min="-2" pref="75" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="cameraButton" min="-2" pref="75" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="employeeButton" min="-2" pref="75" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="excelButton" min="-2" pref="68" max="-2" attributes="0"/>
-              <EmptySpace pref="279" max="32767" attributes="0"/>
+              <EmptySpace pref="354" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -66,12 +63,6 @@
     <Component class="javax.swing.JToggleButton" name="cameraButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Camera"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JToggleButton" name="employeeButton">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Employ&#xe9;s"/>
-        <Property name="actionCommand" type="java.lang.String" value="Employes"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JToggleButton" name="excelButton">

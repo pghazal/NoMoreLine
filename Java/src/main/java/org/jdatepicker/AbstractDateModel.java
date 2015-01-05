@@ -142,7 +142,7 @@ public abstract class AbstractDateModel<T> implements DateModel<T> {
         firePropertyChange(PROPERTY_MONTH, oldMonthValue, this.calendarValue.get(Calendar.MONTH));
         firePropertyChange(PROPERTY_VALUE, oldValue, getValue());
     }
-
+   
     public void addMonth(int add) {
         int oldMonthValue = this.calendarValue.get(Calendar.MONTH);
         T oldValue = getValue();

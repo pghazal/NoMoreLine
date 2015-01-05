@@ -18,12 +18,10 @@ public class MyTableModel extends AbstractTableModel {
     private final String[] columnNone = {};
     private final String[] columnComptoir = {"ID", "Numéro"};
     private final String[] columnCamera = {"ID", "Numéro"};
-    private final String[] columnEmployee = {"Nom", "Prénom", "Date de naissance",
-        "Âge", "Sexe"};
     private final String[] columnExcel = {"Date", "Flux de la journée"};
 
     private final String[][] columnNames = {
-        columnNone, columnComptoir, columnCamera, columnEmployee, columnExcel
+        columnNone, columnComptoir, columnCamera, columnExcel
     };
 
     private ModelInterface[] data;
@@ -49,9 +47,6 @@ public class MyTableModel extends AbstractTableModel {
 
             case COMPTOIR:
                 return columnNames[ToolbarEntityPanel.ENTITY.COMPTOIR.ordinal()].length;
-
-            case EMPLOYEE:
-                return columnNames[ToolbarEntityPanel.ENTITY.EMPLOYEE.ordinal()].length;
 
             case EXCELROW:
                 return columnNames[ToolbarEntityPanel.ENTITY.EXCELROW.ordinal()].length;
@@ -79,9 +74,6 @@ public class MyTableModel extends AbstractTableModel {
 
             case COMPTOIR:
                 return columnNames[ToolbarEntityPanel.ENTITY.COMPTOIR.ordinal()][column];
-
-            case EMPLOYEE:
-                return columnNames[ToolbarEntityPanel.ENTITY.EMPLOYEE.ordinal()][column];
 
             case EXCELROW:
                 return columnNames[ToolbarEntityPanel.ENTITY.EXCELROW.ordinal()][column];
@@ -131,23 +123,6 @@ public class MyTableModel extends AbstractTableModel {
                 }
                 break;
 
-            case EMPLOYEE:
-
-                myData = (Employee) data[row];
-
-                switch (column) {
-                    case 0:
-                        return ((Employee) myData).getLastname();
-                    case 1:
-                        return ((Employee) myData).getFirstname();
-                    case 2:
-                        return ((Employee) myData).getBirthday();
-                    case 3:
-                        return ((Employee) myData).getAge();
-                    case 4:
-                        return ((Employee) myData).getGender();
-                }
-                break;
 
             case EXCELROW:
 
@@ -192,19 +167,6 @@ public class MyTableModel extends AbstractTableModel {
                     case 0:
                         return Long.class;
                     case 1:
-                        return Integer.class;
-                }
-                break;
-
-            case EMPLOYEE:
-
-                switch (column) {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 4:
-                        return String.class;
-                    case 3:
                         return Integer.class;
                 }
                 break;

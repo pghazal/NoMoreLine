@@ -68,9 +68,6 @@ public class ListPanel extends javax.swing.JPanel implements ToolbarEntityPanel.
             case CAMERA:
                 model.setData(cameras, false);
                 break;
-            case EMPLOYEE:
-                model.setData(employees, false);
-                break;
             case EXCELROW:
                 model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new ExcelRow[0]), false);
                 break;

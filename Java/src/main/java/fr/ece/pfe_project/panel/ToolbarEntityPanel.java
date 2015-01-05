@@ -19,7 +19,7 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
 
     public enum ENTITY {
 
-        NONE, COMPTOIR, CAMERA, EMPLOYEE, EXCELROW
+        NONE, COMPTOIR, CAMERA, EXCELROW
     }
 
     public interface ToolbarEntityListener {
@@ -43,8 +43,6 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
         this.comptoirButton.setActionCommand(ENTITY.COMPTOIR.toString());
         this.cameraButton.addActionListener(this);
         this.cameraButton.setActionCommand(ENTITY.CAMERA.toString());
-        this.employeeButton.addActionListener(this);
-        this.employeeButton.setActionCommand(ENTITY.EMPLOYEE.toString());
         this.excelButton.addActionListener(this);
         this.excelButton.setActionCommand(ENTITY.EXCELROW.toString());
     }
@@ -60,7 +58,6 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
             } else {
                 this.cameraButton.setSelected(false);
                 this.comptoirButton.setSelected(true);
-                this.employeeButton.setSelected(false);
                 this.excelButton.setSelected(false);
                 this.toolbarsListener.entityHasChange(ENTITY.COMPTOIR);
             }
@@ -72,24 +69,12 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
                 this.toolbarsListener.entityHasChange(ENTITY.NONE);
             } else {
                 this.cameraButton.setSelected(true);
-                this.comptoirButton.setSelected(false);
-                this.employeeButton.setSelected(false);
+                this.comptoirButton.setSelected(false);              
                 this.excelButton.setSelected(false);
                 this.toolbarsListener.entityHasChange(ENTITY.CAMERA);
             }
 
-        } else if (ENTITY.EMPLOYEE.toString().equals(e.getActionCommand())) {
-
-            if (!employeeButton.isSelected()) {
-                this.employeeButton.setSelected(false);
-                this.toolbarsListener.entityHasChange(ENTITY.NONE);
-            } else {
-                this.cameraButton.setSelected(false);
-                this.comptoirButton.setSelected(false);
-                this.employeeButton.setSelected(true);
-                this.excelButton.setSelected(false);
-                this.toolbarsListener.entityHasChange(ENTITY.EMPLOYEE);
-            }
+               
         } else if (ENTITY.EXCELROW.toString().equals(e.getActionCommand())) {
 
             if (!excelButton.isSelected()) {
@@ -98,7 +83,6 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
             } else {
                 this.cameraButton.setSelected(false);
                 this.comptoirButton.setSelected(false);
-                this.employeeButton.setSelected(false);
                 this.excelButton.setSelected(true);
                 this.toolbarsListener.entityHasChange(ENTITY.EXCELROW);
             }
@@ -128,7 +112,6 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
 
         comptoirButton = new javax.swing.JToggleButton();
         cameraButton = new javax.swing.JToggleButton();
-        employeeButton = new javax.swing.JToggleButton();
         excelButton = new javax.swing.JToggleButton();
 
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -138,9 +121,6 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
         comptoirButton.setText("Comptoir");
 
         cameraButton.setText("Camera");
-
-        employeeButton.setText("Employés");
-        employeeButton.setActionCommand("Employes");
 
         excelButton.setText("Excel");
         excelButton.setMaximumSize(new java.awt.Dimension(104, 29));
@@ -156,7 +136,6 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(comptoirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cameraButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(employeeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(excelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -167,11 +146,9 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
                 .addComponent(comptoirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cameraButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(employeeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(excelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(279, Short.MAX_VALUE))
+                .addContainerGap(354, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -179,7 +156,6 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton cameraButton;
     private javax.swing.JToggleButton comptoirButton;
-    private javax.swing.JToggleButton employeeButton;
     private javax.swing.JToggleButton excelButton;
     // End of variables declaration//GEN-END:variables
 }

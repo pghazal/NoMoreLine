@@ -77,7 +77,6 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
 
             case CAMERA:
             case COMPTOIR:
-            case EMPLOYEE:
             case EXCELROW:
                 buttonAdd.setEnabled(true);
                 buttonDelete.setEnabled(true);

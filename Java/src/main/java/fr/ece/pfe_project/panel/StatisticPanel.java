@@ -41,8 +41,8 @@ public class StatisticPanel extends javax.swing.JPanel {
         JLabel label1 = new JLabel("Personnels alloués", SwingConstants.CENTER);
         JLabel label2 = new JLabel("Autres", SwingConstants.CENTER);
 
-        vBox.add((JComponent) datePicker);
-        //vBox.add((JComponent) datePicker.getJDateInstantPanel());
+        //vBox.add((JComponent) datePicker);
+        vBox.add((JComponent) datePicker.getJDateInstantPanel());
 
         vBox2.add(Box.createRigidArea(new Dimension(0, 10)));
 
