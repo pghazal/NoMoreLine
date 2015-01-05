@@ -1,14 +1,15 @@
 package fr.ece.pfe_project.panel;
 
+import fr.ece.pfe_project.algo.Algorithm;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.awt.Dimension;
-import java.awt.PopupMenu;
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -72,11 +73,13 @@ public class StatisticPanel extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                String date = getDate();
+                Date date = getDate();
 
-                if (date != null && date.length() == 10) {
+                if (date != null) {
                     // Do stuff
                     System.out.println("Action Valid : " + date);
+
+                    Algorithm.process(date);
                 }
 
                 System.out.println("Action : " + date);
@@ -87,12 +90,19 @@ public class StatisticPanel extends javax.swing.JPanel {
 
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println("Property : " + getDate());
+                System.out.println("Property : " + getStringDate());
             }
         });
     }
 
-    public String getDate() {
+    public Date getDate() {
+        Calendar cal = (Calendar) datePicker.getModel().getValue();
+        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+
+        return cal.getTime();
+    }
+
+    public String getStringDate() {
         try {
             Calendar selectedValue = (Calendar) datePicker.getModel().getValue();
 

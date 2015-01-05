@@ -69,7 +69,7 @@ public class ParametersDialog extends javax.swing.JDialog {
             }
 
             // Sert pour les tests
-            //GlobalVariableUtils.showExcelMap();
+            GlobalVariableUtils.showExcelMap();
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {

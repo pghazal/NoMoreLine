@@ -64,4 +64,10 @@ public class DateComponentFormatter extends JFormattedTextField.AbstractFormatte
         return calendar;
     }
     
+    public Object stringToDate(String text) throws ParseException {
+        if (text == null || text.equals("")) {
+            return null;
+        }
+        return format.parse(text);
+    }
 }
