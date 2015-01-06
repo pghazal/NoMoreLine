@@ -15,7 +15,7 @@ public class Algorithm {
     // Nombre d'année que l'on compare dans le passé
     private final static int YEARS_TO_COMPARE = 3;
 
-    public static void process(Date dateSelected) {
+    public static int process(Date dateSelected) {
         int yearSelected = getYear(dateSelected);
         int currentMonth = getMonth(dateSelected);
         int currentDay = getDay(dateSelected);
@@ -161,6 +161,8 @@ public class Algorithm {
         int result = (int) (nbPassagerJournalier + nbPassagerPondere + moyPondere) / 3 ;
 
         System.out.println("RESULT : " + result);
+        
+        return result;
     }
 
     private static double getVariation(Date firstDate, Date secondDate, boolean isJournaliere) {
