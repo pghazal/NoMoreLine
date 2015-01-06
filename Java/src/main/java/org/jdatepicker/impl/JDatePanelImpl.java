@@ -241,13 +241,13 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
         private InternalTableCellRenderer dayTableCellRenderer;
         private JLabel monthLabel;
         private JLabel todayLabel;
-        //private JLabel noneLabel;
         private JPopupMenu monthPopupMenu;
         private JMenuItem[] monthPopupMenuItems;
         private JButton nextMonthButton;
         private JButton previousMonthButton;
         private JButton previousYearButton;
         private JButton nextYearButton;
+        private JButton dateConfirmation;
         private JSpinner yearSpinner;
 
         /**
@@ -367,9 +367,9 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
                 southPanel = new javax.swing.JPanel();
                 southPanel.setLayout(new java.awt.BorderLayout());
                 southPanel.setBackground(getColors().bgTodaySelector());
-                southPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 5, 0));
+                southPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
                 southPanel.add(getTodayLabel(), java.awt.BorderLayout.CENTER);
-//                southPanel.add(getNoneLabel(), java.awt.BorderLayout.EAST);
+                southPanel.add(dateConfirmation(), java.awt.BorderLayout.EAST);
             }
             return southPanel;
         }
@@ -379,18 +379,20 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
          *
          * @return javax.swing.JLabel
          */
-//        private JLabel getNoneLabel() {
-//            if (noneLabel == null) {
-//                noneLabel = new javax.swing.JLabel();
-//                noneLabel.setForeground(getColors().fgTodaySelector());
-//                noneLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-//                noneLabel.addMouseListener(internalController);
-//                //TODO get the translations for each language before adding this in
-//                //noneLabel.setToolTipText(getText(ComponentTextDefaults.CLEAR));
-//                noneLabel.setIcon(getIcons().getClearIcon());
-//            }
-//            return noneLabel;
-//        }
+        private JButton dateConfirmation() {
+            if (dateConfirmation == null) {
+                dateConfirmation = new javax.swing.JButton("OK");
+                dateConfirmation.setForeground(getColors().fgTodaySelector());
+                dateConfirmation.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                dateConfirmation.addMouseListener(internalController);
+                //TODO get the translations for each language before adding this in
+                //noneLabel.setToolTipText(getText(ComponentTextDefaults.CLEAR));
+                //noneLabel.setIcon(getIcons().getClearIcon());
+            }
+            return dateConfirmation;
+
+        }
+        
         /**
          * This method initializes todayLabel
          *
