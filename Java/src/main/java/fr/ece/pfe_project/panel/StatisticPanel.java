@@ -79,7 +79,6 @@ public class StatisticPanel extends javax.swing.JPanel {
                     // Do stuff
                     System.out.println("Action Valid : " + date);
 
-                    Algorithm.process(date);
                 }
 
                 System.out.println("Action : " + date);
