@@ -29,8 +29,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class ParametersDialog extends javax.swing.JDialog {
 
-    private ParametersUtils parametersUtils;
-
     /**
      * Creates new form ParametersDialog
      *
@@ -52,7 +50,7 @@ public class ParametersDialog extends javax.swing.JDialog {
         }
     }
 
-    private void loadExcel() {
+    public static void loadExcel() {
         FileInputStream file = null;
         try {
             file = getExcelFile((String) ParametersUtils.get(ParametersUtils.PARAM_PATH_EXCEL));

@@ -1,9 +1,8 @@
 package fr.ece.pfe_project.panel;
 
+import fr.ece.pfe_project.database.DatabaseHelper;
 import javax.swing.JOptionPane;
 import fr.ece.pfe_project.widget.StartingProgressDialog;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -65,11 +64,8 @@ public class MainFrame extends javax.swing.JFrame {
 
                     @Override
                     public void run() {
-                        try {
-                            Thread.sleep(3000);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        //new DatabaseHelper();
+                        ParametersDialog.loadExcel();
                     }
                 };
 
