@@ -1,5 +1,6 @@
 package fr.ece.pfe_project.algo;
 
+import fr.ece.pfe_project.model.AlgoResult;
 import fr.ece.pfe_project.model.ExcelRow;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import java.util.ArrayList;
@@ -15,16 +16,11 @@ public class Algorithm {
     // Nombre d'année que l'on compare dans le passé
     private final static int YEARS_TO_COMPARE = 3;
 
-    public static int process(Date dateSelected) {
+    public static AlgoResult process(Date dateSelected) {
         int yearSelected = getYear(dateSelected);
         int currentMonth = getMonth(dateSelected);
         int currentDay = getDay(dateSelected);
 
-//        // Initialisation des YEARS_TO_COMPARE années précédentes
-//        ArrayList<Integer> previousYears = new ArrayList<Integer>();
-//        for (int i = YEARS_TO_COMPARE; i > 0; i--) {
-//            previousYears.add(currentYear - i);
-//        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(dateSelected);
 
@@ -162,7 +158,10 @@ public class Algorithm {
 
         System.out.println("RESULT : " + result);
         
-        return result;
+        AlgoResult algoResult = new AlgoResult();
+        algoResult.setPrevisionPassager(result);
+        
+        return algoResult;
     }
 
     private static double getVariation(Date firstDate, Date secondDate, boolean isJournaliere) {

@@ -103,7 +103,7 @@ public class JDatePickerImpl extends JPanel implements JDatePicker {
 
         //Initialise Variables
         popup = null;
-        datePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        //datePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         InternalEventHandler internalEventHandler = new InternalEventHandler();
 
         //Create Layout

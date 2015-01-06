@@ -114,7 +114,6 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
         cameraButton = new javax.swing.JToggleButton();
         excelButton = new javax.swing.JToggleButton();
 
-        setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setMaximumSize(new java.awt.Dimension(90, 32767));
         setPreferredSize(new java.awt.Dimension(90, 600));
 
@@ -148,7 +147,7 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
                 .addComponent(cameraButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(excelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(354, Short.MAX_VALUE))
+                .addContainerGap(358, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

@@ -32,6 +32,7 @@ import fr.ece.pfe_project.algo.Algorithm;
 import fr.ece.pfe_project.panel.StatisticPanel;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -375,9 +376,9 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
         }
 
         /**
-         * This method initializes todayLabel
+         * This method initializes button confirmation
          *
-         * @return javax.swing.JLabel
+         * @return javax.swing.JButton
          */
         private JButton dateConfirmation() {
             if (dateConfirmation == null) {
@@ -385,9 +386,10 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
                 dateConfirmation.setForeground(getColors().fgTodaySelector());
                 dateConfirmation.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
                 dateConfirmation.addActionListener(internalController);
+                dateConfirmation.setFocusable(false);
+                dateConfirmation.setFont(new Font(dateConfirmation.getFont().getName(), Font.PLAIN, 10));
                 //TODO get the translations for each language before adding this in
                 dateConfirmation.setToolTipText(getTexts().getText(ComponentTextDefaults.CONFIRMATION));
-
             }
             return dateConfirmation;
 
@@ -741,7 +743,7 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
                 internalModel.getModel().addYear(-1);
             } else if (arg0.getSource() == internalView.dateConfirmation()) {
                 System.out.println("DANS ELSE IF");
-                Algorithm.process(StatisticPanel.getDate());
+                StatisticPanel.setAlgoResult(Algorithm.process(StatisticPanel.getDate()));
             } else {
                 for (int month = 0; month < internalView.getMonthPopupMenuItems().length; month++) {
                     if (arg0.getSource() == internalView.getMonthPopupMenuItems()[month]) {

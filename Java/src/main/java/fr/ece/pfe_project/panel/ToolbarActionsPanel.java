@@ -31,7 +31,6 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
         buttonAdd = new javax.swing.JButton();
         buttonDelete = new javax.swing.JButton();
 
-        setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setMaximumSize(new java.awt.Dimension(32767, 50));
         setPreferredSize(new java.awt.Dimension(600, 50));
 
@@ -50,7 +49,7 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
                 .addComponent(buttonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonDelete)
-                .addContainerGap(142, Short.MAX_VALUE))
+                .addContainerGap(420, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
