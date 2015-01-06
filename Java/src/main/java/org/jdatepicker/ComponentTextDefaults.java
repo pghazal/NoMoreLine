@@ -13,7 +13,7 @@ public class ComponentTextDefaults {
     public static String TODAY = "text.today";
     public static String MONTH = "text.month";
     public static String YEAR = "text.year";
-    public static String CLEAR = "text.clear";
+    public static String CONFIRMATION = "text.confirmation";
 
     private Properties texts;
 

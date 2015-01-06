@@ -384,10 +384,10 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
                 dateConfirmation = new javax.swing.JButton("OK");
                 dateConfirmation.setForeground(getColors().fgTodaySelector());
                 dateConfirmation.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-                dateConfirmation.addMouseListener(internalController);
+                dateConfirmation.addActionListener(internalController);
                 //TODO get the translations for each language before adding this in
-                //noneLabel.setToolTipText(getText(ComponentTextDefaults.CLEAR));
-                //noneLabel.setIcon(getIcons().getClearIcon());
+                dateConfirmation.setToolTipText(getTexts().getText(ComponentTextDefaults.CONFIRMATION));
+
             }
             return dateConfirmation;
 
@@ -740,6 +740,7 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
             } else if (arg0.getSource() == internalView.getPreviousYearButton()) {
                 internalModel.getModel().addYear(-1);
             } else if (arg0.getSource() == internalView.dateConfirmation()) {
+                System.out.println("DANS ELSE IF");
                 Algorithm.process(StatisticPanel.getDate());
             } else {
                 for (int month = 0; month < internalView.getMonthPopupMenuItems().length; month++) {
