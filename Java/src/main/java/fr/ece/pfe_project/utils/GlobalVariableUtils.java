@@ -25,6 +25,8 @@ public class GlobalVariableUtils {
         if (freqAnnuelleMap == null) {
             if (ParametersUtils.containsKey(ParametersUtils.PARAM_DATABASE_BT_YEAR)) {
                 freqAnnuelleMap = (HashMap<Integer, Integer>) ParametersUtils.get(ParametersUtils.PARAM_DATABASE_BT_YEAR);
+                System.out.println("Loading PARAM_DATABASE_BT_YEAR");
+
             } else {
                 freqAnnuelleMap = new HashMap<Integer, Integer>();
             }
