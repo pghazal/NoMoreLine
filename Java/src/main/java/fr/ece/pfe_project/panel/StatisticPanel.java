@@ -27,7 +27,7 @@ import org.jdatepicker.impl.UtilCalendarModel;
  */
 public class StatisticPanel extends javax.swing.JPanel {
 
-    private JDatePickerImpl datePicker;
+    private static JDatePickerImpl datePicker;
 
     public StatisticPanel() {
         initComponents();
@@ -95,7 +95,7 @@ public class StatisticPanel extends javax.swing.JPanel {
         });
     }
 
-    public Date getDate() {
+    public static Date getDate() {
         Calendar cal = (Calendar) datePicker.getModel().getValue();
         cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
 
