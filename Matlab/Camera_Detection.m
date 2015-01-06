@@ -1,3 +1,8 @@
+%To add in Java code
+%import com.mathworks.toolbox.javabuilder.*;
+
+function Camera_Detection()
+
 clear all;
 close all;
 
@@ -21,4 +26,3 @@ else
 end
 pause(1);
 end;
-
