@@ -16,9 +16,9 @@ import org.jdatepicker.graphics.JPreviousIcon;
  */
 public class ComponentIconDefaults {
 
-    private static String CLEAR = "/org/jdatepicker/icons/clear.png";
+    private static String LOGO = "/org/jdatepicker/icons/logo.png";
 
-    private Icon clearIcon;
+    private Icon logoIcon;
     private Icon nextMonthIcon;
     private Icon nextYearIcon;
     private Icon previousMonthIcon;
@@ -28,7 +28,7 @@ public class ComponentIconDefaults {
     public ComponentIconDefaults() {
         try {
             //TODO consider making all the icons vector images which will scale
-            clearIcon = loadIcon(CLEAR);
+            logoIcon = loadIcon(LOGO);
             nextMonthIcon = new JNextIcon(4, 7, false);
             nextYearIcon = new JNextIcon(8, 7, true);
             previousMonthIcon = new JPreviousIcon(4, 7, false);
@@ -46,12 +46,12 @@ public class ComponentIconDefaults {
         return new ImageIcon(image);
     }
 
-    public Icon getClearIcon() {
-        return clearIcon;
+    public Icon getLogoIcon() {
+        return logoIcon;
     }
 
-    public void setClearIcon(Icon clearIcon) {
-        this.clearIcon = clearIcon;
+    public void setLogoIcon(Icon logoIcon) {
+        this.logoIcon = logoIcon;
     }
 
     public Icon getNextMonthIcon() {

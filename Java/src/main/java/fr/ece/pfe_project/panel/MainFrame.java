@@ -1,6 +1,9 @@
 package fr.ece.pfe_project.panel;
 
 import javax.swing.JOptionPane;
+import fr.ece.pfe_project.widget.StartingProgressDialog;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -46,7 +49,7 @@ public class MainFrame extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
-        
+
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -56,7 +59,24 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new MainFrame().setVisible(true);
+                MainFrame mf = new MainFrame();
+
+                Runnable runnable = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                };
+
+                StartingProgressDialog startingProgressDialog = 
+                        new StartingProgressDialog(mf, runnable, "Chargement...");
+                
+                startingProgressDialog.setVisible(true);
             }
         });
     }
@@ -142,7 +162,7 @@ public class MainFrame extends javax.swing.JFrame {
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
             // TODO : sauvegarde de l'état du logiciel
-            
+
             System.exit(0);
         }
     }//GEN-LAST:event_formWindowClosing

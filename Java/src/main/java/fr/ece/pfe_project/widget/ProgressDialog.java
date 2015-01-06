@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -69,6 +70,10 @@ public class ProgressDialog extends JDialog {
     public void setRunnable(Runnable runnable) {
         this.runnable = runnable;
     }
+    
+    public Runnable getRunnable() {
+        return runnable;
+    }
 
     public void setVisible(boolean visible) {
         if (visible) {
@@ -79,7 +84,7 @@ public class ProgressDialog extends JDialog {
         super.setVisible(visible);
     }
 
-    private void init(Runnable runnable, String message) {
+    protected void init(Runnable runnable, String message) {
         setupControls();
         setupComponent();
         setupEventHandlers();
@@ -87,7 +92,7 @@ public class ProgressDialog extends JDialog {
         setRunnable(runnable);
     }
 
-    private void setupControls() {
+    protected void setupControls() {
 
         progressBar = new JProgressBar();
         progressBar.setIndeterminate(true);
@@ -97,7 +102,7 @@ public class ProgressDialog extends JDialog {
         lblMessage = new JLabel(" ");
     }
 
-    private void setupComponent() {
+    protected void setupComponent() {
 
         JPanel contentPane = (JPanel) getContentPane();
         contentPane.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -118,7 +123,23 @@ public class ProgressDialog extends JDialog {
         pack();
     }
 
-    private void setupEventHandlers() {
+    public JProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public void setProgressBar(JProgressBar progressBar) {
+        this.progressBar = progressBar;
+    }
+
+    public JLabel getLblMessage() {
+        return lblMessage;
+    }
+
+    public void setLblMessage(JLabel lblMessage) {
+        this.lblMessage = lblMessage;
+    }
+
+    protected void setupEventHandlers() {
 
         addComponentListener(new ComponentAdapter() {
             @Override
