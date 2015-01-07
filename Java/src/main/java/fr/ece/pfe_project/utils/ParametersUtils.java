@@ -100,6 +100,12 @@ public class ParametersUtils {
             DatabaseHelper.addFrequentationAnnuelle(2011, 1080046);
             DatabaseHelper.addFrequentationAnnuelle(2012, 1209064);
             DatabaseHelper.addFrequentationAnnuelle(2013, 1367736);
+
+            hmm.put(2009, 1109397);
+            hmm.put(2010, 1060705);
+            hmm.put(2011, 1080046);
+            hmm.put(2012, 1209064);
+            hmm.put(2013, 1367736);
         }
 
         GlobalVariableUtils.getFrequentationAnnuelleMap().
