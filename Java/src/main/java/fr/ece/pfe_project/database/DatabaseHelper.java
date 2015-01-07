@@ -322,9 +322,9 @@ public class DatabaseHelper {
                 int yearR = rs.getInt("ANNEE");
                 int freq = rs.getInt("FREQUENTATION");
 
-                System.out.println("ANNEE = " + yearR);
-                System.out.println("FREQ = " + freq);
-                System.out.println();
+//                System.out.println("ANNEE = " + yearR);
+//                System.out.println("FREQ = " + freq);
+//                System.out.println();
 
                 map.put(yearR, freq);
             }
