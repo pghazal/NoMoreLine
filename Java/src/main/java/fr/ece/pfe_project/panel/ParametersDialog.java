@@ -5,7 +5,7 @@
  */
 package fr.ece.pfe_project.panel;
 
-import fr.ece.pfe_project.model.ExcelRow;
+import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.utils.ExcelUtils;
 import static fr.ece.pfe_project.utils.ExcelUtils.getExcelFile;
 import static fr.ece.pfe_project.utils.ExcelUtils.getSheet;
@@ -63,7 +63,7 @@ public class ParametersDialog extends javax.swing.JDialog {
                 Row row = rows.next();
 
                 GlobalVariableUtils.getExcelMap().put(row.getCell(0).getDateCellValue(),
-                        new ExcelRow(row.getCell(0).getDateCellValue(), (int) row.getCell(1).getNumericCellValue()));
+                        new FrequentationJournaliere(row.getCell(0).getDateCellValue(), (int) row.getCell(1).getNumericCellValue()));
             }
 
             // Sert pour les tests

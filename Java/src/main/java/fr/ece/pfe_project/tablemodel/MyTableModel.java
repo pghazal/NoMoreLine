@@ -5,7 +5,7 @@ import fr.ece.pfe_project.panel.ToolbarEntityPanel;
 import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.Employee;
-import fr.ece.pfe_project.model.ExcelRow;
+import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.ModelInterface;
 import java.util.Date;
 
@@ -126,13 +126,13 @@ public class MyTableModel extends AbstractTableModel {
 
             case EXCELROW:
 
-                myData = (ExcelRow) data[row];
+                myData = (FrequentationJournaliere) data[row];
 
                 switch (column) {
                     case 0:
-                        return ((ExcelRow) myData).getDate();
+                        return ((FrequentationJournaliere) myData).getDate();
                     case 1:
-                        return ((ExcelRow) myData).getValue();
+                        return ((FrequentationJournaliere) myData).getFrequentation();
                     default:
                         System.err.println("Logic Error");
                         break;

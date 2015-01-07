@@ -7,7 +7,7 @@ import java.awt.event.MouseMotionListener;
 import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.Employee;
-import fr.ece.pfe_project.model.ExcelRow;
+import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 
@@ -69,7 +69,7 @@ public class ListPanel extends javax.swing.JPanel implements ToolbarEntityPanel.
                 model.setData(cameras, false);
                 break;
             case EXCELROW:
-                model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new ExcelRow[0]), false);
+                model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new FrequentationJournaliere[0]), false);
                 break;
             case NONE:
             default:

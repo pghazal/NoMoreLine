@@ -1,7 +1,7 @@
 package fr.ece.pfe_project.algo;
 
 import fr.ece.pfe_project.model.AlgoResult;
-import fr.ece.pfe_project.model.ExcelRow;
+import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -183,13 +183,13 @@ public class Algorithm {
     }
 
     public static int getFrequentationJournaliere(Date date) {
-        ExcelRow row = GlobalVariableUtils.getExcelMap().get(date);
+        FrequentationJournaliere row = GlobalVariableUtils.getExcelMap().get(date);
 
         if (row == null) {
             System.err.println("NUULLL");
         }
 
-        return row.getValue();
+        return row.getFrequentation();
     }
 
     public static int getFrequentationAnnuelle(int year) {

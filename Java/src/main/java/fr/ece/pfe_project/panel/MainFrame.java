@@ -1,6 +1,7 @@
 package fr.ece.pfe_project.panel;
 
 import fr.ece.pfe_project.database.DatabaseHelper;
+import fr.ece.pfe_project.utils.ParametersUtils;
 import javax.swing.JOptionPane;
 import fr.ece.pfe_project.widget.StartingProgressDialog;
 
@@ -64,8 +65,9 @@ public class MainFrame extends javax.swing.JFrame {
 
                     @Override
                     public void run() {
-                        //new DatabaseHelper();
-                        ParametersDialog.loadExcel();
+                        DatabaseHelper.initialize();
+                        //ParametersDialog.loadExcel();
+                        ParametersUtils.loadDatabase();
                     }
                 };
 

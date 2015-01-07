@@ -742,7 +742,6 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
             } else if (arg0.getSource() == internalView.getPreviousYearButton()) {
                 internalModel.getModel().addYear(-1);
             } else if (arg0.getSource() == internalView.dateConfirmation()) {
-                System.out.println("DANS ELSE IF");
                 StatisticPanel.setAlgoResult(Algorithm.process(StatisticPanel.getDate()));
             } else {
                 for (int month = 0; month < internalView.getMonthPopupMenuItems().length; month++) {
