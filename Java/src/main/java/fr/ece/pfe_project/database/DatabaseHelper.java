@@ -94,17 +94,24 @@ public class DatabaseHelper {
             Connection c = getConnection();
             c.setAutoCommit(false);
 
-            String sql = "INSERT INTO " + TABLE_FREQUENTATION_JOURNALIERE
-                    + " (DATE, FREQUENTATION)"
-                    + " VALUES (" + date + "," + freq + ")"
-                    + " WHERE NOT EXISTS (SELECT *"
-                    + " FROM " + TABLE_FREQUENTATION_JOURNALIERE
-                    + " WHERE DATE =" + date + ");";
+//            String sql = "INSERT INTO " + TABLE_FREQUENTATION_JOURNALIERE
+//                    + " (DATE, FREQUENTATION)"
+//                    + " VALUES (" + date + "," + freq + ")"
+//                    + " WHERE NOT EXISTS (SELECT *"
+//                    + " FROM " + TABLE_FREQUENTATION_JOURNALIERE
+//                    + " WHERE DATE =" + date + ");";
+            String sql;
+            if (!frequentationJournaliereExists(date)) {
 
-            Statement stmt = c.createStatement();
-            stmt.executeUpdate(sql);
+                sql = "INSERT INTO " + TABLE_FREQUENTATION_JOURNALIERE + " (DATE, FREQUENTATION)"
+                        + " VALUES (" + date + "," + freq + ")";
 
-            stmt.close();
+                Statement stmt = c.createStatement();
+                stmt.executeUpdate(sql);
+
+                stmt.close();
+            }
+
             c.commit();
             c.setAutoCommit(true);
             c.close();
@@ -196,7 +203,7 @@ public class DatabaseHelper {
             c.setAutoCommit(false);
 
             String sql;
-            if (!frequentationAnnuelleExists(year)) {
+            if (frequentationAnnuelleExists(year)) {
 
                 sql = "UPDATE FREQUENTATION_ANNUELLE SET FREQUENTATION=" + freq + " WHERE ANNEE=" + year;
 
@@ -288,7 +295,7 @@ public class DatabaseHelper {
             c.setAutoCommit(false);
 
             String sql;
-            if (!frequentationJournaliereExists(date)) {
+            if (frequentationJournaliereExists(date)) {
 
                 sql = "UPDATE FREQUENTATION_JOURNALIERE SET FREQUENTATION=" + freq + " WHERE DATE=" + date;
 
@@ -325,7 +332,6 @@ public class DatabaseHelper {
 //                System.out.println("ANNEE = " + yearR);
 //                System.out.println("FREQ = " + freq);
 //                System.out.println();
-
                 map.put(yearR, freq);
             }
             rs.close();
@@ -426,7 +432,7 @@ public class DatabaseHelper {
     }
 
     public static void deleteAllFrequentationJournalier() {
-try {
+        try {
             Connection c = getConnection();
             c.setAutoCommit(false);
 

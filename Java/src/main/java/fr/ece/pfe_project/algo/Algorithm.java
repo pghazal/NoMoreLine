@@ -19,7 +19,10 @@ public class Algorithm {
     public static AlgoResult process(Date dateSelected) {
         int yearSelected = getYear(dateSelected);
         int currentMonth = getMonth(dateSelected);
-        int currentDay = getDay(dateSelected);
+        int currentDay = getDayOfMonth(dateSelected);
+        
+        int nbSemaine = getWeekOfYear(dateSelected);
+        int jour = getDayOfWeek(dateSelected);
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(dateSelected);
@@ -28,13 +31,21 @@ public class Algorithm {
          * CALCUL JOURNALIER
          */
         ArrayList<Double> variationsJournaliere = new ArrayList<Double>();
+        Date firstDate;
+        Date secondDate;
         for (int i = YEARS_TO_COMPARE; i > 1; i--) {
-            Date firstDate;
-            Date secondDate;
 
-            cal.set(yearSelected - i, currentMonth, currentDay);
+            cal.set(Calendar.YEAR, yearSelected - i);
+            cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+            cal.set(Calendar.DAY_OF_WEEK, jour);
+
+            //cal.set(yearSelected - i, currentMonth, currentDay);
             firstDate = cal.getTime();
-            cal.set(yearSelected - (i - 1), currentMonth, currentDay);
+            
+            cal.set(Calendar.YEAR, yearSelected - (i - 1));
+            cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+            cal.set(Calendar.DAY_OF_WEEK, jour);
+            //cal.set(yearSelected - (i - 1), currentMonth, currentDay);
             secondDate = cal.getTime();
 
             System.out.println("First Date : " + firstDate);
@@ -74,8 +85,6 @@ public class Algorithm {
          */
         ArrayList<Double> variationsAnnuelle = new ArrayList<Double>();
         for (int i = YEARS_TO_COMPARE; i > 1; i--) {
-            Date firstDate;
-            Date secondDate;
 
             cal.set(yearSelected - i, currentMonth, currentDay);
             firstDate = cal.getTime();
@@ -154,14 +163,64 @@ public class Algorithm {
         System.out.println("Freq Journaliere 2013 : " + cal.getTime());
         System.out.println("Freq Journaliere 2013 : " + getFrequentationJournaliere(cal.getTime()));
 
-        int result = (int) (nbPassagerJournalier + nbPassagerPondere + moyPondere) / 3 ;
+        int result = (int) (nbPassagerJournalier + nbPassagerPondere + moyPondere) / 3;
 
         System.out.println("RESULT : " + result);
-        
+
         AlgoResult algoResult = new AlgoResult();
         algoResult.setPrevisionPassager(result);
-        
+
         return algoResult;
+    }
+
+    public static void displayJour(Date date) {
+
+        int nbSemaine = getWeekOfYear(date);
+        int jour = getDayOfWeek(date);
+
+        System.out.println("Semaine # " + nbSemaine);
+
+        switch (jour) {
+            case Calendar.MONDAY:
+                System.out.println("Jour LUNDI");
+                break;
+            case Calendar.TUESDAY:
+                System.out.println("Jour MARDI");
+                break;
+            case Calendar.WEDNESDAY:
+                System.out.println("Jour MERCREDI");
+                break;
+            case Calendar.THURSDAY:
+                System.out.println("Jour JEUDI");
+                break;
+            case Calendar.FRIDAY:
+                System.out.println("Jour VENDREDI");
+                break;
+            case Calendar.SATURDAY:
+                System.out.println("Jour SAMEDI");
+                break;
+            case Calendar.SUNDAY:
+                System.out.println("Jour DIMANCHE");
+                break;
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        cal.add(Calendar.YEAR, -1);
+        cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+        cal.set(Calendar.DAY_OF_WEEK, jour);
+        System.out.println("Date year - 1 : " + cal.getTime());
+
+        cal.add(Calendar.YEAR, -1);
+        cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+        cal.set(Calendar.DAY_OF_WEEK, jour);
+        System.out.println("Date year - 2 : " + cal.getTime());
+
+        cal.add(Calendar.YEAR, -1);
+        cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+        cal.set(Calendar.DAY_OF_WEEK, jour);
+        System.out.println("Date year - 3 : " + cal.getTime());
     }
 
     private static double getVariation(Date firstDate, Date secondDate, boolean isJournaliere) {
@@ -186,7 +245,7 @@ public class Algorithm {
         FrequentationJournaliere row = GlobalVariableUtils.getExcelMap().get(date);
 
         if (row == null) {
-            System.err.println("NUULLL");
+            System.err.println("NUULL at Date : " + date);
         }
 
         return row.getFrequentation();
@@ -208,9 +267,21 @@ public class Algorithm {
         return cal.get(Calendar.MONTH);
     }
 
-    public static int getDay(Date date) {
+    public static int getDayOfMonth(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return cal.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static int getDayOfWeek(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.DAY_OF_WEEK);
+    }
+
+    public static int getWeekOfYear(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.WEEK_OF_YEAR);
     }
 }
