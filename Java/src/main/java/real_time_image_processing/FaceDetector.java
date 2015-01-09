@@ -1,8 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *
+ * IMAGE PROCESSING FOR REAL TIME OVERCROWDED AREA DETECTION
+ *
  */
+
 package real_time_image_processing;
 
 import java.io.IOException;
@@ -24,6 +25,8 @@ import static org.bytedeco.javacpp.opencv_objdetect.*;
 /**
  *
  * @author samuelthomas
+ * 
+ * Face detection implementation for crowd management 
  */
 public class FaceDetector {
     
