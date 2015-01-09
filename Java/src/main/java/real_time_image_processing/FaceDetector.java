@@ -7,16 +7,16 @@
 package real_time_image_processing;
 
 import java.io.IOException;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.bytedeco.javacv.*;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.indexer.*;
 import org.bytedeco.javacpp.opencv_core.IplImage;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 import static org.bytedeco.javacpp.opencv_calib3d.*;
