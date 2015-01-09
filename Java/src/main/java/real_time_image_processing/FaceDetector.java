@@ -32,8 +32,7 @@ public class FaceDetector {
     
         public static void main(String[] args) {
         try {
-            
-            
+                  
             String classifierName = null;
             
             if (args.length > 0) {
