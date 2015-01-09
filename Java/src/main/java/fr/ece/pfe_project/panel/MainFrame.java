@@ -59,8 +59,8 @@ public class MainFrame extends javax.swing.JFrame {
             @Override
             public void run() {
                 MainFrame mf = new MainFrame();
-
-                Runnable runnable = new Runnable() {
+                mf.setVisible(true);
+               /* Runnable runnable = new Runnable() {
 
                     @Override
                     public void run() {
@@ -72,7 +72,7 @@ public class MainFrame extends javax.swing.JFrame {
                 StartingProgressDialog startingProgressDialog = 
                         new StartingProgressDialog(mf, runnable, "Chargement...");
                 
-                startingProgressDialog.setVisible(true);
+                startingProgressDialog.setVisible(true);*/
             }
         });
     }

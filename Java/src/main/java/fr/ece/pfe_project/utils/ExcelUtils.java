@@ -179,6 +179,24 @@ public class ExcelUtils {
 
     }
 
+    public static void checkExcel(){
+     
+        try {
+
+            FileInputStream file = getExcelFile((String) ParametersUtils.get(ParametersUtils.PARAM_PATH_EXCEL));
+            XSSFWorkbook workbook = getWorkbook(file);
+            XSSFSheet sheet = getSheet(workbook, 0);
+        
+                file.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        
+        
+    }
 //    public void updateExcel() {
 //
 //        try {
@@ -239,5 +257,7 @@ public class ExcelUtils {
         public String getDescription() {
             return "Fichier Excel";
         }
+        
+    
     }
 }
