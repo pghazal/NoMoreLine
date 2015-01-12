@@ -28,11 +28,13 @@ import static org.bytedeco.javacpp.opencv_objdetect.*;
  * 
  * Face detection implementation for crowd management 
  */
-public class FaceDetector {
+public class FaceDetector extends Thread {
+
+        private boolean active = true;
     
         public static void main(String[] args) {
-        try {
-                  
+            
+        try {                  
             String classifierName = null;
             
             if (args.length > 0) {
@@ -65,9 +67,6 @@ public class FaceDetector {
                 System.exit(1);
             }
             
-            // The available FrameGrabber classes include OpenCVFrameGrabber (opencv_highgui),
-            // DC1394FrameGrabber, FlyCaptureFrameGrabber, OpenKinectFrameGrabber,
-            // PS3EyeFrameGrabber, VideoInputFrameGrabber, and FFmpegFrameGrabber.
             FrameGrabber grabber = null;
             try {
                 grabber = FrameGrabber.createDefault(0);
@@ -76,26 +75,17 @@ public class FaceDetector {
             }
             grabber.start();
             
-            // about IplImage:
-            // - For custom raw processing of data, createBuffer() returns an NIO direct
-            //   buffer wrapped around the memory pointed by imageData, and under Android we can
-            //   also use that Buffer with Bitmap.copyPixelsFromBuffer() and copyPixelsToBuffer().
-            // - To get a BufferedImage from an IplImage, we may call getBufferedImage().
-            // - The createFrom() factory method can construct an IplImage from a BufferedImage.
-            // - There are also a few copy*() methods for BufferedImage<->IplImage data transfers.
+
             IplImage grabbedImage = grabber.grab();
             int width  = grabbedImage.width();
             int height = grabbedImage.height();
             IplImage grayImage    = IplImage.create(width, height, IPL_DEPTH_8U, 1);
             IplImage rotatedImage = grabbedImage.clone();
             
-            // Objects allocated with a create*() or clone() factory method are automatically released
-            // by the garbage collector, but may still be explicitly released by calling release().
-            // You shall NOT call cvReleaseImage(), cvReleaseMemStorage(), etc. on objects allocated this way.
+
             CvMemStorage storage = CvMemStorage.create();
             
-            // The OpenCVFrameRecorder class simply uses the CvVideoWriter of opencv_highgui,
-            // but FFmpegFrameRecorder also exists as a more versatile alternative.
+
             FrameRecorder recorder = null;
             try {
                 recorder = FrameRecorder.createDefault("output.avi", width, height);
@@ -108,12 +98,9 @@ public class FaceDetector {
                 Logger.getLogger(FaceDetector.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            // CanvasFrame is a JFrame containing a Canvas component, which is hardware accelerated.
-            // It can also switch into full-screen mode when called with a screenNumber.
-            // We should also specify the relative monitor/camera response for proper gamma correction.
-            CanvasFrame frame = new CanvasFrame("Some Title", CanvasFrame.getDefaultGamma()/grabber.getGamma());
+            CanvasFrame frame = new CanvasFrame("Face Detection", CanvasFrame.getDefaultGamma()/grabber.getGamma());
             
-            // Let's create some random 3D rotation...
+            // Let's create some random 3D rotation
             CvMat randomR = CvMat.create(3, 3), randomAxis = CvMat.create(3, 1);
             // We can easily and efficiently access the elements of matrices and images
             // through an Indexer object with the set of get() and put() methods.
@@ -147,7 +134,9 @@ public class FaceDetector {
                     hatPoints.position(0).x(x-w/10)   .y(y-h/10);
                     hatPoints.position(1).x(x+w*11/10).y(y-h/10);
                     hatPoints.position(2).x(x+w/2)    .y(y-h/2);
-                    cvFillConvexPoly(grabbedImage, hatPoints.position(0), 3, CvScalar.GREEN, CV_AA, 0);
+                    
+                    // Draw triangle above the character's head
+                    //cvFillConvexPoly(grabbedImage, hatPoints.position(0), 3, CvScalar.GREEN, CV_AA, 0);
                 }
                 System.out.println("Number of faces detected: " +number_of_faces_detected);
                 
@@ -161,20 +150,23 @@ public class FaceDetector {
                 while (contour != null && !contour.isNull()) {
                     if (contour.elem_size() > 0) {
                         CvSeq points = cvApproxPoly(contour, Loader.sizeof(CvContour.class), storage, CV_POLY_APPROX_DP, cvContourPerimeter(contour)*0.02, 0);
-                        cvDrawContours(grabbedImage, points, CvScalar.BLUE, CvScalar.BLUE, -1, 1, CV_AA);
+                        //cvDrawContours(grabbedImage, points, CvScalar.BLUE, CvScalar.BLUE, -1, 1, CV_AA);
                     }
                     contour = contour.h_next();
                 }
                 
-                cvWarpPerspective(grabbedImage, rotatedImage, randomR);
+                frame.showImage(grabbedImage);
                 
-                frame.showImage(rotatedImage);
-                try {
-                    recorder.record(rotatedImage);
-                } catch (FrameRecorder.Exception ex) {
-                    Logger.getLogger(FaceDetector.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+//                cvWarpPerspective(grabbedImage, rotatedImage, randomR);                
+//                frame.showImage(rotatedImage);
+//                try {
+//                    recorder.record(rotatedImage);
+//                } catch (FrameRecorder.Exception ex) {
+//                    Logger.getLogger(FaceDetector.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+                
+            } // END OF WHILE
+            
             frame.dispose();
             try {
                 recorder.stop();
@@ -189,8 +181,11 @@ public class FaceDetector {
         
         
         
+       
+    } // END OF MAIN
         
-        
-    }
-    
-}
+     public void stopFaceDetection() {
+         active = false;
+     }
+     
+} // END OF CLASS
