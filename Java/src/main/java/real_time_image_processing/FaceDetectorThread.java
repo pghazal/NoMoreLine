@@ -93,18 +93,6 @@ public class FaceDetectorThread extends Thread {
 
             CvMemStorage storage = CvMemStorage.create();
 
-//            FrameRecorder recorder = null;
-//            try {
-//                recorder = FrameRecorder.createDefault("output.avi", width, height);
-//            } catch (FrameRecorder.Exception ex) {
-//                Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            try {
-//                recorder.start();
-//            } catch (FrameRecorder.Exception ex) {
-//                Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-
             CanvasFrame frame = new CanvasFrame("Face Detection", CanvasFrame.getDefaultGamma() / grabber.getGamma());
 
             // Let's create some random 3D rotation
@@ -176,11 +164,7 @@ public class FaceDetectorThread extends Thread {
             } // END OF WHILE
 
             frame.dispose();
-//            try {
-//                recorder.stop();
-//            } catch (FrameRecorder.Exception ex) {
-//                Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
-//            }
+
             grabber.stop();
         } catch (FrameGrabber.Exception ex) {
             Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
@@ -191,8 +175,12 @@ public class FaceDetectorThread extends Thread {
         return number_of_faces_detected;
     } // END OF MAIN
 
+    
+    
     public void stopFaceDetection() {
         active = false;
     }
+    
+    
 
 } // END OF CLASS
