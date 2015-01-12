@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -96,12 +97,6 @@ public class DatabaseHelper {
             Connection c = getConnection();
             c.setAutoCommit(false);
 
-//            String sql = "INSERT INTO " + TABLE_FREQUENTATION_JOURNALIERE
-//                    + " (DATE, FREQUENTATION)"
-//                    + " VALUES (" + date + "," + freq + ")"
-//                    + " WHERE NOT EXISTS (SELECT *"
-//                    + " FROM " + TABLE_FREQUENTATION_JOURNALIERE
-//                    + " WHERE DATE =" + date + ");";
             String sql;
             if (!frequentationJournaliereExists(date)) {
 
@@ -274,6 +269,27 @@ public class DatabaseHelper {
         return null;
     }
 
+    public static boolean isYearComplete(int year) {
+
+        try {
+            Connection c = getConnection();
+
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_FREQUENTATION_JOURNALIERE
+                    + " WHERE JOUR=31 AND MOIS=11 AND ANNEE=" + year + ";");
+
+            while (rs.next()) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+
+        return false;
+    }
+
     public static FrequentationAnnuelle getFrequentationAnnuelle(Integer year) {
         try {
             Connection c = getConnection();
@@ -338,6 +354,33 @@ public class DatabaseHelper {
         System.out.println("Update Journalier success");
     }
 
+    public static void aggregateFrequentationOfYear(int year) {
+        try {
+            Connection c = getConnection();
+
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT SUM(FREQUENTATION) AS SOMME FROM " + TABLE_FREQUENTATION_JOURNALIERE
+                    + " WHERE ANNEE=" + year + ";");
+
+            while (rs.next()) {
+                int sumFreq = rs.getInt("SOMME");
+                
+                System.out.println("SOMME : " + sumFreq);
+
+                rs.close();
+                stmt.close();
+                c.close();
+
+                DatabaseHelper.addFrequentationAnnuelle(year, sumFreq);
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+
+    }
+
     public static HashMap<Integer, Integer> getAllFrequentationAnnuelle() {
         try {
             HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
@@ -351,6 +394,9 @@ public class DatabaseHelper {
 
                 int yearR = rs.getInt("ANNEE");
                 int freq = rs.getInt("FREQUENTATION");
+                
+                System.out.println("WE GOT : " + yearR);
+                
                 map.put(yearR, freq);
             }
             rs.close();
@@ -358,6 +404,41 @@ public class DatabaseHelper {
             c.close();
 
             return map;
+
+        } catch (SQLException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+
+        return null;
+    }
+
+    public static ArrayList<Integer> getYearsComplete() {
+        Calendar cal = Calendar.getInstance();
+        int actualYear = cal.get(Calendar.YEAR);
+        
+        ArrayList<Integer> list = new ArrayList<Integer>();
+
+        try {
+            Connection c = getConnection();
+
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT ANNEE FROM " + TABLE_FREQUENTATION_JOURNALIERE
+                    + " WHERE JOUR=31 AND MOIS=11 AND ANNEE<>" + actualYear + ";");
+
+            while (rs.next()) {
+                int nbYear = rs.getInt("ANNEE");
+
+                System.out.println("ANNEE : " + nbYear);
+                
+                rs.close();
+                stmt.close();
+                c.close();
+
+                list.add(nbYear);
+            }
+            
+            return list;
 
         } catch (SQLException e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -384,10 +465,6 @@ public class DatabaseHelper {
 
                 Date date = cal.getTime();
                 int freq = rs.getInt("FREQUENTATION");
-
-                System.out.println("DATE = " + date);
-                System.out.println("FREQ = " + freq);
-                System.out.println();
 
                 map.put(date, new FrequentationJournaliere(date, freq));
             }

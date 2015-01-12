@@ -14,13 +14,13 @@ import java.util.Date;
  */
 public class Algorithm {
 
-    // Nombre d'année que l'on compare dans le passé
-    private final static int YEARS_TO_COMPARE = 3;
-
     public static AlgoResult process(Date dateSelected) {
         int yearSelected = getYear(dateSelected);
         int currentMonth = getMonth(dateSelected);
         int currentDay = getDayOfMonth(dateSelected);
+        
+        int YEARS_TO_COMPARE = DatabaseHelper.getYearsComplete().size();
+        System.out.println("NB ANNEE : " + YEARS_TO_COMPARE);
         
         int nbSemaine = getWeekOfYear(dateSelected);
         int jour = getDayOfWeek(dateSelected);

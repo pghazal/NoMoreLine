@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -204,8 +205,6 @@ public class ExcelUtils {
             while (rows.hasNext()) {
                 Row row = rows.next();
 
-                System.out.println("BEFORE SWITCH");
-
                 switch (checkExcel(row)) {
 
                     case ERROR_EMPTY:
@@ -235,9 +234,16 @@ public class ExcelUtils {
                     System.out.println("Adding to DB...");
                     DatabaseHelper.addFrequentationJournaliere(entry.getKey(), entry.getValue().getFrequentation());
                 }
-
                 GlobalVariableUtils.getExcelMap().
                         putAll(DatabaseHelper.getAllFrequentationJournaliere());
+
+                ArrayList<Integer> l = DatabaseHelper.getYearsComplete();
+                for (int i = 0; i < l.size(); i++) {
+                    DatabaseHelper.aggregateFrequentationOfYear(l.get(i));
+                }
+                GlobalVariableUtils.getFrequentationAnnuelleMap().
+                        putAll(DatabaseHelper.getAllFrequentationAnnuelle());
+
             } else {
                 tempMap.clear();
                 System.out.println("Erreur in Excel - Not adding to DB...");
@@ -262,14 +268,12 @@ public class ExcelUtils {
                 ex.printStackTrace();
             }
         }
-        
+
         return true;
     }
 
     //Différents tests de l'excel pour détecter erreur
     private static TYPE_ERROR checkExcel(Row row) {
-
-        System.out.println("ENTREE DANS CHECK EXCEL");
 
         if ((row.getCell(0).getCellType() == Cell.CELL_TYPE_BLANK) || (row.getCell(1).getCellType() == Cell.CELL_TYPE_BLANK)) {
             return TYPE_ERROR.ERROR_EMPTY;

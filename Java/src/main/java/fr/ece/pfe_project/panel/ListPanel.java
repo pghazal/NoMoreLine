@@ -32,7 +32,6 @@ public class ListPanel extends javax.swing.JPanel implements ToolbarEntityPanel.
         // Listener
         addMouseListener(this);
         addMouseMotionListener(this);
-        //this.itemsTable.getModel().addTableModelListener(this);
 
         // Data initialization
         comptoirs = new Comptoir[]{
