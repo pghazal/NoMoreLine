@@ -1,8 +1,13 @@
 package fr.ece.pfe_project.panel;
 
 import fr.ece.pfe_project.database.DatabaseHelper;
+import fr.ece.pfe_project.utils.ParametersUtils;
 import javax.swing.JOptionPane;
 import fr.ece.pfe_project.widget.StartingProgressDialog;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -58,21 +63,34 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
+                try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (UnsupportedLookAndFeelException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
                 MainFrame mf = new MainFrame();
                 mf.setVisible(true);
-               /* Runnable runnable = new Runnable() {
+                Runnable runnable = new Runnable() {
 
                     @Override
                     public void run() {
-                        //new DatabaseHelper();
-                        ParametersDialog.loadExcel();
+                        DatabaseHelper.initialize();
+                        //ParametersDialog.loadExcel();
+                        ParametersUtils.loadDatabase();
                     }
                 };
 
-                StartingProgressDialog startingProgressDialog = 
-                        new StartingProgressDialog(mf, runnable, "Chargement...");
-                
-                startingProgressDialog.setVisible(true);*/
+                StartingProgressDialog startingProgressDialog
+                        = new StartingProgressDialog(mf, runnable, "Chargement...");
+
+                startingProgressDialog.setVisible(true);
             }
         });
     }

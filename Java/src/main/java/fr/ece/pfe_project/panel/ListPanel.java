@@ -1,15 +1,17 @@
 package fr.ece.pfe_project.panel;
 
-import java.awt.BorderLayout;
+import fr.ece.pfe_project.editor.CameraCellEditor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.Employee;
-import fr.ece.pfe_project.model.ExcelRow;
+import fr.ece.pfe_project.model.FrequentationJournaliere;
+import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
+import fr.ece.pfe_project.widget.CameraCellComponent;
 
 /**
  *
@@ -40,14 +42,19 @@ public class ListPanel extends javax.swing.JPanel implements ToolbarEntityPanel.
         };
 
         cameras = new Camera[]{
-            new Camera(10), new Camera(20),
-            new Camera(30)
+            new Camera(1), new Camera(2),
+            new Camera(3)
         };
+        
+        cameras[1].setState(Camera.CAMERA_STATE.ALERT);
 
         employees = new Employee[]{
             new Employee(), new Employee(),
             new Employee()
         };
+
+        itemsTable.setDefaultRenderer(Camera.class, new CameraCellRenderer());
+        itemsTable.setDefaultEditor(Camera.class, new CameraCellEditor());
 
         this.itemsTable.setModel(new MyTableModel());
     }
@@ -63,13 +70,16 @@ public class ListPanel extends javax.swing.JPanel implements ToolbarEntityPanel.
         switch (typeEntity) {
 
             case COMPTOIR:
+                itemsTable.setRowHeight(16);
                 model.setData(comptoirs, false);
                 break;
             case CAMERA:
+                itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
                 model.setData(cameras, false);
                 break;
             case EXCELROW:
-                model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new ExcelRow[0]), false);
+                itemsTable.setRowHeight(16);
+                model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new FrequentationJournaliere[0]), false);
                 break;
             case NONE:
             default:

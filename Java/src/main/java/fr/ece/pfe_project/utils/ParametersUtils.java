@@ -1,5 +1,6 @@
 package fr.ece.pfe_project.utils;
 
+import fr.ece.pfe_project.database.DatabaseHelper;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -18,7 +19,7 @@ public class ParametersUtils {
     private final static String FILENAME_PARAMETERS = "parameters.pfe";
 
     public final static String PARAM_PATH_EXCEL = "PARAM_PATH_EXCEL";
-    public final static String PARAM_DATABASE_BT_YEAR = "PARAM_DATABASE_BT_YEAR";
+    //public final static String PARAM_DATABASE_BT_YEAR = "PARAM_DATABASE_BT_YEAR";
 
     private static HashMap<String, Object> paramsMap;
 
@@ -46,7 +47,7 @@ public class ParametersUtils {
 
         return null;
     }
-    
+
     public static boolean containsKey(String key) {
         return paramsMap.containsKey(key);
     }
@@ -87,5 +88,30 @@ public class ParametersUtils {
         }
 
         System.out.println("Deserialized HashMap...");
+    }
+
+    public static void loadDatabase() {
+        HashMap<Integer, Integer> hmm = DatabaseHelper.getAllFrequentationAnnuelle();
+
+        if (hmm.isEmpty()) {
+            System.out.println("DB Annuelle Empty");
+            DatabaseHelper.addFrequentationAnnuelle(2009, 1109397);
+            DatabaseHelper.addFrequentationAnnuelle(2010, 1060705);
+            DatabaseHelper.addFrequentationAnnuelle(2011, 1080046);
+            DatabaseHelper.addFrequentationAnnuelle(2012, 1209064);
+            DatabaseHelper.addFrequentationAnnuelle(2013, 1367736);
+
+            hmm.put(2009, 1109397);
+            hmm.put(2010, 1060705);
+            hmm.put(2011, 1080046);
+            hmm.put(2012, 1209064);
+            hmm.put(2013, 1367736);
+        }
+
+        GlobalVariableUtils.getFrequentationAnnuelleMap().
+                putAll(hmm);
+
+        GlobalVariableUtils.getExcelMap().
+                putAll(DatabaseHelper.getAllFrequentationJournaliere());
     }
 }

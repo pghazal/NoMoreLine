@@ -42,9 +42,9 @@
               <Component id="comptoirButton" min="-2" pref="75" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="cameraButton" min="-2" pref="75" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="excelButton" min="-2" pref="68" max="-2" attributes="0"/>
-              <EmptySpace pref="358" max="32767" attributes="0"/>
+              <EmptySpace pref="364" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

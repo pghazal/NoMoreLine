@@ -4,8 +4,7 @@ import javax.swing.table.AbstractTableModel;
 import fr.ece.pfe_project.panel.ToolbarEntityPanel;
 import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.Comptoir;
-import fr.ece.pfe_project.model.Employee;
-import fr.ece.pfe_project.model.ExcelRow;
+import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.ModelInterface;
 import java.util.Date;
 
@@ -17,7 +16,7 @@ public class MyTableModel extends AbstractTableModel {
 
     private final String[] columnNone = {};
     private final String[] columnComptoir = {"ID", "Numéro"};
-    private final String[] columnCamera = {"ID", "Numéro"};
+    private final String[] columnCamera = {"Cameras"};
     private final String[] columnExcel = {"Date", "Flux de la journée"};
 
     private final String[][] columnNames = {
@@ -99,9 +98,7 @@ public class MyTableModel extends AbstractTableModel {
 
                 switch (column) {
                     case 0:
-                        return ((Camera) myData).getId();
-                    case 1:
-                        return ((Camera) myData).getNumber();
+                        return (Camera) myData;
                     default:
                         System.err.println("Logic Error");
                         break;
@@ -123,16 +120,15 @@ public class MyTableModel extends AbstractTableModel {
                 }
                 break;
 
-
             case EXCELROW:
 
-                myData = (ExcelRow) data[row];
+                myData = (FrequentationJournaliere) data[row];
 
                 switch (column) {
                     case 0:
-                        return ((ExcelRow) myData).getDate();
+                        return ((FrequentationJournaliere) myData).getDate();
                     case 1:
-                        return ((ExcelRow) myData).getValue();
+                        return ((FrequentationJournaliere) myData).getFrequentation();
                     default:
                         System.err.println("Logic Error");
                         break;
@@ -155,9 +151,7 @@ public class MyTableModel extends AbstractTableModel {
             case CAMERA:
                 switch (column) {
                     case 0:
-                        return Long.class;
-                    case 1:
-                        return Integer.class;
+                        return Camera.class;
                 }
                 break;
 

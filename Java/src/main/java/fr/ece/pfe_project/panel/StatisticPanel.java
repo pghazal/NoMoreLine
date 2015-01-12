@@ -2,7 +2,6 @@ package fr.ece.pfe_project.panel;
 
 import fr.ece.pfe_project.model.AlgoResult;
 import java.awt.FlowLayout;
-import java.awt.Dimension;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,8 +37,6 @@ public class StatisticPanel extends javax.swing.JPanel {
         
         labelPassagerPrevu = new JLabel("Nombre de passagers prévu", SwingConstants.CENTER);
 
-        //JLabel label = new JLabel("Nombre de passagers prévu", SwingConstants.CENTER);
-        JLabel label1 = new JLabel("Personnels alloués", SwingConstants.CENTER);
         JLabel label2 = new JLabel("Autres", SwingConstants.CENTER);
         
         add((JComponent) datePicker.getJDateInstantPanel());
@@ -47,8 +44,6 @@ public class StatisticPanel extends javax.swing.JPanel {
         //vBox2.add(Box.createRigidArea(new Dimension(0, 10)));
         vBox2.add(new JSeparator(SwingConstants.HORIZONTAL));
         vBox2.add(labelPassagerPrevu);
-        vBox2.add(new JSeparator(SwingConstants.HORIZONTAL));
-        vBox2.add(label1);
         vBox2.add(new JSeparator(SwingConstants.HORIZONTAL));
         vBox2.add(label2);
         vBox2.add(new JSeparator(SwingConstants.HORIZONTAL));
