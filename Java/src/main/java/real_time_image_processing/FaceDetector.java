@@ -76,7 +76,7 @@ public class FaceDetector {
             }
             grabber.start();
             
-            // FAQ about IplImage:
+            // about IplImage:
             // - For custom raw processing of data, createBuffer() returns an NIO direct
             //   buffer wrapped around the memory pointed by imageData, and under Android we can
             //   also use that Buffer with Bitmap.copyPixelsFromBuffer() and copyPixelsToBuffer().
@@ -135,11 +135,13 @@ public class FaceDetector {
                 cvCvtColor(grabbedImage, grayImage, CV_BGR2GRAY);
                 CvSeq faces = cvHaarDetectObjects(grayImage, classifier, storage,1.1, 3, CV_HAAR_DO_CANNY_PRUNING);
                 
+                int number_of_faces_detected = 0;
                 int total = faces.total();
                 for (int i = 0; i < total; i++) {
                     CvRect r = new CvRect(cvGetSeqElem(faces, i));
                     int x = r.x(), y = r.y(), w = r.width(), h = r.height();
                     cvRectangle(grabbedImage, cvPoint(x, y), cvPoint(x+w, y+h), CvScalar.RED, 1, CV_AA, 0);
+                    number_of_faces_detected++;
                     
                     // To access or pass as argument the elements of a native array, call position() before.
                     hatPoints.position(0).x(x-w/10)   .y(y-h/10);
@@ -147,6 +149,7 @@ public class FaceDetector {
                     hatPoints.position(2).x(x+w/2)    .y(y-h/2);
                     cvFillConvexPoly(grabbedImage, hatPoints.position(0), 3, CvScalar.GREEN, CV_AA, 0);
                 }
+                System.out.println("Number of faces detected: " +number_of_faces_detected);
                 
                 // Let's find some contours! but first some thresholding...
                 cvThreshold(grayImage, grayImage, 64, 255, CV_THRESH_BINARY);
@@ -182,6 +185,12 @@ public class FaceDetector {
         } catch (FrameGrabber.Exception ex) {
             Logger.getLogger(FaceDetector.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        
+        
+        
+        
+        
     }
     
 }
