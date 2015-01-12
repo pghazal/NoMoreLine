@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.ece.pfe_project.panel;
 
 import fr.ece.pfe_project.model.FrequentationJournaliere;
