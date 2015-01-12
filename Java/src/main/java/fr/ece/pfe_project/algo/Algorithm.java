@@ -70,7 +70,9 @@ public class Algorithm {
         // Réinitialisation de la date
         cal.setTime(dateSelected);
         // Initialisation à l'année précédente
-        cal.add(Calendar.YEAR, -1);
+        cal.set(Calendar.YEAR, yearSelected - 1);
+        cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+        cal.set(Calendar.DAY_OF_WEEK, jour);
 
         // représente le J1 sur le papier
         double nbPassagerJournalier = getFrequentationJournaliere(cal.getTime())
@@ -114,6 +116,13 @@ public class Algorithm {
         double nbPassagerAnnuelle = getFrequentationAnnuelle(yearSelected - 1)
                 + moyVariationAnnuelle * getFrequentationAnnuelle(yearSelected - 1);
         System.out.println("A1 = " + nbPassagerAnnuelle);
+        
+        // Réinitialisation de la date
+        cal.setTime(dateSelected);
+        // Initialisation à l'année précédente
+        cal.set(Calendar.YEAR, yearSelected - 1);
+        cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+        cal.set(Calendar.DAY_OF_WEEK, jour);
 
         /**
          * CALCUL ASSOCIE JOURNALIER/ANNUEL
@@ -230,14 +239,14 @@ public class Algorithm {
 
             System.out.println("Freq : " + freq1);
 
-            return (freq2 - freq1) / freq1;
+            return (freq1 - freq2) / freq2;
         } else {
             double freq1 = new Integer(getFrequentationAnnuelle(getYear(firstDate))).doubleValue();
             double freq2 = new Integer(getFrequentationAnnuelle(getYear(secondDate))).doubleValue();
 
             System.out.println("Freq : " + freq1);
 
-            return (freq2 - freq1) / freq1;
+            return (freq1 - freq2) / freq2;
         }
     }
 
