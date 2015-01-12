@@ -117,13 +117,6 @@ public class FaceDetectorThread extends Thread {
                     cvRectangle(grabbedImage, cvPoint(x, y), cvPoint(x + w, y + h), CvScalar.RED, 1, CV_AA, 0);
                     number_of_faces_detected++;
 
-                    // To access or pass as argument the elements of a native array, call position() before.
-                    hatPoints.position(0).x(x - w / 10).y(y - h / 10);
-                    hatPoints.position(1).x(x + w * 11 / 10).y(y - h / 10);
-                    hatPoints.position(2).x(x + w / 2).y(y - h / 2);
-
-                    // Draw triangle above the character's head
-                    //cvFillConvexPoly(grabbedImage, hatPoints.position(0), 3, CvScalar.GREEN, CV_AA, 0);
                 }
                 System.out.println("Number of faces detected: " + number_of_faces_detected);
 
