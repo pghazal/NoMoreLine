@@ -95,19 +95,6 @@ public class FaceDetectorThread extends Thread {
 
             CanvasFrame frame = new CanvasFrame("Face Detection", CanvasFrame.getDefaultGamma() / grabber.getGamma());
 
-            // Let's create some random 3D rotation
-            CvMat randomR = CvMat.create(3, 3), randomAxis = CvMat.create(3, 1);
-            // We can easily and efficiently access the elements of matrices and images
-            // through an Indexer object with the set of get() and put() methods.
-            DoubleIndexer Ridx = randomR.createIndexer(), axisIdx = randomAxis.createIndexer();
-            axisIdx.put(0, (Math.random() - 0.5) / 4, (Math.random() - 0.5) / 4, (Math.random() - 0.5) / 4);
-            cvRodrigues2(randomAxis, randomR, null);
-            double f = (width + height) / 2.0;
-            Ridx.put(0, 2, Ridx.get(0, 2) * f);
-            Ridx.put(1, 2, Ridx.get(1, 2) * f);
-            Ridx.put(2, 0, Ridx.get(2, 0) / f);
-            Ridx.put(2, 1, Ridx.get(2, 1) / f);
-            System.out.println(Ridx);
 
             // We can allocate native arrays using constructors taking an integer as argument.
             CvPoint hatPoints = new CvPoint(3);
