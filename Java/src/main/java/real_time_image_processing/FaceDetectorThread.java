@@ -93,17 +93,17 @@ public class FaceDetectorThread extends Thread {
 
             CvMemStorage storage = CvMemStorage.create();
 
-            FrameRecorder recorder = null;
-            try {
-                recorder = FrameRecorder.createDefault("output.avi", width, height);
-            } catch (FrameRecorder.Exception ex) {
-                Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {
-                recorder.start();
-            } catch (FrameRecorder.Exception ex) {
-                Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//            FrameRecorder recorder = null;
+//            try {
+//                recorder = FrameRecorder.createDefault("output.avi", width, height);
+//            } catch (FrameRecorder.Exception ex) {
+//                Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//            try {
+//                recorder.start();
+//            } catch (FrameRecorder.Exception ex) {
+//                Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
+//            }
 
             CanvasFrame frame = new CanvasFrame("Face Detection", CanvasFrame.getDefaultGamma() / grabber.getGamma());
 
@@ -176,11 +176,11 @@ public class FaceDetectorThread extends Thread {
             } // END OF WHILE
 
             frame.dispose();
-            try {
-                recorder.stop();
-            } catch (FrameRecorder.Exception ex) {
-                Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//            try {
+//                recorder.stop();
+//            } catch (FrameRecorder.Exception ex) {
+//                Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
+//            }
             grabber.stop();
         } catch (FrameGrabber.Exception ex) {
             Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
