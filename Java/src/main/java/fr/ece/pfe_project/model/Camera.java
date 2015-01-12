@@ -1,5 +1,7 @@
 package fr.ece.pfe_project.model;
 
+import real_time_image_processing.FaceDetectorThread;
+
 /**
  *
  * @author Pierre Ghazal
@@ -11,6 +13,8 @@ public class Camera implements ModelInterface {
         NONE, NORMAL, ALERT
     }
 
+    private FaceDetectorThread faceDetectorThread;
+
     private long id;
     private int number;
     private CAMERA_STATE state;
@@ -18,6 +22,16 @@ public class Camera implements ModelInterface {
     public Camera(long id) {
         this.id = id;
         this.state = CAMERA_STATE.NONE;
+
+        faceDetectorThread = new FaceDetectorThread();
+    }
+
+    public FaceDetectorThread getFaceDetectorThread() {
+        return faceDetectorThread;
+    }
+
+    public void setFaceDetectorThread(FaceDetectorThread faceDetectorThread) {
+        this.faceDetectorThread = faceDetectorThread;
     }
 
     public long getId() {
@@ -39,7 +53,7 @@ public class Camera implements ModelInterface {
     public CAMERA_STATE getState() {
         return state;
     }
-    
+
     public void setState(CAMERA_STATE state) {
         this.state = state;
     }

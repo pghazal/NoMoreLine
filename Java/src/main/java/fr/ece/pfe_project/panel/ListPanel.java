@@ -75,12 +75,30 @@ public class ListPanel extends javax.swing.JPanel implements ToolbarEntityPanel.
             case CAMERA:
                 itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
                 model.setData(cameras, false);
+
+                if (cameras[0].getFaceDetectorThread() != null && !cameras[0].getFaceDetectorThread().isActive()) {
+                    cameras[0].getFaceDetectorThread().start();
+                }
+                
+                if (cameras[1].getFaceDetectorThread() != null && !cameras[0].getFaceDetectorThread().isActive()) {
+                    cameras[1].getFaceDetectorThread().start();
+                }
+
                 break;
             case EXCELROW:
                 itemsTable.setRowHeight(16);
                 model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new FrequentationJournaliere[0]), false);
                 break;
             case NONE:
+                if (cameras[0].getFaceDetectorThread() != null && cameras[0].getFaceDetectorThread().isActive()) {
+                    cameras[0].getFaceDetectorThread().stopFaceDetection();
+                }
+                
+                if (cameras[1].getFaceDetectorThread() != null && cameras[0].getFaceDetectorThread().isActive()) {
+                    cameras[1].getFaceDetectorThread().stopFaceDetection();
+                }
+                break;
+
             default:
                 break;
         }
