@@ -1,5 +1,6 @@
 package fr.ece.pfe_project.algo;
 
+import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.model.AlgoResult;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
@@ -251,7 +252,7 @@ public class Algorithm {
     }
 
     public static int getFrequentationJournaliere(Date date) {
-        FrequentationJournaliere row = GlobalVariableUtils.getExcelMap().get(date);
+        FrequentationJournaliere row = DatabaseHelper.getFrequentationJournaliere(date);//GlobalVariableUtils.getExcelMap().get(date);
 
         if (row == null) {
             System.err.println("NUULL at Date : " + date);

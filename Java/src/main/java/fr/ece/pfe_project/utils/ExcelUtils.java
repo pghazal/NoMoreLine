@@ -1,5 +1,9 @@
 package fr.ece.pfe_project.utils;
 
+import fr.ece.pfe_project.database.DatabaseHelper;
+import fr.ece.pfe_project.model.FrequentationJournaliere;
+import fr.ece.pfe_project.panel.ParametersDialog;
+import static java.awt.image.ImageObserver.ERROR;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,7 +11,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import javax.swing.filechooser.FileFilter;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -23,6 +29,11 @@ import org.jdatepicker.impl.DateComponentFormatter;
  * @author pierreghazal
  */
 public class ExcelUtils {
+
+    enum TYPE_ERROR {
+
+        NO_ERROR, ERROR_EMPTY, ERROR_NUMERIC, ERROR_DATEFORMAT
+    }
 
     public final static String XLSX = "xlsx";
     public final static String XLS = "xls";
@@ -61,9 +72,9 @@ public class ExcelUtils {
         return null;
     }
 
-    public static void setValueAtEnd(Date date, Object value) {
+    public static void setValueAtEnd(String path, Date date, Object value) {
         try {
-            FileInputStream file = getExcelFile((String) ParametersUtils.get(ParametersUtils.PARAM_PATH_EXCEL));
+            FileInputStream file = getExcelFile(path);
             XSSFWorkbook workbook = getWorkbook(file);
             XSSFSheet sheet = getSheet(workbook, 0);
             XSSFRow row = sheet.getRow(sheet.getLastRowNum() + 1);
@@ -84,7 +95,7 @@ public class ExcelUtils {
 
             // Open file for writing
             FileOutputStream outFile = new FileOutputStream(
-                    new File((String) ParametersUtils.get(ParametersUtils.PARAM_PATH_EXCEL)));
+                    new File(path));
             workbook.write(outFile);
             outFile.close();
 
@@ -95,9 +106,9 @@ public class ExcelUtils {
         }
     }
 
-    public static void replaceValueForDate(Date date, Object value) {
+    public static void replaceValueForDate(String path, Date date, Object value) {
         try {
-            FileInputStream file = getExcelFile((String) ParametersUtils.get(ParametersUtils.PARAM_PATH_EXCEL));
+            FileInputStream file = getExcelFile(path);
             XSSFWorkbook workbook = getWorkbook(file);
             XSSFSheet sheet = getSheet(workbook, 0);
             Iterator<Row> rowIterator = sheet.iterator();
@@ -122,7 +133,7 @@ public class ExcelUtils {
 
             // Open file for writing
             FileOutputStream outFile = new FileOutputStream(
-                    new File((String) ParametersUtils.get(ParametersUtils.PARAM_PATH_EXCEL)));
+                    new File(path));
             workbook.write(outFile);
             outFile.close();
 
@@ -133,96 +144,174 @@ public class ExcelUtils {
         }
     }
 
-    public void readExcel() {
-        try {
-
-            FileInputStream file = getExcelFile((String) ParametersUtils.get(ParametersUtils.PARAM_PATH_EXCEL));
-            XSSFWorkbook workbook = getWorkbook(file);
-            XSSFSheet sheet = getSheet(workbook, 0);
-
-            //Iterate through each rows one by one
-            Iterator<Row> rowIterator = sheet.iterator();
-
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
-                //For each row, iterate through all the columns
-                Iterator<Cell> cellIterator = row.cellIterator();
-
-                while (cellIterator.hasNext()) {
-
-                    Cell cell = cellIterator.next();
-                    //Check the cell type and format accordingly
-                    switch (cell.getCellType()) {
-
-                        case Cell.CELL_TYPE_NUMERIC:
-                            System.out.print(cell.getNumericCellValue() + "\t");
-
-                            break;
-                        case Cell.CELL_TYPE_STRING:
-                            System.out.print(cell.getStringCellValue() + "\t");
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-
-                System.out.println("\n");
-            }
-
-            file.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public static void checkExcel(){
-     
-        try {
-
-            FileInputStream file = getExcelFile((String) ParametersUtils.get(ParametersUtils.PARAM_PATH_EXCEL));
-            XSSFWorkbook workbook = getWorkbook(file);
-            XSSFSheet sheet = getSheet(workbook, 0);
-        
-                file.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        
-        
-    }
-//    public void updateExcel() {
-//
+//    public void readExcel() {
 //        try {
 //
-//            FileInputStream file = getExcelFile();
+//            FileInputStream file = getExcelFile((String) ParametersUtils.get(ParametersUtils.PARAM_PATH_EXCEL));
 //            XSSFWorkbook workbook = getWorkbook(file);
 //            XSSFSheet sheet = getSheet(workbook, 0);
-//            Cell cell = null;
 //
-//            //Update the value of cell
-//            for (int i = 0; i <= 9; i++) {
-//                cell = sheet.getRow(i).getCell(1);
-//                cell.setCellValue(cell.getNumericCellValue() * 2);
+//            //Iterate through each rows one by one
+//            Iterator<Row> rowIterator = sheet.iterator();
+//
+//            while (rowIterator.hasNext()) {
+//                Row row = rowIterator.next();
+//                //For each row, iterate through all the columns
+//                Iterator<Cell> cellIterator = row.cellIterator();
+//
+//                while (cellIterator.hasNext()) {
+//
+//                    Cell cell = cellIterator.next();
+//                    //Check the cell type and format accordingly
+//                    switch (cell.getCellType()) {
+//
+//                        case Cell.CELL_TYPE_NUMERIC:
+//                            System.out.print(cell.getNumericCellValue() + "\t");
+//
+//                            break;
+//                        case Cell.CELL_TYPE_STRING:
+//                            System.out.print(cell.getStringCellValue() + "\t");
+//                            break;
+//
+//                        default:
+//                            break;
+//                    }
+//                }
+//
+//                System.out.println("\n");
 //            }
 //
 //            file.close();
-//
-//            FileOutputStream outFile = new FileOutputStream(
-//                    new File((String) ParametersUtils.get(ParametersUtils.PARAM_PATH_EXCEL)));
-//            workbook.write(outFile);
-//            outFile.close();
-//
 //        } catch (FileNotFoundException e) {
 //            e.printStackTrace();
 //        } catch (IOException e) {
 //            e.printStackTrace();
+//        }
+//    }
+    public static boolean loadExcel(String filePath) {
+        FileInputStream file = null;
+
+        HashMap<Date, FrequentationJournaliere> tempMap = new HashMap<Date, FrequentationJournaliere>();
+        Boolean excelOK = true;
+
+        try {
+            file = getExcelFile(filePath);
+            XSSFWorkbook workbook = getWorkbook(file);
+            XSSFSheet sheet = getSheet(workbook, 0);
+
+            Iterator<Row> rows = sheet.iterator();
+
+            while (rows.hasNext()) {
+                Row row = rows.next();
+
+                System.out.println("BEFORE SWITCH");
+
+                switch (checkExcel(row)) {
+
+                    case ERROR_EMPTY:
+                        System.out.println("CASE ERROR EMPTY");
+                        excelOK = false;
+                        throw new ParseException("Problème case vide dans votre excel", ERROR);
+
+                    case ERROR_NUMERIC:
+                        System.out.println("CASE ERROR NUMERIC");
+                        excelOK = false;
+                        throw new ParseException("Problème cellule non numérique sur 2ème colonne", ERROR);
+
+                    case ERROR_DATEFORMAT:
+                        excelOK = false;
+                        throw new ParseException("Format de date incorrect dans une des cellules de la 1ère colonne", ERROR);
+
+                    default:
+                        break;
+                }
+
+                tempMap.put(row.getCell(0).getDateCellValue(),
+                        new FrequentationJournaliere(row.getCell(0).getDateCellValue(), (int) row.getCell(1).getNumericCellValue()));
+            }
+
+            if (excelOK && !tempMap.isEmpty()) {
+                for (Map.Entry<Date, FrequentationJournaliere> entry : tempMap.entrySet()) {
+                    System.out.println("Adding to DB...");
+                    DatabaseHelper.addFrequentationJournaliere(entry.getKey(), entry.getValue().getFrequentation());
+                }
+
+                GlobalVariableUtils.getExcelMap().
+                        putAll(DatabaseHelper.getAllFrequentationJournaliere());
+            } else {
+                tempMap.clear();
+                System.out.println("Erreur in Excel - Not adding to DB...");
+            }
+
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            return false;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return false;
+        } catch (ParseException ex) {
+            String str = ex.getMessage();
+            ParametersDialog.msgbox(str);
+            return false;
+        } finally {
+            try {
+                if (file != null) {
+                    file.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        
+        return true;
+    }
+
+    //Différents tests de l'excel pour détecter erreur
+    private static TYPE_ERROR checkExcel(Row row) {
+
+        System.out.println("ENTREE DANS CHECK EXCEL");
+
+        if ((row.getCell(0).getCellType() == Cell.CELL_TYPE_BLANK) || (row.getCell(1).getCellType() == Cell.CELL_TYPE_BLANK)) {
+            return TYPE_ERROR.ERROR_EMPTY;
+        }
+
+        if (row.getCell(0).getCellType() == Cell.CELL_TYPE_NUMERIC) {
+            if (row.getCell(0).getDateCellValue() == null) {
+                return TYPE_ERROR.ERROR_DATEFORMAT;
+            }
+        }
+
+        if (row.getCell(0).getCellType() != Cell.CELL_TYPE_NUMERIC) {
+            return TYPE_ERROR.ERROR_DATEFORMAT;
+        }
+
+        if (row.getCell(1).getCellType() != Cell.CELL_TYPE_NUMERIC) {
+            return TYPE_ERROR.ERROR_NUMERIC;
+        }
+
+        /* if(row.getCell(0).getCellType() == Cell.CELL_TYPE_STRING){
+         
+         System.out.println("C'EST UNE STRING !!");
+             
+         if (isValidDate(row.getCell(0).getStringCellValue()) == false)
+         {
+         System.out.println("IS VALIDATE !!");
+                
+         return TYPE_ERROR.ERROR_DATEFORMAT;
+         }
+            
+         }*/
+        return TYPE_ERROR.NO_ERROR;
+    }
+
+    //Format de la date valide, à appeler pour vérifier
+//    public boolean isValidDate(String dateString) {
+//        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+//        try {
+//            df.parse(dateString);
+//            return true;
+//        } catch (ParseException e) {
+//            return false;
 //        }
 //    }
     public static String getExtension(File f) {
@@ -257,7 +346,6 @@ public class ExcelUtils {
         public String getDescription() {
             return "Fichier Excel";
         }
-        
-    
+
     }
 }

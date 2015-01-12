@@ -7,8 +7,8 @@ import java.util.Date;
  * @author pierreghazal
  */
 public class FrequentationJournaliere implements ModelInterface {
-    private Date date;
-    private Integer frequentation;
+    private Date date = null;
+    private Integer frequentation = null;
     
     public FrequentationJournaliere() {
         this(null, 0);

@@ -1,26 +1,14 @@
 package fr.ece.pfe_project.panel;
 
-import fr.ece.pfe_project.model.FrequentationJournaliere;
+import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.utils.ExcelUtils;
-import static fr.ece.pfe_project.utils.ExcelUtils.getExcelFile;
-import static fr.ece.pfe_project.utils.ExcelUtils.getSheet;
-import static fr.ece.pfe_project.utils.ExcelUtils.getWorkbook;
-import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import fr.ece.pfe_project.widget.ProgressDialog;
+import java.awt.Component;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Iterator;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -28,9 +16,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class ParametersDialog extends javax.swing.JDialog {
 
-        enum TYPE_ERROR{
-           NO_ERROR, ERROR_EMPTY, ERROR_NUMERIC, ERROR_DATEFORMAT
-        }
+    private static JDialog dialog;
+
     /**
      * Creates new form ParametersDialog
      *
@@ -42,139 +29,21 @@ public class ParametersDialog extends javax.swing.JDialog {
         initComponents();
 
         initParameters();
+
+        dialog = this;
     }
 
     private void initParameters() {
-        String paramPathExcel = (String) ParametersUtils.get(ParametersUtils.PARAM_PATH_EXCEL);
-
-        if (paramPathExcel != null) {
-            this.textFieldPathExcel.setText(paramPathExcel);
-        }
-    }
-
-    public void loadExcel() {
-        FileInputStream file = null;
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Cell cell = null;
-        boolean bool = true;
-
-        try {
-            file = getExcelFile((String) ParametersUtils.get(ParametersUtils.PARAM_PATH_EXCEL));
-            XSSFWorkbook workbook = getWorkbook(file);
-            XSSFSheet sheet = getSheet(workbook, 0);
-
-            Iterator<Row> rows = sheet.iterator();
-
-            while (rows.hasNext()) {
-                Row row = rows.next();
-                cell = row.getCell(0);
-            
-                System.out.println("BEFORE SWITCH");
-                
-            switch(checkExcel(row)){
-                
-                case ERROR_EMPTY:
-                       System.out.println("CASE ERROR EMPTY");
-                       throw new ParseException("Problème case vide dans votre excel", ERROR);
-                    
-                case ERROR_NUMERIC:
-                       System.out.println("CASE ERROR NUMERIC");
-                       throw new ParseException("Problème cellule non numérique sur 2ème colonne", ERROR);
-                          
-                case ERROR_DATEFORMAT:
-                       throw new ParseException("Format de date incorrect dans une des cellules de la 1ère colonne", ERROR);
-                
-                default:
-                    break;    
-                
-            }
-
-              // ICI METTRE DONNEES EXCEL DANS BASE DE DONNEES
-                GlobalVariableUtils.getExcelMap().put(row.getCell(0).getDateCellValue(),
-                        new FrequentationJournaliere(row.getCell(0).getDateCellValue(), (int) row.getCell(1).getNumericCellValue()));
-            }
-
-            // Sert pour les tests
-            GlobalVariableUtils.showExcelMap();
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (ParseException ex) {
-            String str=ex.getMessage();
-            msgbox(str);
-        } finally {
-            try {
-                if (file != null) {
-                    file.close();
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
+//        String paramPathExcel = (String) ParametersUtils.get(ParametersUtils.PARAM_PATH_EXCEL);
+//
+//        if (paramPathExcel != null) {
+//            this.textFieldPathExcel.setText(paramPathExcel);
+//        }
     }
 
     //Poppup Message
-    private void msgbox(String s) {
-
-        JOptionPane.showMessageDialog(this, s, "Warning",JOptionPane.WARNING_MESSAGE);
-    }
-
-    //Format de la date valide, à appeler pour vérifier
-    public boolean isValidDate(String dateString) {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            df.parse(dateString);
-            return true;
-        } catch (ParseException e) {
-            return false;
-        }
-    }
-
-    //Différents tests de l'excel pour détecter erreur
-    private TYPE_ERROR checkExcel(Row row) {
-
-        System.out.println("ENTREE DANS CHECK EXCEL");
-        
-        if ((row.getCell(0).getCellType() == Cell.CELL_TYPE_BLANK) || (row.getCell(1).getCellType() == Cell.CELL_TYPE_BLANK)) {
-           
-            System.out.println("\nVIIDDEEEE\n");
-            return TYPE_ERROR.ERROR_EMPTY;
-        }
-   
-       /* if(row.getCell(0).getCellType() == Cell.CELL_TYPE_STRING){
-         
-             System.out.println("C'EST UNE STRING !!");
-             
-            if (isValidDate(row.getCell(0).getStringCellValue()) == false)
-            {
-                System.out.println("IS VALIDATE !!");
-                
-                return TYPE_ERROR.ERROR_DATEFORMAT;
-            }
-            
-        }*/
-        
-         if(row.getCell(0).getCellType() == Cell.CELL_TYPE_NUMERIC)
-        {
-            System.out.println("NUMERIC VRAIII");
-            if(row.getCell(0).getDateCellValue() == null)
-            {
-                return TYPE_ERROR.ERROR_DATEFORMAT;
-            }  
-        } 
-         
-         if(row.getCell(0).getCellType() != Cell.CELL_TYPE_NUMERIC)
-        {
-            return TYPE_ERROR.ERROR_DATEFORMAT;
-        }
-        
-        if (row.getCell(1).getCellType() != Cell.CELL_TYPE_NUMERIC) {
-            
-            return TYPE_ERROR.ERROR_NUMERIC;
-        }
-        
-        return TYPE_ERROR.NO_ERROR;
+    public static void msgbox(String s) {
+        JOptionPane.showMessageDialog(dialog, s, "Warning", JOptionPane.WARNING_MESSAGE);
     }
 
     /**
@@ -347,20 +216,22 @@ public class ParametersDialog extends javax.swing.JDialog {
 
             @Override
             public void run() {
+                Boolean isSuccess = false;
 
-                //Test du format de l'excel
                 // Saving parameters in memory
                 if (textFieldPathExcel.getText() != null && textFieldPathExcel.getText().length() > 0) {
-                    ParametersUtils.set(ParametersUtils.PARAM_PATH_EXCEL, textFieldPathExcel.getText());
+                    isSuccess = ExcelUtils.loadExcel(textFieldPathExcel.getText());
+                    //ParametersUtils.set(ParametersUtils.PARAM_PATH_EXCEL, textFieldPathExcel.getText());
                 }
 
-                // Saving parameters in file parameter
-                ParametersUtils.saveParameters();
-
-                loadExcel();
-
-                // Dispose the parameter window
-                dispose();
+                if (isSuccess) {
+                    // Reinit
+                    textFieldPathExcel.setText("");
+                    // Saving parameters in file parameter
+                    ParametersUtils.saveParameters();
+                    // Dispose the parameter window
+                    dispose();
+                }
             }
         };
 

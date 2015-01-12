@@ -76,13 +76,11 @@ public class MainFrame extends javax.swing.JFrame {
                 }
 
                 MainFrame mf = new MainFrame();
-                mf.setVisible(true);
                 Runnable runnable = new Runnable() {
 
                     @Override
                     public void run() {
                         DatabaseHelper.initialize();
-                        //ParametersDialog.loadExcel();
                         ParametersUtils.loadDatabase();
                     }
                 };

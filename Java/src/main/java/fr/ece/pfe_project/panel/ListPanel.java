@@ -45,7 +45,7 @@ public class ListPanel extends javax.swing.JPanel implements ToolbarEntityPanel.
             new Camera(1), new Camera(2),
             new Camera(3)
         };
-        
+
         cameras[1].setState(Camera.CAMERA_STATE.ALERT);
 
         employees = new Employee[]{

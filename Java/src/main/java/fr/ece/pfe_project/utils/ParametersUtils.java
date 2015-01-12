@@ -18,7 +18,7 @@ public class ParametersUtils {
     private final static ParametersUtils INSTANCE = new ParametersUtils();
     private final static String FILENAME_PARAMETERS = "parameters.pfe";
 
-    public final static String PARAM_PATH_EXCEL = "PARAM_PATH_EXCEL";
+    //public final static String PARAM_PATH_EXCEL = "PARAM_PATH_EXCEL";
     //public final static String PARAM_DATABASE_BT_YEAR = "PARAM_DATABASE_BT_YEAR";
 
     private static HashMap<String, Object> paramsMap;

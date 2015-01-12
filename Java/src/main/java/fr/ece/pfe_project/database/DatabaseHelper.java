@@ -1,5 +1,6 @@
 package fr.ece.pfe_project.database;
 
+import fr.ece.pfe_project.algo.Algorithm;
 import fr.ece.pfe_project.model.FrequentationAnnuelle;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import java.sql.Connection;
@@ -7,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -36,7 +38,7 @@ public class DatabaseHelper {
         }
     }
 
-    private final static Connection getConnection() throws SQLException {
+    private static Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             Connection c = null;
             try {
@@ -57,8 +59,9 @@ public class DatabaseHelper {
         try {
             Statement stmt = getConnection().createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_FREQUENTATION_JOURNALIERE
-                    // + " (ID INT PRIMARY KEY NOT NULL AUTOINCREMENT,"
-                    + " (DATE DATE NOT NULL,"
+                    + " (JOUR INT NOT NULL,"
+                    + " MOIS INT NOT NULL,"
+                    + " ANNEE INT NOT NULL,"
                     + " FREQUENTATION INT NOT NULL)";
             stmt.executeUpdate(sql);
             stmt.close();
@@ -75,7 +78,6 @@ public class DatabaseHelper {
         try {
             Statement stmt = getConnection().createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_FREQUENTATION_ANNUELLE
-                    //+ " (ID INT PRIMARY KEY NOT NULL AUTOINCREMENT,"
                     + " (ANNEE INT NOT NULL,"
                     + " FREQUENTATION INT NOT NULL)";
             stmt.executeUpdate(sql);
@@ -103,8 +105,12 @@ public class DatabaseHelper {
             String sql;
             if (!frequentationJournaliereExists(date)) {
 
-                sql = "INSERT INTO " + TABLE_FREQUENTATION_JOURNALIERE + " (DATE, FREQUENTATION)"
-                        + " VALUES (" + date + "," + freq + ")";
+                int jour = Algorithm.getDayOfMonth(date);
+                int mois = Algorithm.getMonth(date);
+                int annee = Algorithm.getYear(date);
+
+                sql = "INSERT INTO " + TABLE_FREQUENTATION_JOURNALIERE + " (JOUR, MOIS, ANNEE, FREQUENTATION)"
+                        + " VALUES (" + jour + "," + mois + "," + annee + "," + freq + ")";
 
                 Statement stmt = c.createStatement();
                 stmt.executeUpdate(sql);
@@ -125,7 +131,7 @@ public class DatabaseHelper {
     public static boolean frequentationJournaliereExists(Date date) {
         FrequentationJournaliere fj = getFrequentationJournaliere(date);
 
-        if (fj.getFrequentation() == null) {
+        if (fj.getFrequentation() == null || fj.getDate() == null) {
             System.err.println(date + " DOES NOT EXIST");
 
             return false;
@@ -205,7 +211,8 @@ public class DatabaseHelper {
             String sql;
             if (frequentationAnnuelleExists(year)) {
 
-                sql = "UPDATE FREQUENTATION_ANNUELLE SET FREQUENTATION=" + freq + " WHERE ANNEE=" + year;
+                sql = "UPDATE FREQUENTATION_ANNUELLE SET FREQUENTATION=" + freq
+                        + " WHERE ANNEE=" + year;
 
                 Statement stmt = c.createStatement();
                 stmt.executeUpdate(sql);
@@ -227,12 +234,22 @@ public class DatabaseHelper {
         try {
             Connection c = getConnection();
 
+            int jour = Algorithm.getDayOfMonth(date);
+            int mois = Algorithm.getMonth(date);
+            int annee = Algorithm.getYear(date);
+
             Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_FREQUENTATION_JOURNALIERE + " WHERE DATE =" + date + " LIMIT 1;");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_FREQUENTATION_JOURNALIERE
+                    + " WHERE JOUR=" + jour + " AND MOIS=" + mois + " AND ANNEE=" + annee + " LIMIT 1;");
             FrequentationJournaliere fj = new FrequentationJournaliere();
 
+            Calendar cal = Calendar.getInstance();
+
             while (rs.next()) {
-                Date dateResult = rs.getDate("DATE");
+
+                cal.set(rs.getInt("ANNEE"), rs.getInt("MOIS"), rs.getInt("JOUR"), 0, 0, 0);
+
+                Date dateResult = cal.getTime();
                 int freq = rs.getInt("FREQUENTATION");
 
                 System.out.println("DATE = " + dateResult);
@@ -242,6 +259,7 @@ public class DatabaseHelper {
                 fj.setDate(dateResult);
                 fj.setFrequentation(freq);
             }
+
             rs.close();
             stmt.close();
             c.close();
@@ -297,7 +315,12 @@ public class DatabaseHelper {
             String sql;
             if (frequentationJournaliereExists(date)) {
 
-                sql = "UPDATE FREQUENTATION_JOURNALIERE SET FREQUENTATION=" + freq + " WHERE DATE=" + date;
+                int jour = Algorithm.getDayOfMonth(date);
+                int mois = Algorithm.getMonth(date);
+                int annee = Algorithm.getYear(date);
+
+                sql = "UPDATE FREQUENTATION_JOURNALIERE SET FREQUENTATION=" + freq
+                        + " WHERE JOUR=" + jour + " AND MOIS=" + mois + " AND ANNEE=" + annee;
 
                 Statement stmt = c.createStatement();
                 stmt.executeUpdate(sql);
@@ -328,10 +351,6 @@ public class DatabaseHelper {
 
                 int yearR = rs.getInt("ANNEE");
                 int freq = rs.getInt("FREQUENTATION");
-
-//                System.out.println("ANNEE = " + yearR);
-//                System.out.println("FREQ = " + freq);
-//                System.out.println();
                 map.put(yearR, freq);
             }
             rs.close();
@@ -357,9 +376,13 @@ public class DatabaseHelper {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_FREQUENTATION_JOURNALIERE + ";");
 
+            Calendar cal = Calendar.getInstance();
+
             while (rs.next()) {
 
-                Date date = rs.getDate("DATE");
+                cal.set(rs.getInt("ANNEE"), rs.getInt("MOIS"), rs.getInt("JOUR"), 0, 0, 0);
+
+                Date date = cal.getTime();
                 int freq = rs.getInt("FREQUENTATION");
 
                 System.out.println("DATE = " + date);
@@ -391,8 +414,13 @@ public class DatabaseHelper {
 
             Statement stmt = null;
 
+            int jour = Algorithm.getDayOfMonth(date);
+            int mois = Algorithm.getMonth(date);
+            int annee = Algorithm.getYear(date);
+
             stmt = c.createStatement();
-            String sql = "DELETE FROM " + TABLE_FREQUENTATION_JOURNALIERE + " WHERE DATE=" + date + ";";
+            String sql = "DELETE FROM " + TABLE_FREQUENTATION_JOURNALIERE
+                    + " WHERE JOUR=" + jour + " AND MOIS=" + mois + " AND ANNEE=" + annee + ";";
             stmt.executeUpdate(sql);
             stmt.close();
 
