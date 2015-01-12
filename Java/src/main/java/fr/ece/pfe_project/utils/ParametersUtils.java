@@ -91,18 +91,10 @@ public class ParametersUtils {
     }
 
     public static void loadDatabase() {
+        
+        // Si l'année precente est complete, agrege et ajouter à la BDD
+        
         HashMap<Integer, Integer> hmm = DatabaseHelper.getAllFrequentationAnnuelle();
-
-//        if (hmm.isEmpty()) {
-//            System.out.println("DB Annuelle Empty");
-//            DatabaseHelper.addFrequentationAnnuelle(2011, 1080046);
-//            DatabaseHelper.addFrequentationAnnuelle(2012, 1209064);
-//            DatabaseHelper.addFrequentationAnnuelle(2013, 1367736);
-//
-//            hmm.put(2011, 1080046);
-//            hmm.put(2012, 1209064);
-//            hmm.put(2013, 1367736);
-//        }
 
         GlobalVariableUtils.getFrequentationAnnuelleMap().
                 putAll(hmm);
