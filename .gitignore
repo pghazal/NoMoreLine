@@ -1,3 +1,13 @@
 /Java/target/
 /Java/target/*
 *.class
+
+*.class
+
+*.class
+
+*.class
+
+Java/target/classes/fr/ece/pfe_project/panel/ListPanel.class
+
+Java/target/classes/fr/ece/pfe_project/panel/ListPanel$1.class

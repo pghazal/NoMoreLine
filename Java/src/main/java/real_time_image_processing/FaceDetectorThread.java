@@ -161,7 +161,7 @@ public class FaceDetectorThread extends Thread {
                     contour = contour.h_next();
                 }
 
-                frame.showImage(grabbedImage);
+                //frame.showImage(grabbedImage);
 
             } // END OF WHILE
 
