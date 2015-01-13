@@ -111,11 +111,10 @@ public class FaceDetectorThread extends Thread {
             IplImage grayImage = IplImage.create(width, height, IPL_DEPTH_8U, 1);
 
             CvMemStorage storage = CvMemStorage.create();
-
+            
+            // Frame declaration for video display
             //CanvasFrame frame = new CanvasFrame("Face Detection", CanvasFrame.getDefaultGamma() / grabber.getGamma());
 
-            // We can allocate native arrays using constructors taking an integer as argument.
-            CvPoint hatPoints = new CvPoint(3);
             
             while (isActive() && (grabbedImage = grabber.grab()) != null) {
                 if (!isActive()) {
@@ -169,8 +168,7 @@ public class FaceDetectorThread extends Thread {
             Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        //System.out.println("Result FaceDetection : " + number_of_faces_detected);
-    } // END OF MAIN
+    } // END OF METHOD
 
     public void stopFaceDetection() {
         active = false;
