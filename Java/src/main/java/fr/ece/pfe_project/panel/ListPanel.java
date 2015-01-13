@@ -1,9 +1,6 @@
 package fr.ece.pfe_project.panel;
 
 import fr.ece.pfe_project.editor.CameraCellEditor;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.Employee;
@@ -13,6 +10,11 @@ import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.widget.CameraCellComponent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import real_time_image_processing.FaceDetectorThread;
 
 /**
@@ -96,6 +98,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 break;
             case EXCELROW:
                 setVisibility(visibility);
+                JComboboxItems(jComboBox1);
                 itemsTable.setRowHeight(16);
                 model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new FrequentationJournaliere[0]), false);
                 break;
@@ -112,7 +115,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         model.fireTableStructureChanged();
     }
 
-    public void setVisibility(boolean bool) {
+    private void setVisibility(boolean bool) {
 
         if (bool == false) {
             jLabel1.setVisible(false);
@@ -129,6 +132,16 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         }
 
     }
+    
+    private void JComboboxItems (JComboBox comboBox)
+    {
+        String[] months = {"January", "February", "March", "April", "Mei", "June",
+                "July", "August", "September", "October", "November", "December"};
+        
+        comboBox.setModel(new DefaultComboBoxModel(months));
+        
+    }
+    
 
     private void cameraInterface(boolean on) {
         // On souhaite lancer l'activation des cameras
