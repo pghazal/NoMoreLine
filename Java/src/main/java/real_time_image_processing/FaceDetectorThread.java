@@ -65,6 +65,7 @@ public class FaceDetectorThread extends Thread {
         faceDetectionThread(this.cameraID);
     }
 
+
     public void faceDetectionThread(int id_camera) {
 
         System.err.println("START FACE DETECT #" + id_camera);
@@ -111,7 +112,13 @@ public class FaceDetectorThread extends Thread {
             /*
             
             IplImage template = grabber.grab();
+            CanvasFrame frame = new CanvasFrame("Template");
+            frame.showImage(template);
+            
             IplImage img = grabber.grab();
+            CanvasFrame frame = new CanvasFrame("New Image For comparison");
+            frame.showImage(img);
+            
             IplImage comparison_result = cvCreateImage(cvSize(img.width() - template.width() + 1, img.height() - template.height() + 1), IPL_DEPTH_32F, 1);
             int method = CV_TM_SQDIFF;
             cvMatchTemplate(img, template, comparison_result, method);
