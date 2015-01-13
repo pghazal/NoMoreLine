@@ -1,3 +1,22 @@
+# Package Files #                                                               
+*.jar                                                                           
+*.war                                                                           
+*.ear
+
 /Java/target/
 /Java/target/*
 *.class
+.classpath
+.project
+.settings/
+target/
+.DS_Store
+
+# Netbeans Gitignore file published by Github
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml

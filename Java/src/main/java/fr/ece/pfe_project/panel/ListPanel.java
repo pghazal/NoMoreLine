@@ -1,9 +1,6 @@
 package fr.ece.pfe_project.panel;
 
 import fr.ece.pfe_project.editor.CameraCellEditor;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.Employee;
@@ -13,6 +10,11 @@ import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.widget.CameraCellComponent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import real_time_image_processing.FaceDetectorThread;
 
 /**
@@ -48,6 +50,9 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             new Comptoir(3), new Comptoir(4),
             new Comptoir(5), new Comptoir(6)
         };
+        
+        //setVisibility false pour rendre invisible les 2 combobox au démarrage
+        setVisibility(false);
 
         cameras = new Camera[]{
             new Camera(1), new Camera(2),
@@ -65,6 +70,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         itemsTable.setDefaultEditor(Camera.class, new CameraCellEditor());
 
         this.itemsTable.setModel(new MyTableModel());
+        
     }
 
     @Override
@@ -73,24 +79,32 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
         MyTableModel model = (MyTableModel) this.itemsTable.getModel();
         model.setEntity(typeEntity);
-
+        boolean visibility = true;
         // TODO : model.setData() avec les nouvelles données
         switch (typeEntity) {
 
             case COMPTOIR:
+                visibility = false;
+                setVisibility(visibility);
                 itemsTable.setRowHeight(16);
                 model.setData(comptoirs, false);
                 break;
             case CAMERA:
+                visibility = false;
+                setVisibility(visibility);
                 itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
                 model.setData(cameras, false);
                 cameraInterface(true);
                 break;
             case EXCELROW:
+                setVisibility(visibility);
+                JComboboxItems(jComboBox1);
                 itemsTable.setRowHeight(16);
                 model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new FrequentationJournaliere[0]), false);
                 break;
             case NONE:
+                visibility = false;
+                setVisibility(visibility);
                 cameraInterface(false);
                 break;
 
@@ -100,6 +114,34 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
         model.fireTableStructureChanged();
     }
+
+    private void setVisibility(boolean bool) {
+
+        if (bool == false) {
+            jLabel1.setVisible(false);
+            jComboBox1.setVisible(false);
+            jComboBox2.setVisible(false);
+
+        }
+
+        else  {
+            jLabel1.setVisible(true);
+            jComboBox1.setVisible(true);
+            jComboBox2.setVisible(true);
+
+        }
+
+    }
+    
+    private void JComboboxItems (JComboBox comboBox)
+    {
+        String[] months = {"January", "February", "March", "April", "Mei", "June",
+                "July", "August", "September", "October", "November", "December"};
+        
+        comboBox.setModel(new DefaultComboBoxModel(months));
+        
+    }
+    
 
     private void cameraInterface(boolean on) {
         // On souhaite lancer l'activation des cameras
