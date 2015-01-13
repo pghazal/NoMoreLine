@@ -22,8 +22,7 @@ public class Camera implements ModelInterface {
     public Camera(long id) {
         this.id = id;
         this.state = CAMERA_STATE.NONE;
-
-        faceDetectorThread = new FaceDetectorThread();
+        this.faceDetectorThread = null;
     }
 
     public FaceDetectorThread getFaceDetectorThread() {

@@ -5,6 +5,7 @@
  */
 package real_time_image_processing;
 
+import fr.ece.pfe_project.panel.MainPanel.FaceDetectorListener;
 import java.io.IOException;
 import java.io.File;
 import java.util.logging.Level;
@@ -14,11 +15,9 @@ import java.net.URL;
 
 import org.bytedeco.javacv.*;
 import org.bytedeco.javacpp.*;
-import org.bytedeco.javacpp.indexer.*;
 import org.bytedeco.javacpp.opencv_core.IplImage;
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
-import static org.bytedeco.javacpp.opencv_calib3d.*;
 import static org.bytedeco.javacpp.opencv_objdetect.*;
 
 /**
@@ -29,23 +28,46 @@ import static org.bytedeco.javacpp.opencv_objdetect.*;
  */
 public class FaceDetectorThread extends Thread {
 
+    public interface FaceDetectorInterface {
+
+        public void getCountFaceDetected(int number_of_faces);
+    }
+
+    public FaceDetectorThread(FaceDetectorListener listener) {
+        faceDetectorListener = listener;
+    }
+
     private boolean active = false;
+    private int cameraID = -1;
+    private FaceDetectorListener faceDetectorListener;
 
     public boolean isActive() {
         return active;
+    }
+
+    public void setCameraID(int id) {
+        this.cameraID = id;
+    }
+
+    public int getCameraID() {
+        return this.cameraID;
+    }
+
+    public void launch(int id) {
+        setCameraID(id);
+        start();
     }
 
     @Override
     public void run() {
         System.err.println("RUN");
         this.active = true;
-        faceDetectionThread(0);
+        faceDetectionThread(this.cameraID);
     }
 
-    public int faceDetectionThread(int id_camera) {
-        
-        System.err.println("START FACE DETECT");
+    public void faceDetectionThread(int id_camera) {
 
+        System.err.println("START FACE DETECT #" + id_camera);
         int number_of_faces_detected = 0;
 
         try {
@@ -95,7 +117,6 @@ public class FaceDetectorThread extends Thread {
 
             CanvasFrame frame = new CanvasFrame("Face Detection", CanvasFrame.getDefaultGamma() / grabber.getGamma());
 
-
             // We can allocate native arrays using constructors taking an integer as argument.
             CvPoint hatPoints = new CvPoint(3);
 
@@ -104,6 +125,7 @@ public class FaceDetectorThread extends Thread {
                     break;
                 }
 
+                number_of_faces_detected = 0;
                 cvClearMemStorage(storage);
 
                 // Let's try to detect some faces! but we need a grayscale image...
@@ -116,9 +138,11 @@ public class FaceDetectorThread extends Thread {
                     int x = r.x(), y = r.y(), w = r.width(), h = r.height();
                     cvRectangle(grabbedImage, cvPoint(x, y), cvPoint(x + w, y + h), CvScalar.RED, 1, CV_AA, 0);
                     number_of_faces_detected++;
-
                 }
+
                 System.out.println("Number of faces detected: " + number_of_faces_detected);
+
+                faceDetectorListener.getCountFaceDetected(number_of_faces_detected);
 
                 // Let's find some contours! but first some thresholding...
                 cvThreshold(grayImage, grayImage, 64, 255, CV_THRESH_BINARY);
@@ -150,17 +174,11 @@ public class FaceDetectorThread extends Thread {
             Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        System.out.println("Result FaceDetection : " + number_of_faces_detected);
-
-        return number_of_faces_detected;
+        //System.out.println("Result FaceDetection : " + number_of_faces_detected);
     } // END OF MAIN
 
-    
-    
     public void stopFaceDetection() {
         active = false;
     }
-    
-    
 
 } // END OF CLASS

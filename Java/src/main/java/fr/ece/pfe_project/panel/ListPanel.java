@@ -8,26 +8,35 @@ import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.Employee;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
+import fr.ece.pfe_project.panel.MainPanel.FaceDetectorListener;
 import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.widget.CameraCellComponent;
+import real_time_image_processing.FaceDetectorThread;
 
 /**
  *
  * @author pierreghazal
  */
-public class ListPanel extends javax.swing.JPanel implements ToolbarEntityPanel.ToolbarEntityListener, MouseMotionListener, MouseListener {
+public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.FaceDetectorInterface,
+        ToolbarEntityPanel.ToolbarEntityListener, MouseMotionListener, MouseListener {
 
     private final Comptoir comptoirs[];
     private final Camera cameras[];
     private final Employee employees[];
 
+    FaceDetectorListener faceDetectorListener;
+
     /**
      * Creates new form DrawingPanel
+     *
+     * @param faceListener
      */
-    public ListPanel() {
+    public ListPanel(FaceDetectorListener faceListener) {
         initComponents();
+
+        faceDetectorListener = faceListener;
 
         // Listener
         addMouseListener(this);
@@ -75,28 +84,14 @@ public class ListPanel extends javax.swing.JPanel implements ToolbarEntityPanel.
             case CAMERA:
                 itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
                 model.setData(cameras, false);
-
-                if (cameras[0].getFaceDetectorThread() != null && !cameras[0].getFaceDetectorThread().isActive()) {
-                    cameras[0].getFaceDetectorThread().start();
-                }
-                
-                if (cameras[1].getFaceDetectorThread() != null && !cameras[0].getFaceDetectorThread().isActive()) {
-                    cameras[1].getFaceDetectorThread().start();
-                }
-
+                cameraInterface(true);
                 break;
             case EXCELROW:
                 itemsTable.setRowHeight(16);
                 model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new FrequentationJournaliere[0]), false);
                 break;
             case NONE:
-                if (cameras[0].getFaceDetectorThread() != null && cameras[0].getFaceDetectorThread().isActive()) {
-                    cameras[0].getFaceDetectorThread().stopFaceDetection();
-                }
-                
-                if (cameras[1].getFaceDetectorThread() != null && cameras[0].getFaceDetectorThread().isActive()) {
-                    cameras[1].getFaceDetectorThread().stopFaceDetection();
-                }
+                cameraInterface(false);
                 break;
 
             default:
@@ -104,6 +99,52 @@ public class ListPanel extends javax.swing.JPanel implements ToolbarEntityPanel.
         }
 
         model.fireTableStructureChanged();
+    }
+
+    private void cameraInterface(boolean on) {
+        // On souhaite lancer l'activation des cameras
+        if (on) {
+            for (int i = 0; i < cameras.length; i++) {
+                Camera cam = cameras[i];
+                if (cam != null && cam.getFaceDetectorThread() != null
+                        && !cam.getFaceDetectorThread().isActive()) {
+                    cam.getFaceDetectorThread().launch(0);
+                } else if (cam == null) {
+                    cam = new Camera(i);
+                    cam.setFaceDetectorThread(new FaceDetectorThread(faceDetectorListener));
+                    cam.getFaceDetectorThread().launch(0);
+                } else if (cam.getFaceDetectorThread() == null) {
+                    cam.setFaceDetectorThread(new FaceDetectorThread(faceDetectorListener));
+                    cam.getFaceDetectorThread().launch(0);
+                } else if (cam.getFaceDetectorThread() != null
+                        && cam.getFaceDetectorThread().isActive()) {
+                    // do nothing
+                }
+            }
+        } // Extinction du systeme de detection
+        else {
+            for (int i = 0; i < cameras.length; i++) {
+                Camera cam = cameras[i];
+
+                if (cam != null && cam.getFaceDetectorThread() != null
+                        && !cam.getFaceDetectorThread().isActive()) {
+                    // do nothing
+                } else if (cam == null) {
+                    // do nothing
+                } else if (cam.getFaceDetectorThread() == null) {
+                    // do nothing
+                } else if (cam.getFaceDetectorThread() != null
+                        && cam.getFaceDetectorThread().isActive()) {
+                    cam.getFaceDetectorThread().stopFaceDetection();
+                    cam.setFaceDetectorThread(null);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void getCountFaceDetected(int number_of_faces) {
+        System.out.println("List Panel NB FACES : " + number_of_faces);
     }
 
     /**
