@@ -98,10 +98,27 @@ public class ListPanel extends javax.swing.JPanel implements ToolbarEntityPanel.
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSpinnerPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox();
+        jComboBox2 = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         itemsTable = new javax.swing.JTable();
 
         setLayout(new java.awt.BorderLayout());
+
+        jSpinnerPanel.setPreferredSize(new java.awt.Dimension(40, 40));
+
+        jLabel1.setText("Sélectionner date :");
+        jSpinnerPanel.add(jLabel1);
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jSpinnerPanel.add(jComboBox1);
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jSpinnerPanel.add(jComboBox2);
+
+        add(jSpinnerPanel, java.awt.BorderLayout.PAGE_START);
 
         itemsTable.setAutoCreateRowSorter(true);
         itemsTable.setModel(new MyTableModel());
@@ -116,7 +133,11 @@ public class ListPanel extends javax.swing.JPanel implements ToolbarEntityPanel.
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable itemsTable;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JComboBox jComboBox2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel jSpinnerPanel;
     // End of variables declaration//GEN-END:variables
 
     @Override
