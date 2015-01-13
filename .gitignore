@@ -1,13 +1,22 @@
+# Package Files #                                                               
+*.jar                                                                           
+*.war                                                                           
+*.ear
+
 /Java/target/
 /Java/target/*
 *.class
+.classpath
+.project
+.settings/
+target/
+.DS_Store
 
-*.class
-
-*.class
-
-*.class
-
-Java/target/classes/fr/ece/pfe_project/panel/ListPanel.class
-
-Java/target/classes/fr/ece/pfe_project/panel/ListPanel$1.class
+# Netbeans Gitignore file published by Github
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml

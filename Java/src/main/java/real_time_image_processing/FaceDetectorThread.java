@@ -109,16 +109,14 @@ public class FaceDetectorThread extends Thread {
             int width = grabbedImage.width();
             int height = grabbedImage.height();
             IplImage grayImage = IplImage.create(width, height, IPL_DEPTH_8U, 1);
-            //IplImage rotatedImage = grabbedImage.clone();
 
             CvMemStorage storage = CvMemStorage.create();
-
-            CanvasFrame frame = new CanvasFrame("Face Detection", CanvasFrame.getDefaultGamma() / grabber.getGamma());
-
-            // We can allocate native arrays using constructors taking an integer as argument.
-            CvPoint hatPoints = new CvPoint(3);
             
-            while (frame.isVisible() && (grabbedImage = grabber.grab()) != null) {
+            // Frame declaration for video display
+            //CanvasFrame frame = new CanvasFrame("Face Detection", CanvasFrame.getDefaultGamma() / grabber.getGamma());
+
+            
+            while (isActive() && (grabbedImage = grabber.grab()) != null) {
                 if (!isActive()) {
                     break;
                 }
@@ -126,7 +124,7 @@ public class FaceDetectorThread extends Thread {
                 number_of_faces_detected = 0;
                 cvClearMemStorage(storage);
 
-                // Let's try to detect some faces! but we need a grayscale image...
+                // Let's try to detect some faces! but we need a grayscale image
                 cvCvtColor(grabbedImage, grayImage, CV_BGR2GRAY);
                 CvSeq faces = cvHaarDetectObjects(grayImage, classifier, storage, 1.1, 3, CV_HAAR_DO_CANNY_PRUNING);
 
@@ -160,20 +158,17 @@ public class FaceDetectorThread extends Thread {
                     }
                     contour = contour.h_next();
                 }
-
-                //frame.showImage(grabbedImage);
+                
 
             } // END OF WHILE
 
-            frame.dispose();
 
             grabber.stop();
         } catch (FrameGrabber.Exception ex) {
             Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        //System.out.println("Result FaceDetection : " + number_of_faces_detected);
-    } // END OF MAIN
+    } // END OF METHOD
 
     public void stopFaceDetection() {
         active = false;
