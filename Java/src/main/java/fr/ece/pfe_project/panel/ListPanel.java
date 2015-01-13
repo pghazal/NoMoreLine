@@ -48,6 +48,9 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             new Comptoir(3), new Comptoir(4),
             new Comptoir(5), new Comptoir(6)
         };
+        
+        //setVisibility false pour rendre invisible les 2 combobox au démarrage
+        setVisibility(false);
 
         cameras = new Camera[]{
             new Camera(1), new Camera(2),
@@ -65,6 +68,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         itemsTable.setDefaultEditor(Camera.class, new CameraCellEditor());
 
         this.itemsTable.setModel(new MyTableModel());
+        
     }
 
     @Override
@@ -73,24 +77,31 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
         MyTableModel model = (MyTableModel) this.itemsTable.getModel();
         model.setEntity(typeEntity);
-
+        boolean visibility = true;
         // TODO : model.setData() avec les nouvelles données
         switch (typeEntity) {
 
             case COMPTOIR:
+                visibility = false;
+                setVisibility(visibility);
                 itemsTable.setRowHeight(16);
                 model.setData(comptoirs, false);
                 break;
             case CAMERA:
+                visibility = false;
+                setVisibility(visibility);
                 itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
                 model.setData(cameras, false);
                 cameraInterface(true);
                 break;
             case EXCELROW:
+                setVisibility(visibility);
                 itemsTable.setRowHeight(16);
                 model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new FrequentationJournaliere[0]), false);
                 break;
             case NONE:
+                visibility = false;
+                setVisibility(visibility);
                 cameraInterface(false);
                 break;
 
@@ -99,6 +110,24 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         }
 
         model.fireTableStructureChanged();
+    }
+
+    public void setVisibility(boolean bool) {
+
+        if (bool == false) {
+            jLabel1.setVisible(false);
+            jComboBox1.setVisible(false);
+            jComboBox2.setVisible(false);
+
+        }
+
+        else  {
+            jLabel1.setVisible(true);
+            jComboBox1.setVisible(true);
+            jComboBox2.setVisible(true);
+
+        }
+
     }
 
     private void cameraInterface(boolean on) {
