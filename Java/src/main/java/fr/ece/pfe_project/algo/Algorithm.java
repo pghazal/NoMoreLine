@@ -1,5 +1,6 @@
 package fr.ece.pfe_project.algo;
 
+import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.model.AlgoResult;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
@@ -13,13 +14,13 @@ import java.util.Date;
  */
 public class Algorithm {
 
-    // Nombre d'année que l'on compare dans le passé
-    private final static int YEARS_TO_COMPARE = 3;
-
     public static AlgoResult process(Date dateSelected) {
         int yearSelected = getYear(dateSelected);
         int currentMonth = getMonth(dateSelected);
         int currentDay = getDayOfMonth(dateSelected);
+        
+        int YEARS_TO_COMPARE = DatabaseHelper.getYearsComplete().size();
+        System.out.println("NB ANNEE : " + YEARS_TO_COMPARE);
         
         int nbSemaine = getWeekOfYear(dateSelected);
         int jour = getDayOfWeek(dateSelected);
@@ -251,7 +252,7 @@ public class Algorithm {
     }
 
     public static int getFrequentationJournaliere(Date date) {
-        FrequentationJournaliere row = GlobalVariableUtils.getExcelMap().get(date);
+        FrequentationJournaliere row = DatabaseHelper.getFrequentationJournaliere(date);//GlobalVariableUtils.getExcelMap().get(date);
 
         if (row == null) {
             System.err.println("NUULL at Date : " + date);

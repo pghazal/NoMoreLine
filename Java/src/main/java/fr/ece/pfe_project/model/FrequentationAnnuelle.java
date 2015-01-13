@@ -6,8 +6,8 @@ package fr.ece.pfe_project.model;
  */
 public class FrequentationAnnuelle {
 
-    private Integer year;
-    private Integer frequentation;
+    private Integer year = null;
+    private Integer frequentation = null;
 
     public FrequentationAnnuelle() {
         year = null;

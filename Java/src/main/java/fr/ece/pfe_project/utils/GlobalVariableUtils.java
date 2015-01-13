@@ -1,6 +1,5 @@
 package fr.ece.pfe_project.utils;
 
-import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import java.util.Date;
 import java.util.HashMap;
@@ -56,9 +55,9 @@ public class GlobalVariableUtils {
         return freqAnnuelleMap;
     }
 
-    public static void showExcelMap() {
-        for (HashMap.Entry<Date, FrequentationJournaliere> entry : getExcelMap().entrySet()) {
-            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue().getFrequentation());
-        }
-    }
+//    public static void showExcelMap() {
+//        for (HashMap.Entry<Date, FrequentationJournaliere> entry : getExcelMap().entrySet()) {
+//            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue().getFrequentation());
+//        }
+//    }
 }

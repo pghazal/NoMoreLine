@@ -6,24 +6,35 @@
 package fr.ece.pfe_project.panel;
 
 import javax.swing.Box;
+import real_time_image_processing.FaceDetectorThread;
 
 /**
  *
  * @author pierreghazal
  */
 public class MainPanel extends javax.swing.JPanel {
-
+    
     public class ToolbarsListener implements ToolbarEntityPanel.ToolbarEntityListener {
-
+        
         @Override
         public void entityHasChange(ToolbarEntityPanel.ENTITY typeEntity) {
             listPanel.entityHasChange(typeEntity);
             toolbarActions.entityHasChange(typeEntity);
         }
     }
-
+    
+    public class FaceDetectorListener implements FaceDetectorThread.FaceDetectorInterface {
+        
+        @Override
+        public void getCountFaceDetected(int number_of_faces) {
+            listPanel.getCountFaceDetected(number_of_faces);
+        }
+        
+    }
+    
     ToolbarsListener toolbarsListener;
-
+    FaceDetectorListener faceDetectorListener;
+    
     private ToolbarEntityPanel toolbarEntity;
     private ToolbarActionsPanel toolbarActions;
     private ListPanel listPanel;
@@ -37,9 +48,10 @@ public class MainPanel extends javax.swing.JPanel {
 //        GridBagConstraints c = new GridBagConstraints();
 
         toolbarsListener = new ToolbarsListener();
-
+        faceDetectorListener = new FaceDetectorListener();
+        
         statisticPanel = new StatisticPanel();
-        listPanel = new ListPanel();
+        listPanel = new ListPanel(faceDetectorListener);
         toolbarEntity = new ToolbarEntityPanel(toolbarsListener);
         toolbarActions = new ToolbarActionsPanel();
 
@@ -65,11 +77,9 @@ public class MainPanel extends javax.swing.JPanel {
 //        c.gridy = 0;
 //        c.gridheight = 0;
 //        c.gridwidth = GridBagConstraints.REMAINDER;
-
 //        c.fill = GridBagConstraints.BOTH;
 //        c.gridx = 1;
 //        c.gridy = 1;
-
 //        c.fill = GridBagConstraints.VERTICAL;
 //        c.gridx = 2;
 //        c.gridy = 1;
