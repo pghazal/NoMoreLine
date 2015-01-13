@@ -15,6 +15,8 @@ import org.bytedeco.javacv.*;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.opencv_core.IplImage;
 import static org.bytedeco.javacpp.opencv_core.*;
+import static org.bytedeco.javacpp.opencv_highgui.cvShowImage;
+import static org.bytedeco.javacpp.opencv_highgui.cvWaitKey;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 import static org.bytedeco.javacpp.opencv_objdetect.*;
 
@@ -105,17 +107,28 @@ public class FaceDetectorThread extends Thread {
             }
             grabber.start();
 
+            // Image comparison
+            /*
+            
+            IplImage template = grabber.grab();
+            IplImage img = grabber.grab();
+            IplImage comparison_result = cvCreateImage(cvSize(img.width() - template.width() + 1, img.height() - template.height() + 1), IPL_DEPTH_32F, 1);
+            int method = CV_TM_SQDIFF;
+            cvMatchTemplate(img, template, comparison_result, method);
+            cvShowImage("comparison result", comparison_result);
+            
+            */
+
+
             IplImage grabbedImage = grabber.grab();
             int width = grabbedImage.width();
             int height = grabbedImage.height();
             IplImage grayImage = IplImage.create(width, height, IPL_DEPTH_8U, 1);
 
             CvMemStorage storage = CvMemStorage.create();
-            
+
             // Frame declaration for video display
             //CanvasFrame frame = new CanvasFrame("Face Detection", CanvasFrame.getDefaultGamma() / grabber.getGamma());
-
-            
             while (isActive() && (grabbedImage = grabber.grab()) != null) {
                 if (!isActive()) {
                     break;
@@ -158,10 +171,8 @@ public class FaceDetectorThread extends Thread {
                     }
                     contour = contour.h_next();
                 }
-                
 
             } // END OF WHILE
-
 
             grabber.stop();
         } catch (FrameGrabber.Exception ex) {
