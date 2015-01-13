@@ -1,7 +1,5 @@
 /*
- *
  * IMAGE PROCESSING FOR REAL TIME OVERCROWDED AREA DETECTION
- *
  */
 package real_time_image_processing;
 
@@ -111,7 +109,7 @@ public class FaceDetectorThread extends Thread {
             int width = grabbedImage.width();
             int height = grabbedImage.height();
             IplImage grayImage = IplImage.create(width, height, IPL_DEPTH_8U, 1);
-            IplImage rotatedImage = grabbedImage.clone();
+            //IplImage rotatedImage = grabbedImage.clone();
 
             CvMemStorage storage = CvMemStorage.create();
 
@@ -119,7 +117,7 @@ public class FaceDetectorThread extends Thread {
 
             // We can allocate native arrays using constructors taking an integer as argument.
             CvPoint hatPoints = new CvPoint(3);
-
+            
             while (frame.isVisible() && (grabbedImage = grabber.grab()) != null) {
                 if (!isActive()) {
                     break;
