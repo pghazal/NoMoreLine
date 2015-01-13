@@ -1,10 +1,8 @@
 package fr.ece.pfe_project.panel;
 
-import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.utils.ExcelUtils;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import fr.ece.pfe_project.widget.ProgressDialog;
-import java.awt.Component;
 import java.io.File;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -15,6 +13,9 @@ import javax.swing.JOptionPane;
  * @author pierreghazal
  */
 public class ParametersDialog extends javax.swing.JDialog {
+
+    private final Integer DEFAULT_SEUIL_JOUR = 4000;
+    private final Integer DEFAULT_SEUIL_CAMERA = 70;
 
     private static JDialog dialog;
 
@@ -39,6 +40,21 @@ public class ParametersDialog extends javax.swing.JDialog {
 //        if (paramPathExcel != null) {
 //            this.textFieldPathExcel.setText(paramPathExcel);
 //        }
+
+        Integer seuilJour = (Integer) ParametersUtils.get(ParametersUtils.PARAM_SUEIL_JOUR);
+        Integer seuilCamera = (Integer) ParametersUtils.get(ParametersUtils.PARAM_SUEIL_CAMERA);
+
+        if (seuilJour != null) {
+            this.spinnerSeuilJour.setValue(seuilJour);
+        } else {
+            this.spinnerSeuilJour.setValue(DEFAULT_SEUIL_JOUR);
+        }
+
+        if (seuilCamera != null) {
+            this.spinnerSeuilCamera.setValue(seuilCamera);
+        } else {
+            this.spinnerSeuilCamera.setValue(DEFAULT_SEUIL_CAMERA);
+        }
     }
 
     //Poppup Message
@@ -59,11 +75,16 @@ public class ParametersDialog extends javax.swing.JDialog {
         buttonCancel = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        spinnerSeuilJour = new javax.swing.JSpinner();
+        jLabel3 = new javax.swing.JLabel();
+        spinnerSeuilCamera = new javax.swing.JSpinner();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         textFieldPathExcel = new javax.swing.JTextField();
         buttonBrowserExcel = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
+        buttonReset = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Paramètres");
@@ -88,15 +109,41 @@ public class ParametersDialog extends javax.swing.JDialog {
             }
         });
 
+        jLabel2.setText("Seuil d'alerte journalier :");
+
+        spinnerSeuilJour.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(4000), Integer.valueOf(0), null, Integer.valueOf(100)));
+
+        jLabel3.setText("Seuil d'alerte par caméras :");
+
+        spinnerSeuilCamera.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(70), Integer.valueOf(0), null, Integer.valueOf(10)));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 518, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(spinnerSeuilJour, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                    .addComponent(spinnerSeuilCamera))
+                .addContainerGap(254, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 138, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(spinnerSeuilJour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(spinnerSeuilCamera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Général", jPanel1);
@@ -156,6 +203,16 @@ public class ParametersDialog extends javax.swing.JDialog {
 
         jTabbedPane1.addTab("Exportation", jPanel3);
 
+        buttonReset.setText("Reset");
+        buttonReset.setMaximumSize(new java.awt.Dimension(93, 29));
+        buttonReset.setMinimumSize(new java.awt.Dimension(93, 29));
+        buttonReset.setPreferredSize(new java.awt.Dimension(93, 29));
+        buttonReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonResetActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -165,7 +222,8 @@ public class ParametersDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTabbedPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(buttonReset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(buttonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonValider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -179,7 +237,8 @@ public class ParametersDialog extends javax.swing.JDialog {
                 .addGap(75, 75, 75)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonValider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonCancel))
+                    .addComponent(buttonCancel)
+                    .addComponent(buttonReset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -224,9 +283,17 @@ public class ParametersDialog extends javax.swing.JDialog {
                     //ParametersUtils.set(ParametersUtils.PARAM_PATH_EXCEL, textFieldPathExcel.getText());
                 }
 
+                if ((int) spinnerSeuilJour.getValue() >= 0 && (int) spinnerSeuilCamera.getValue() >= 0) {
+                    ParametersUtils.set(ParametersUtils.PARAM_SUEIL_JOUR, (int) spinnerSeuilJour.getValue());
+                    ParametersUtils.set(ParametersUtils.PARAM_SUEIL_CAMERA, (int) spinnerSeuilCamera.getValue());
+
+                    isSuccess = true;
+                }
+
                 if (isSuccess) {
                     // Reinit
                     textFieldPathExcel.setText("");
+
                     // Saving parameters in file parameter
                     ParametersUtils.saveParameters();
                     // Dispose the parameter window
@@ -239,16 +306,33 @@ public class ParametersDialog extends javax.swing.JDialog {
         progressDialog.setVisible(true);
     }//GEN-LAST:event_buttonValiderActionPerformed
 
+    private void buttonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonResetActionPerformed
+        // REMETTRE PARAMETRE PAR DEFAUT
+
+        // Afficher pop-up ?
+        this.spinnerSeuilJour.setValue(DEFAULT_SEUIL_JOUR);
+        this.spinnerSeuilCamera.setValue(DEFAULT_SEUIL_CAMERA);
+
+        ParametersUtils.set(ParametersUtils.PARAM_SUEIL_JOUR, (int) spinnerSeuilJour.getValue());
+        ParametersUtils.set(ParametersUtils.PARAM_SUEIL_CAMERA, (int) spinnerSeuilCamera.getValue());
+
+    }//GEN-LAST:event_buttonResetActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBrowserExcel;
     private javax.swing.JButton buttonCancel;
+    private javax.swing.JButton buttonReset;
     private javax.swing.JButton buttonValider;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JSpinner spinnerSeuilCamera;
+    private javax.swing.JSpinner spinnerSeuilJour;
     private javax.swing.JTextField textFieldPathExcel;
     // End of variables declaration//GEN-END:variables
 }
