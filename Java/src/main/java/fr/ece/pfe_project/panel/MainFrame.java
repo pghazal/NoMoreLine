@@ -3,9 +3,12 @@ package fr.ece.pfe_project.panel;
 import fr.ece.pfe_project.algo.Algorithm;
 import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.model.JourFerie;
+import fr.ece.pfe_project.tablemodel.JourFerieTableModel;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import javax.swing.JOptionPane;
 import fr.ece.pfe_project.widget.StartingProgressDialog;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
@@ -84,6 +87,8 @@ public class MainFrame extends javax.swing.JFrame {
                     public void run() {
                         DatabaseHelper.initialize();
                         ParametersUtils.loadDatabase();
+
+                        loadJourFerieDefaut();
                     }
                 };
 
@@ -93,6 +98,36 @@ public class MainFrame extends javax.swing.JFrame {
                 startingProgressDialog.setVisible(true);
             }
         });
+    }
+
+    private static void loadJourFerieDefaut() {
+        ArrayList<JourFerie> jours = new ArrayList<JourFerie>();
+        Calendar cal = Calendar.getInstance();
+
+        JourFerie paques = Algorithm.paques(cal.get(Calendar.YEAR));
+        jours.add(paques);
+        jours.add(Algorithm.ascension(paques));
+        jours.add(Algorithm.pentecote(paques));
+        jours.add(Algorithm.vendrediSaint(paques));
+
+        cal.set(Calendar.MILLISECOND, 0);
+
+        cal.set(cal.get(Calendar.YEAR), 7, 14, 0, 0, 0);
+        jours.add(new JourFerie("Fête Nationale", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 10, 11, 0, 0, 0);
+        jours.add(new JourFerie("Armistice", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 4, 8, 0, 0, 0);
+        jours.add(new JourFerie("8 Mai", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 7, 15, 0, 0, 0);
+        jours.add(new JourFerie("Assomption", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 10, 1, 0, 0, 0);
+        jours.add(new JourFerie("Toussaint", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 11, 25, 0, 0, 0);
+        jours.add(new JourFerie("Noël", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 11, 26, 0, 0, 0);
+        jours.add(new JourFerie("26 Décembre", cal.getTime()));
+
+        ParametersUtils.set(ParametersUtils.PARAM_JOURS_FERIES, (ArrayList<JourFerie>) jours);
     }
 
     /**
