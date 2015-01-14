@@ -37,7 +37,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="CameraButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Activer cam&#xe9;ra"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[35, 35]"/>
+            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="jComboBox1">

@@ -17,7 +17,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import org.jdatepicker.ComponentIconDefaults;
+import org.jdatepicker.ComponentManager;
 import real_time_image_processing.FaceDetectorThread;
 
 /**
@@ -141,12 +146,14 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
     private void setCameraButtonVisibility(boolean bool) {
 
+    
         if (bool == false) {
             CameraButton.setVisible(false);
         } else {
             CameraButton.setVisible(true);
             CameraButton.setOpaque(true);
-            //CameraButton.setForeground(Color.green);
+            CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
+            
         }
     }
 
@@ -155,11 +162,13 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
         if (isCameraActive == true) {
             //On désactive les caméras 
+            CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getredCameraIcon());
             cameraInterface(!isCameraActive);
-            CameraButton.setText("Activer caméra");
+            
+           // CameraButton.setText("Activer caméra");
         } else //On change le label du bouton (de "activer caméra" à "désactiver caméra) et sa couleur
         {
-            CameraButton.setText("Désactiver caméra");
+            CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
             //On lance l'activation des caméras une fois qu'on appuie sur le bouton
             cameraInterface(!isCameraActive);
         }
@@ -247,7 +256,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         jLabel1.setText("Sélectionner date :");
         jSpinnerPanel.add(jLabel1);
 
-        CameraButton.setText("Activer caméra");
+        CameraButton.setPreferredSize(new java.awt.Dimension(35, 35));
         jSpinnerPanel.add(CameraButton);
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
