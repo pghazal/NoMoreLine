@@ -15,8 +15,8 @@ import org.bytedeco.javacv.*;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.opencv_core.IplImage;
 import static org.bytedeco.javacpp.opencv_core.*;
-import static org.bytedeco.javacpp.opencv_highgui.cvShowImage;
-import static org.bytedeco.javacpp.opencv_highgui.cvWaitKey;
+import static org.bytedeco.javacpp.opencv_highgui.CV_CAP_PROP_FRAME_HEIGHT;
+import static org.bytedeco.javacpp.opencv_highgui.CV_CAP_PROP_FRAME_WIDTH;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 import static org.bytedeco.javacpp.opencv_objdetect.*;
 
@@ -65,7 +65,6 @@ public class FaceDetectorThread extends Thread {
         faceDetectionThread(this.cameraID);
     }
 
-
     public void faceDetectionThread(int id_camera) {
 
         System.err.println("START FACE DETECT #" + id_camera);
@@ -106,27 +105,52 @@ public class FaceDetectorThread extends Thread {
             } catch (FrameGrabber.Exception ex) {
                 Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
             }
+
+            grabber.setImageWidth(300);
+            grabber.setImageHeight(300);
+
             grabber.start();
 
-            // Image comparison
-            /*
-            
+//***************************************************************************************************************//
+            // Image comparison   
+            System.out.println("taking template picture");
             IplImage template = grabber.grab();
-            CanvasFrame frame = new CanvasFrame("Template");
-            frame.showImage(template);
-            
-            IplImage img = grabber.grab();
-            CanvasFrame frame = new CanvasFrame("New Image For comparison");
-            frame.showImage(img);
-            
-            IplImage comparison_result = cvCreateImage(cvSize(img.width() - template.width() + 1, img.height() - template.height() + 1), IPL_DEPTH_32F, 1);
-            int method = CV_TM_SQDIFF;
-            cvMatchTemplate(img, template, comparison_result, method);
-            cvShowImage("comparison result", comparison_result);
-            
-            */
+            int template_width = template.width();
+            int template_height = template.height();
+            System.out.println("creating gray template IplImage");
+            IplImage grayTemplate = IplImage.create(template_width, template_height, IPL_DEPTH_8U, 1);
+            cvCvtColor(template, grayTemplate, CV_BGR2GRAY);
+            System.out.println("Template picture has been translated to B&W picture");
+            CvMat mat_template = new CvMat(grayTemplate);
+            System.out.println("B&W template matrix has been created");
+            CanvasFrame gray_frame_template = new CanvasFrame("Template");
+            System.out.println("B&W template frame created");
+            gray_frame_template.showImage(grayTemplate);
+            System.out.println("B&W template frame display");
 
+            IplImage img_to_compare = grabber.grab();
+            System.out.println("creating gray template IplImage");
+            IplImage gray_img_to_compare = IplImage.create(template_width, template_height, IPL_DEPTH_8U, 1);
+            cvCvtColor(img_to_compare, gray_img_to_compare, CV_BGR2GRAY);
+            System.out.println("Template picture has been translated to B&W picture");
+            CvMat mat_img_to_compare = new CvMat(grayTemplate);
+            System.out.println("B&W img_to_compare matrix has been created");
+            CanvasFrame frame_img_to_compare = new CanvasFrame("New Image For comparison");
+            frame_img_to_compare.showImage(gray_img_to_compare);
+            
+            if (mat_img_to_compare.equals(mat_template))
+                System.out.println("MATRIX ARE THE SAME");
+            else System.out.println("MATRIX ARE NOT THE SAME");
+            
+            IplImage result = IplImage.create(template_width, template_height, IPL_DEPTH_8U, 1);
+            System.out.println("Start Image comparison ");
+            cvAbsDiff( grayTemplate, gray_img_to_compare, result);
+            System.out.println("Display Image comaprison result");
+            CanvasFrame result_frame = new CanvasFrame("result");
+            result_frame.showImage(result);
 
+//***************************************************************************************************************//
+            
             IplImage grabbedImage = grabber.grab();
             int width = grabbedImage.width();
             int height = grabbedImage.height();
