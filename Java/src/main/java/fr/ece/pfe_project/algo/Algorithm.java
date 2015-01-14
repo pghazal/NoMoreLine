@@ -3,7 +3,9 @@ package fr.ece.pfe_project.algo;
 import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.model.AlgoResult;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
+import fr.ece.pfe_project.model.JourFerie;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
+import fr.ece.pfe_project.utils.ParametersUtils;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,14 +16,15 @@ import java.util.Date;
  */
 public class Algorithm {
 
-    public static AlgoResult process(Date dateSelected) {
+    // Moyenne avec les annees precedentes
+    public static AlgoResult process1(Date dateSelected) {
         int yearSelected = getYear(dateSelected);
         int currentMonth = getMonth(dateSelected);
         int currentDay = getDayOfMonth(dateSelected);
-        
+
         int YEARS_TO_COMPARE = DatabaseHelper.getYearsComplete().size();
         System.out.println("NB ANNEE : " + YEARS_TO_COMPARE);
-        
+
         int nbSemaine = getWeekOfYear(dateSelected);
         int jour = getDayOfWeek(dateSelected);
 
@@ -42,7 +45,7 @@ public class Algorithm {
 
             //cal.set(yearSelected - i, currentMonth, currentDay);
             firstDate = cal.getTime();
-            
+
             cal.set(Calendar.YEAR, yearSelected - (i - 1));
             cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
             cal.set(Calendar.DAY_OF_WEEK, jour);
@@ -117,7 +120,7 @@ public class Algorithm {
         double nbPassagerAnnuelle = getFrequentationAnnuelle(yearSelected - 1)
                 + moyVariationAnnuelle * getFrequentationAnnuelle(yearSelected - 1);
         System.out.println("A1 = " + nbPassagerAnnuelle);
-        
+
         // Réinitialisation de la date
         cal.setTime(dateSelected);
         // Initialisation à l'année précédente
@@ -183,56 +186,282 @@ public class Algorithm {
         return algoResult;
     }
 
-    public static void displayJour(Date date) {
+    public static AlgoResult process2(Date date, AlgoResult algoResult) {
+        ArrayList<JourFerie> jours = (ArrayList<JourFerie>) ParametersUtils.get(ParametersUtils.PARAM_JOURS_FERIES);
 
-        int nbSemaine = getWeekOfYear(date);
-        int jour = getDayOfWeek(date);
+        if (jours != null && jours.size() > 0) {
 
-        System.out.println("Semaine # " + nbSemaine);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            cal.set(Calendar.MILLISECOND, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.HOUR, 0);
 
-        switch (jour) {
-            case Calendar.MONDAY:
-                System.out.println("Jour LUNDI");
-                break;
-            case Calendar.TUESDAY:
-                System.out.println("Jour MARDI");
-                break;
-            case Calendar.WEDNESDAY:
-                System.out.println("Jour MERCREDI");
-                break;
-            case Calendar.THURSDAY:
-                System.out.println("Jour JEUDI");
-                break;
-            case Calendar.FRIDAY:
-                System.out.println("Jour VENDREDI");
-                break;
-            case Calendar.SATURDAY:
-                System.out.println("Jour SAMEDI");
-                break;
-            case Calendar.SUNDAY:
-                System.out.println("Jour DIMANCHE");
-                break;
+            Boolean isFerie = false;
+
+            switch (getDayOfWeek(date)) {
+                case Calendar.MONDAY:
+                    isFerie = isFerie(date, jours);
+
+                    cal.add(Calendar.DAY_OF_MONTH, 1);
+
+                    if (isFerie) {
+                        // Si le lendemain est ferie
+                        if (isFerie(cal.getTime(), jours)) {
+                            int prevision = process1(cal.getTime())
+                                    .getPrevisionPassager();
+
+                            algoResult.setPrevisionPassager(prevision - ((prevision * 10) / 100));
+                        } else {
+                            algoResult.setPrevisionPassager(process1(cal.getTime())
+                                    .getPrevisionPassager());
+                        }
+
+                    } // Si le lendemain est ferie
+                    else if (isFerie(cal.getTime(), jours)) {
+                        algoResult.setPrevisionPassager(process1(cal.getTime())
+                                .getPrevisionPassager());
+                    }
+
+                    break;
+                case Calendar.TUESDAY:
+                    isFerie = isFerie(date, jours);
+
+                    cal.add(Calendar.DAY_OF_MONTH, -1);
+
+                    if (isFerie) {
+                        // Si la veille est ferie
+                        if (isFerie(cal.getTime(), jours)) {
+                            algoResult.setPrevisionPassager(process1(cal.getTime())
+                                    .getPrevisionPassager());
+                        } else {
+                            // do nothing
+                        }
+
+                    } // Si la veille est ferie
+                    else if (isFerie(cal.getTime(), jours)) {
+                        algoResult.setPrevisionPassager(process1(cal.getTime())
+                                .getPrevisionPassager());
+                    }
+
+                    break;
+                case Calendar.WEDNESDAY:
+
+                    isFerie = isFerie(date, jours);
+
+                    if (isFerie) {
+                        int prevision = process1(date)
+                                .getPrevisionPassager();
+
+                        algoResult.setPrevisionPassager(prevision - ((prevision * 25) / 100));
+                        break;
+                    }
+
+                    cal.add(Calendar.DAY_OF_MONTH, -1);
+                    // Si la veille est ferie
+                    if (isFerie(cal.getTime(), jours)) {
+                        algoResult.setPrevisionPassager(process1(cal.getTime())
+                                .getPrevisionPassager());
+                        break;
+                    }
+
+                    cal.add(Calendar.DAY_OF_MONTH, 2);
+                    // Si le lendemain est ferie
+                    if (isFerie(cal.getTime(), jours)) {
+                        cal.add(Calendar.DAY_OF_MONTH, 1);
+                        // Et le jour d'apres est ferie
+                        if (isFerie(cal.getTime(), jours)) {
+                            algoResult.setPrevisionPassager(process1(cal.getTime())
+                                    .getPrevisionPassager());
+                        }
+                    }
+
+                    break;
+                case Calendar.THURSDAY:
+
+                    isFerie = isFerie(date, jours);
+
+                    if (isFerie) {
+                        cal.add(Calendar.DAY_OF_MONTH, 1);
+                        // Si le lendemain est ferie
+                        if (isFerie(cal.getTime(), jours)) {
+                            int prevision = process1(date)
+                                    .getPrevisionPassager();
+
+                            algoResult.setPrevisionPassager(prevision - ((prevision * 25) / 100));
+                        } else {
+                            int prevision = process1(date)
+                                    .getPrevisionPassager();
+
+                            algoResult.setPrevisionPassager(prevision - ((prevision * 10) / 100));
+
+                        }
+
+                        break;
+                    }
+
+                    cal.add(Calendar.DAY_OF_MONTH, -1);
+                    // Si la veille est ferie
+                    if (isFerie(cal.getTime(), jours)) {
+                        int prevision = process1(date)
+                                .getPrevisionPassager();
+
+                        algoResult.setPrevisionPassager(prevision - ((prevision * 20) / 100));
+                        break;
+                    }
+
+                    cal.add(Calendar.DAY_OF_MONTH, 2);
+                    Date JPlus1 = cal.getTime();
+                    // Si le lendemain est ferie
+                    if (isFerie(cal.getTime(), jours)) {
+                        cal.add(Calendar.DAY_OF_MONTH, 3);
+                        // Si le lundi suivant est ferie
+                        if (isFerie(cal.getTime(), jours)) {
+                            algoResult.setPrevisionPassager(process1(JPlus1)
+                                    .getPrevisionPassager());
+                        } else {
+                            int prevision = process1(date)
+                                    .getPrevisionPassager();
+
+                            algoResult.setPrevisionPassager(prevision + ((prevision * 10) / 100));
+                        }
+                    }
+
+                    break;
+                case Calendar.FRIDAY:
+                    isFerie = isFerie(date, jours);
+
+                    if (isFerie) {
+                        cal.add(Calendar.DAY_OF_MONTH, 3);
+                        // Si lundi suivant ferie
+                        if (isFerie(cal.getTime(), jours)) {
+                            int prevision = process1(date)
+                                    .getPrevisionPassager();
+
+                            algoResult.setPrevisionPassager(prevision - ((prevision * 30) / 100));
+                        } else {
+                            int prevision = process1(date)
+                                    .getPrevisionPassager();
+
+                            algoResult.setPrevisionPassager(prevision - ((prevision * 20) / 100));
+                        }
+                        break;
+                    }
+
+                    cal.add(Calendar.DAY_OF_MONTH, -1);
+                    // Si la veille est ferie
+                    if (isFerie(cal.getTime(), jours)) {
+                        int prevision = process1(date)
+                                .getPrevisionPassager();
+
+                        algoResult.setPrevisionPassager(prevision - ((prevision * 20) / 100));
+                    }
+
+                    break;
+                case Calendar.SATURDAY:
+
+                    cal.add(Calendar.DAY_OF_MONTH, 1);
+
+                    // Si le lendemain est ferie
+                    if (isFerie(cal.getTime(), jours)) {
+                        int prevision = process1(date)
+                                .getPrevisionPassager();
+
+                        algoResult.setPrevisionPassager(prevision - ((prevision * 20) / 100));
+                    }
+
+                    break;
+                case Calendar.SUNDAY:
+
+                    cal.add(Calendar.DAY_OF_MONTH, 1);
+
+                    // Si le lendemain est ferie
+                    if (isFerie(cal.getTime(), jours)) {
+
+                        cal.add(Calendar.DAY_OF_MONTH, -2);
+
+                        algoResult.setPrevisionPassager(process1(cal.getTime())
+                                .getPrevisionPassager());
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-
-        cal.add(Calendar.YEAR, -1);
-        cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
-        cal.set(Calendar.DAY_OF_WEEK, jour);
-        System.out.println("Date year - 1 : " + cal.getTime());
-
-        cal.add(Calendar.YEAR, -1);
-        cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
-        cal.set(Calendar.DAY_OF_WEEK, jour);
-        System.out.println("Date year - 2 : " + cal.getTime());
-
-        cal.add(Calendar.YEAR, -1);
-        cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
-        cal.set(Calendar.DAY_OF_WEEK, jour);
-        System.out.println("Date year - 3 : " + cal.getTime());
+        return algoResult;
     }
 
+    private static Boolean isFerie(Date date, ArrayList<JourFerie> jours) {
+        Boolean isFerie = false;
+
+        for (int i = 0; i < jours.size(); i++) {
+            JourFerie jf = jours.get(i);
+
+            if (jf.getDate().equals(date)) {
+                isFerie = true;
+            }
+        }
+
+        if (isFerie) {
+            System.out.println(date + " IS FERIE");
+        } else {
+            System.out.println(date + " IS NOT FERIE");
+        }
+
+        return isFerie;
+    }
+
+//    public static void displayJour(Date date) {
+//
+//        int nbSemaine = getWeekOfYear(date);
+//        int jour = getDayOfWeek(date);
+//
+//        System.out.println("Semaine # " + nbSemaine);
+//
+//        switch (jour) {
+//            case Calendar.MONDAY:
+//                System.out.println("Jour LUNDI");
+//                break;
+//            case Calendar.TUESDAY:
+//                System.out.println("Jour MARDI");
+//                break;
+//            case Calendar.WEDNESDAY:
+//                System.out.println("Jour MERCREDI");
+//                break;
+//            case Calendar.THURSDAY:
+//                System.out.println("Jour JEUDI");
+//                break;
+//            case Calendar.FRIDAY:
+//                System.out.println("Jour VENDREDI");
+//                break;
+//            case Calendar.SATURDAY:
+//                System.out.println("Jour SAMEDI");
+//                break;
+//            case Calendar.SUNDAY:
+//                System.out.println("Jour DIMANCHE");
+//                break;
+//        }
+//
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(date);
+//
+//        cal.add(Calendar.YEAR, -1);
+//        cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+//        cal.set(Calendar.DAY_OF_WEEK, jour);
+//        System.out.println("Date year - 1 : " + cal.getTime());
+//
+//        cal.add(Calendar.YEAR, -1);
+//        cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+//        cal.set(Calendar.DAY_OF_WEEK, jour);
+//        System.out.println("Date year - 2 : " + cal.getTime());
+//
+//        cal.add(Calendar.YEAR, -1);
+//        cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+//        cal.set(Calendar.DAY_OF_WEEK, jour);
+//        System.out.println("Date year - 3 : " + cal.getTime());
+//    }
     private static double getVariation(Date firstDate, Date secondDate, boolean isJournaliere) {
         if (isJournaliere) {
             double freq1 = new Integer(getFrequentationJournaliere(firstDate)).doubleValue();

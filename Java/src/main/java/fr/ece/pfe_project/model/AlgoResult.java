@@ -7,6 +7,7 @@ package fr.ece.pfe_project.model;
 public class AlgoResult {
 
     private Integer previsionPassager;
+    private Integer previsionAvecJoursFeries;
 
     public AlgoResult() {
     }
@@ -17,6 +18,14 @@ public class AlgoResult {
 
     public void setPrevisionPassager(Integer previsionPassager) {
         this.previsionPassager = previsionPassager;
+    }
+
+    public Integer getPrevisionAvecJoursFeries() {
+        return previsionAvecJoursFeries;
+    }
+
+    public void setPrevisionAvecJoursFeries(Integer previsionAvecJoursFeries) {
+        this.previsionAvecJoursFeries = previsionAvecJoursFeries;
     }
 
 }

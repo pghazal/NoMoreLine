@@ -5,22 +5,21 @@ import fr.ece.pfe_project.tablemodel.JourFerieTableModel;
 import fr.ece.pfe_project.utils.ExcelUtils;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import fr.ece.pfe_project.widget.ProgressDialog;
-import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import javax.swing.AbstractCellEditor;
-import javax.swing.JButton;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -34,33 +33,32 @@ public class ParametersDialog extends javax.swing.JDialog {
     private static JDialog dialog;
 
     SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
-    final TableCellRenderer tableCellRenderer = new DefaultTableCellRenderer() {
+
+    public class DateRenderer extends DefaultTableCellRenderer {
 
         @Override
-        public Component getTableCellRendererComponent(JTable table,
-                Object value, boolean isSelected, boolean hasFocus,
-                int row, int column) {
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int col) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
             if (value instanceof Date) {
-                value = f.format(value);
+                String strDate = f.format((Date) value);
+                this.setText(strDate);
             }
 
-            return super.getTableCellRendererComponent(table, value, isSelected,
-                    hasFocus, row, column);
+            return this;
         }
-    };
+    }
 
-    public class DateEditor extends AbstractCellEditor
-            implements TableCellEditor {
-        
-        private final JFormattedTextField formattedTextField;
-        
+    public class DateEditor extends DefaultCellEditor {
+
+        private final JFormattedTextField textField;
+
         public DateEditor() {
-            formattedTextField = new JFormattedTextField(f);
-        }
+            super(new JFormattedTextField(f));
 
-        @Override
-        public Object getCellEditorValue() {
-            return formattedTextField.getText();
+            textField = (JFormattedTextField) super.getComponent();
+            textField.setFont(new Font(textField.getFont().getName(), Font.PLAIN, 11));
         }
 
         @Override
@@ -69,8 +67,32 @@ public class ParametersDialog extends javax.swing.JDialog {
                 boolean isSelected,
                 int row,
                 int column) {
-                        
-            return formattedTextField;
+
+            if (value instanceof Date) {
+
+                String strDate = f.format((Date) value);
+                this.textField.setText(strDate);
+            }
+
+            return this.textField;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+
+            try {
+                if (textField.getText().trim().length() == 0) {
+                    throw new ParseException("", 0);
+                }
+
+                java.util.Date utilDate = f.parse(textField.getText().trim());
+
+                return utilDate;
+            } catch (ParseException e) {
+                msgbox("Format date invalide. Format accepté : jj/mm/aaaa");
+
+                return textField.getText();
+            }
         }
     }
 
@@ -84,10 +106,15 @@ public class ParametersDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-        this.tableFeries.getColumnModel()
-                .getColumn(1).setCellRenderer(tableCellRenderer);
-//        this.tableFeries.getColumnModel().getColumn(1).
-//                setCellEditor(new DateEditor());
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        this.tableFeries.getColumnModel().getColumn(0).setCellRenderer(rightRenderer);
+        this.tableFeries.getColumnModel().getColumn(0).setMaxWidth(50);
+        this.tableFeries.getColumnModel().getColumn(0).setMinWidth(20);
+        this.tableFeries.getColumnModel().getColumn(2).
+                setCellRenderer(new DateRenderer());
+        this.tableFeries.getColumnModel().getColumn(2).
+                setCellEditor(new DateEditor());
 
         initParameters();
 
@@ -187,8 +214,6 @@ public class ParametersDialog extends javax.swing.JDialog {
 
         spinnerSeuilCamera.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(70), Integer.valueOf(0), null, Integer.valueOf(10)));
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
         jScrollPane1.setBorder(null);
 
         tableFeries.setAutoCreateRowSorter(true);
@@ -234,7 +259,7 @@ public class ParametersDialog extends javax.swing.JDialog {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 94, Short.MAX_VALUE)
+                .addGap(0, 98, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addJourFerieButton)
                     .addComponent(deleteJourFerieButton)))
@@ -261,7 +286,7 @@ public class ParametersDialog extends javax.swing.JDialog {
                             .addComponent(spinnerSeuilJour, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
                             .addComponent(spinnerSeuilCamera)))
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(336, Short.MAX_VALUE))
+                .addContainerGap(340, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -366,7 +391,7 @@ public class ParametersDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonValider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -461,6 +486,11 @@ public class ParametersDialog extends javax.swing.JDialog {
 
     private void addJourFerieButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addJourFerieButtonActionPerformed
         JourFerieTableModel model = (JourFerieTableModel) this.tableFeries.getModel();
+
+        if (tableFeries.isEditing()) {
+            tableFeries.getCellEditor().stopCellEditing();
+        }
+
         model.add(new JourFerie());
     }//GEN-LAST:event_addJourFerieButtonActionPerformed
 
@@ -471,6 +501,9 @@ public class ParametersDialog extends javax.swing.JDialog {
 
         // Si une ligne est selectionnee
         if (index != -1) {
+            if (tableFeries.isEditing()) {
+                tableFeries.getCellEditor().stopCellEditing();
+            }
             model.removeDataAtRow(index);
         }
     }//GEN-LAST:event_deleteJourFerieButtonActionPerformed
