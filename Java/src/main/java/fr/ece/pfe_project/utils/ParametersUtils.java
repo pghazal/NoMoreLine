@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -92,13 +93,15 @@ public class ParametersUtils {
     }
 
     public static void loadDatabase() {
-        
-        // Si l'année precente est complete, agrege et ajouter à la BDD
-        
-        HashMap<Integer, Integer> hmm = DatabaseHelper.getAllFrequentationAnnuelle();
 
+        // Si l'année precente est complete, agrege et ajouter à la BDD
+        ArrayList<Integer> yearsComplete = DatabaseHelper.getYearsComplete();
+        for(Integer year : yearsComplete) {
+            DatabaseHelper.aggregateFrequentationOfYear(year);
+        }
+        
         GlobalVariableUtils.getFrequentationAnnuelleMap().
-                putAll(hmm);
+                putAll(DatabaseHelper.getAllFrequentationAnnuelle());
 
         GlobalVariableUtils.getExcelMap().
                 putAll(DatabaseHelper.getAllFrequentationJournaliere());

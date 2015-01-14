@@ -112,42 +112,55 @@ public class FaceDetectorThread extends Thread {
             grabber.start();
 
 //***************************************************************************************************************//
-            // Image comparison   
+            // IMAGE COMPARISON
+            // Image template
             System.out.println("taking template picture");
             IplImage template = grabber.grab();
             int template_width = template.width();
             int template_height = template.height();
+            
             System.out.println("creating gray template IplImage");
             IplImage grayTemplate = IplImage.create(template_width, template_height, IPL_DEPTH_8U, 1);
             cvCvtColor(template, grayTemplate, CV_BGR2GRAY);
             System.out.println("Template picture has been translated to B&W picture");
+            
             CvMat mat_template = new CvMat(grayTemplate);
             System.out.println("B&W template matrix has been created");
-            CanvasFrame gray_frame_template = new CanvasFrame("Template");
+            
+            //CanvasFrame gray_frame_template = new CanvasFrame("Template");
             System.out.println("B&W template frame created");
-            gray_frame_template.showImage(grayTemplate);
+            //gray_frame_template.showImage(grayTemplate);
             System.out.println("B&W template frame display");
 
+            // Image to compare
             IplImage img_to_compare = grabber.grab();
             System.out.println("creating gray template IplImage");
             IplImage gray_img_to_compare = IplImage.create(template_width, template_height, IPL_DEPTH_8U, 1);
             cvCvtColor(img_to_compare, gray_img_to_compare, CV_BGR2GRAY);
             System.out.println("Template picture has been translated to B&W picture");
+            
             CvMat mat_img_to_compare = new CvMat(grayTemplate);
             System.out.println("B&W img_to_compare matrix has been created");
-            CanvasFrame frame_img_to_compare = new CanvasFrame("New Image For comparison");
-            frame_img_to_compare.showImage(gray_img_to_compare);
             
+            //CanvasFrame frame_img_to_compare = new CanvasFrame("New Image For comparison");
+            //frame_img_to_compare.showImage(gray_img_to_compare);
+            
+            // Are the images equal?
             if (mat_img_to_compare.equals(mat_template))
                 System.out.println("MATRIX ARE THE SAME");
             else System.out.println("MATRIX ARE NOT THE SAME");
             
+            // Image result from comparison
             IplImage result = IplImage.create(template_width, template_height, IPL_DEPTH_8U, 1);
             System.out.println("Start Image comparison ");
             cvAbsDiff( grayTemplate, gray_img_to_compare, result);
             System.out.println("Display Image comaprison result");
-            CanvasFrame result_frame = new CanvasFrame("result");
-            result_frame.showImage(result);
+            //CanvasFrame result_frame = new CanvasFrame("result");
+            //result_frame.showImage(result);
+            
+            IplImage bitImage = IplImage.create(template_width, template_height, IPL_DEPTH_8U, 1);
+            
+            //cvThreshold(result,bitImage,tr,255,CV_THRESH_BINARY);
 
 //***************************************************************************************************************//
             

@@ -1,5 +1,6 @@
 package fr.ece.pfe_project.panel;
 
+import fr.ece.pfe_project.algo.Algorithm;
 import fr.ece.pfe_project.model.JourFerie;
 import fr.ece.pfe_project.tablemodel.JourFerieTableModel;
 import fr.ece.pfe_project.utils.ExcelUtils;
@@ -11,6 +12,7 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JDialog;
@@ -26,71 +28,71 @@ import javax.swing.table.DefaultTableCellRenderer;
  * @author pierreghazal
  */
 public class ParametersDialog extends javax.swing.JDialog {
-
+    
     private final Integer DEFAULT_SEUIL_JOUR = 4000;
     private final Integer DEFAULT_SEUIL_CAMERA = 70;
-
+    
     private static JDialog dialog;
-
+    
     SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
-
+    
     public class DateRenderer extends DefaultTableCellRenderer {
-
+        
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int col) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
-
+            
             if (value instanceof Date) {
                 String strDate = f.format((Date) value);
                 this.setText(strDate);
             }
-
+            
             return this;
         }
     }
-
+    
     public class DateEditor extends DefaultCellEditor {
-
+        
         private final JFormattedTextField textField;
-
+        
         public DateEditor() {
             super(new JFormattedTextField(f));
-
+            
             textField = (JFormattedTextField) super.getComponent();
             textField.setFont(new Font(textField.getFont().getName(), Font.PLAIN, 11));
         }
-
+        
         @Override
         public Component getTableCellEditorComponent(JTable table,
                 Object value,
                 boolean isSelected,
                 int row,
                 int column) {
-
+            
             if (value instanceof Date) {
-
+                
                 String strDate = f.format((Date) value);
                 this.textField.setText(strDate);
             }
-
+            
             return this.textField;
         }
-
+        
         @Override
         public Object getCellEditorValue() {
-
+            
             try {
                 if (textField.getText().trim().length() == 0) {
                     throw new ParseException("", 0);
                 }
-
+                
                 java.util.Date utilDate = f.parse(textField.getText().trim());
-
+                
                 return utilDate;
             } catch (ParseException e) {
                 msgbox("Format date invalide. Format accepté : jj/mm/aaaa");
-
+                
                 return textField.getText();
             }
         }
@@ -105,7 +107,7 @@ public class ParametersDialog extends javax.swing.JDialog {
     public ParametersDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-
+        
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         this.tableFeries.getColumnModel().getColumn(0).setCellRenderer(rightRenderer);
@@ -115,12 +117,12 @@ public class ParametersDialog extends javax.swing.JDialog {
                 setCellRenderer(new DateRenderer());
         this.tableFeries.getColumnModel().getColumn(2).
                 setCellEditor(new DateEditor());
-
+        
         initParameters();
-
+        
         dialog = this;
     }
-
+    
     private void initParameters() {
 //        String paramPathExcel = (String) ParametersUtils.get(ParametersUtils.PARAM_PATH_EXCEL);
 //
@@ -130,19 +132,19 @@ public class ParametersDialog extends javax.swing.JDialog {
 
         Integer seuilJour = (Integer) ParametersUtils.get(ParametersUtils.PARAM_SUEIL_JOUR);
         Integer seuilCamera = (Integer) ParametersUtils.get(ParametersUtils.PARAM_SUEIL_CAMERA);
-
+        
         if (seuilJour != null) {
             this.spinnerSeuilJour.setValue(seuilJour);
         } else {
             this.spinnerSeuilJour.setValue(DEFAULT_SEUIL_JOUR);
         }
-
+        
         if (seuilCamera != null) {
             this.spinnerSeuilCamera.setValue(seuilCamera);
         } else {
             this.spinnerSeuilCamera.setValue(DEFAULT_SEUIL_CAMERA);
         }
-
+        
         ArrayList<JourFerie> jours = (ArrayList<JourFerie>) ParametersUtils.get(ParametersUtils.PARAM_JOURS_FERIES);
         if (jours != null && jours.size() > 0) {
             ((JourFerieTableModel) this.tableFeries.getModel()).setData(jours, true);
@@ -176,6 +178,7 @@ public class ParametersDialog extends javax.swing.JDialog {
         tableFeries = new javax.swing.JTable();
         addJourFerieButton = new javax.swing.JButton();
         deleteJourFerieButton = new javax.swing.JButton();
+        loadJourFerie = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         textFieldPathExcel = new javax.swing.JTextField();
@@ -241,6 +244,14 @@ public class ParametersDialog extends javax.swing.JDialog {
             }
         });
 
+        loadJourFerie.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/france_icon.png"))); // NOI18N
+        loadJourFerie.setText("  Jours Fériés");
+        loadJourFerie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadJourFerieActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -249,7 +260,9 @@ public class ParametersDialog extends javax.swing.JDialog {
                 .addComponent(addJourFerieButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deleteJourFerieButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 242, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                .addComponent(loadJourFerie, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel4Layout.createSequentialGroup()
                     .addContainerGap()
@@ -262,7 +275,8 @@ public class ParametersDialog extends javax.swing.JDialog {
                 .addGap(0, 98, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addJourFerieButton)
-                    .addComponent(deleteJourFerieButton)))
+                    .addComponent(deleteJourFerieButton)
+                    .addComponent(loadJourFerie)))
             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel4Layout.createSequentialGroup()
                     .addContainerGap()
@@ -277,6 +291,7 @@ public class ParametersDialog extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
@@ -284,9 +299,8 @@ public class ParametersDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(spinnerSeuilJour, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
-                            .addComponent(spinnerSeuilCamera)))
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(340, Short.MAX_VALUE))
+                            .addComponent(spinnerSeuilCamera))))
+                .addContainerGap(360, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -352,7 +366,7 @@ public class ParametersDialog extends javax.swing.JDialog {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 674, Short.MAX_VALUE)
+            .addGap(0, 694, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -408,19 +422,19 @@ public class ParametersDialog extends javax.swing.JDialog {
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.addChoosableFileFilter(new ExcelUtils().new ExcelFilter());
         fc.setAcceptAllFileFilterUsed(false);
-
+        
         int returnVal = fc.showOpenDialog(this);
-
+        
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-
+            
             if (file.exists()) {
                 String path = file.getPath();
-
+                
                 this.textFieldPathExcel.setText(path);
             }
         } else {
-
+            
         }
     }//GEN-LAST:event_buttonBrowserExcelActionPerformed
 
@@ -430,7 +444,7 @@ public class ParametersDialog extends javax.swing.JDialog {
 
     private void buttonValiderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonValiderActionPerformed
         Runnable r = new Runnable() {
-
+            
             @Override
             public void run() {
                 Boolean isSuccess = false;
@@ -439,17 +453,17 @@ public class ParametersDialog extends javax.swing.JDialog {
                 if (textFieldPathExcel.getText() != null && textFieldPathExcel.getText().length() > 0) {
                     isSuccess = ExcelUtils.loadExcel(textFieldPathExcel.getText());
                 }
-
+                
                 if ((int) spinnerSeuilJour.getValue() >= 0 && (int) spinnerSeuilCamera.getValue() >= 0) {
                     ParametersUtils.set(ParametersUtils.PARAM_SUEIL_JOUR, (int) spinnerSeuilJour.getValue());
                     ParametersUtils.set(ParametersUtils.PARAM_SUEIL_CAMERA, (int) spinnerSeuilCamera.getValue());
-
+                    
                     isSuccess = true;
                 }
-
+                
                 JourFerieTableModel model = (JourFerieTableModel) tableFeries.getModel();
                 ParametersUtils.set(ParametersUtils.PARAM_JOURS_FERIES, (ArrayList<JourFerie>) model.getDatas());
-
+                
                 if (isSuccess) {
                     // Reinit
                     textFieldPathExcel.setText("");
@@ -461,7 +475,7 @@ public class ParametersDialog extends javax.swing.JDialog {
                 }
             }
         };
-
+        
         ProgressDialog progressDialog = new ProgressDialog(this, r, "Veuillez patienter...");
         progressDialog.setVisible(true);
     }//GEN-LAST:event_buttonValiderActionPerformed
@@ -476,7 +490,7 @@ public class ParametersDialog extends javax.swing.JDialog {
         // Afficher pop-up ?
         this.spinnerSeuilJour.setValue(DEFAULT_SEUIL_JOUR);
         this.spinnerSeuilCamera.setValue(DEFAULT_SEUIL_CAMERA);
-
+        
         ParametersUtils.set(ParametersUtils.PARAM_SUEIL_JOUR, (int) spinnerSeuilJour.getValue());
         ParametersUtils.set(ParametersUtils.PARAM_SUEIL_CAMERA, (int) spinnerSeuilCamera.getValue());
 
@@ -486,17 +500,17 @@ public class ParametersDialog extends javax.swing.JDialog {
 
     private void addJourFerieButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addJourFerieButtonActionPerformed
         JourFerieTableModel model = (JourFerieTableModel) this.tableFeries.getModel();
-
+        
         if (tableFeries.isEditing()) {
             tableFeries.getCellEditor().stopCellEditing();
         }
-
+        
         model.add(new JourFerie());
     }//GEN-LAST:event_addJourFerieButtonActionPerformed
 
     private void deleteJourFerieButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteJourFerieButtonActionPerformed
         JourFerieTableModel model = (JourFerieTableModel) this.tableFeries.getModel();
-
+        
         int index = this.tableFeries.getSelectedRow();
 
         // Si une ligne est selectionnee
@@ -507,6 +521,42 @@ public class ParametersDialog extends javax.swing.JDialog {
             model.removeDataAtRow(index);
         }
     }//GEN-LAST:event_deleteJourFerieButtonActionPerformed
+
+    private void loadJourFerieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadJourFerieActionPerformed
+        ArrayList<JourFerie> jours = new ArrayList<JourFerie>();
+        Calendar cal = Calendar.getInstance();
+        
+        JourFerie paques = Algorithm.paques(cal.get(Calendar.YEAR));
+        jours.add(paques);
+        jours.add(Algorithm.ascension(paques));
+        jours.add(Algorithm.pentecote(paques));
+        jours.add(Algorithm.vendrediSaint(paques));
+        
+        cal.set(Calendar.MILLISECOND, 0);
+        
+        cal.set(cal.get(Calendar.YEAR), 7, 14, 0, 0, 0);
+        jours.add(new JourFerie("Fête Nationale", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 10, 11, 0, 0, 0);
+        jours.add(new JourFerie("Armistice", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 4, 8, 0, 0, 0);
+        jours.add(new JourFerie("8 Mai", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 7, 15, 0, 0, 0);
+        jours.add(new JourFerie("Assomption", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 10, 1, 0, 0, 0);
+        jours.add(new JourFerie("Toussaint", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 11, 25, 0, 0, 0);
+        jours.add(new JourFerie("Noël", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 11, 26, 0, 0, 0);
+        jours.add(new JourFerie("26 Décembre", cal.getTime()));
+        
+        JourFerieTableModel model = (JourFerieTableModel) this.tableFeries.getModel();
+        
+        if (tableFeries.isEditing()) {
+            tableFeries.getCellEditor().stopCellEditing();
+        }
+        
+        model.setData(jours, true);
+    }//GEN-LAST:event_loadJourFerieActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -525,6 +575,7 @@ public class ParametersDialog extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JButton loadJourFerie;
     private javax.swing.JSpinner spinnerSeuilCamera;
     private javax.swing.JSpinner spinnerSeuilJour;
     private javax.swing.JTable tableFeries;

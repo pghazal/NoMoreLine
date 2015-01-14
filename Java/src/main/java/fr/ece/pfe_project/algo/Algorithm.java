@@ -18,6 +18,8 @@ public class Algorithm {
 
     // Moyenne avec les annees precedentes
     public static AlgoResult process1(Date dateSelected) {
+        AlgoResult algoResult = new AlgoResult();
+
         int yearSelected = getYear(dateSelected);
         int currentMonth = getMonth(dateSelected);
         int currentDay = getDayOfMonth(dateSelected);
@@ -25,163 +27,165 @@ public class Algorithm {
         int YEARS_TO_COMPARE = DatabaseHelper.getYearsComplete().size();
         System.out.println("NB ANNEE : " + YEARS_TO_COMPARE);
 
-        int nbSemaine = getWeekOfYear(dateSelected);
-        int jour = getDayOfWeek(dateSelected);
+        // METTRE > 1 ?? Division par 0
+        if (YEARS_TO_COMPARE > 0) {
+            int nbSemaine = getWeekOfYear(dateSelected);
+            int jour = getDayOfWeek(dateSelected);
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(dateSelected);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(dateSelected);
 
-        /**
-         * CALCUL JOURNALIER
-         */
-        ArrayList<Double> variationsJournaliere = new ArrayList<Double>();
-        Date firstDate;
-        Date secondDate;
-        for (int i = YEARS_TO_COMPARE; i > 1; i--) {
+            /**
+             * CALCUL JOURNALIER
+             */
+            ArrayList<Double> variationsJournaliere = new ArrayList<Double>();
+            Date firstDate;
+            Date secondDate;
+            for (int i = YEARS_TO_COMPARE; i > 1; i--) {
 
-            cal.set(Calendar.YEAR, yearSelected - i);
+                cal.set(Calendar.YEAR, yearSelected - i);
+                cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+                cal.set(Calendar.DAY_OF_WEEK, jour);
+
+                //cal.set(yearSelected - i, currentMonth, currentDay);
+                firstDate = cal.getTime();
+
+                cal.set(Calendar.YEAR, yearSelected - (i - 1));
+                cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+                cal.set(Calendar.DAY_OF_WEEK, jour);
+                //cal.set(yearSelected - (i - 1), currentMonth, currentDay);
+                secondDate = cal.getTime();
+
+                System.out.println("First Date : " + firstDate);
+                System.out.println("Second Date : " + secondDate);
+
+                Double var = getVariation(firstDate, secondDate, true);
+                System.out.println("Variation : " + var);
+
+                variationsJournaliere.add(var);
+            }
+
+            // calcul moyenne journaliere
+            double moyVariationJournaliere;
+            double sommeJournaliere = 0;
+            for (int i = 0; i < YEARS_TO_COMPARE - 1; i++) {
+                sommeJournaliere += variationsJournaliere.get(i);
+            }
+            // Représente le Alpha sur le papier
+            moyVariationJournaliere = sommeJournaliere / (YEARS_TO_COMPARE - 1);
+            System.out.println("Alpha = " + moyVariationJournaliere);
+
+            // Réinitialisation de la date
+            cal.setTime(dateSelected);
+            // Initialisation à l'année précédente
+            cal.set(Calendar.YEAR, yearSelected - 1);
             cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
             cal.set(Calendar.DAY_OF_WEEK, jour);
 
-            //cal.set(yearSelected - i, currentMonth, currentDay);
-            firstDate = cal.getTime();
+            // représente le J1 sur le papier
+            double nbPassagerJournalier = getFrequentationJournaliere(cal.getTime())
+                    + moyVariationJournaliere * getFrequentationJournaliere(cal.getTime());
+            System.out.println("J1 = " + nbPassagerJournalier);
 
-            cal.set(Calendar.YEAR, yearSelected - (i - 1));
+            // Réinitialisation pour l'année
+            cal.setTime(dateSelected);
+
+            /**
+             * CALCUL ANNUEL
+             */
+            ArrayList<Double> variationsAnnuelle = new ArrayList<Double>();
+            for (int i = YEARS_TO_COMPARE; i > 1; i--) {
+
+                cal.set(yearSelected - i, currentMonth, currentDay);
+                firstDate = cal.getTime();
+                cal.set(yearSelected - (i - 1), currentMonth, currentDay);
+                secondDate = cal.getTime();
+
+                System.out.println("First Date : " + firstDate);
+                System.out.println("Second Date : " + secondDate);
+
+                Double var = getVariation(firstDate, secondDate, false);
+                System.out.println("Variation : " + var);
+
+                variationsAnnuelle.add(var);
+            }
+
+            // Calcul moyenne annuelle
+            double moyVariationAnnuelle;
+            double sommeAnnuelle = 0;
+            for (int i = 0; i < YEARS_TO_COMPARE - 1; i++) {
+                sommeAnnuelle += variationsAnnuelle.get(i);
+            }
+            // Représente le Beta sur le papier
+            moyVariationAnnuelle = sommeAnnuelle / (YEARS_TO_COMPARE - 1);
+            System.out.println("Beta = " + moyVariationAnnuelle);
+
+            // représente le A1 sur le papier
+            double nbPassagerAnnuelle = getFrequentationAnnuelle(yearSelected - 1)
+                    + moyVariationAnnuelle * getFrequentationAnnuelle(yearSelected - 1);
+            System.out.println("A1 = " + nbPassagerAnnuelle);
+
+            // Réinitialisation de la date
+            cal.setTime(dateSelected);
+            // Initialisation à l'année précédente
+            cal.set(Calendar.YEAR, yearSelected - 1);
             cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
             cal.set(Calendar.DAY_OF_WEEK, jour);
-            //cal.set(yearSelected - (i - 1), currentMonth, currentDay);
-            secondDate = cal.getTime();
 
-            System.out.println("First Date : " + firstDate);
-            System.out.println("Second Date : " + secondDate);
+            /**
+             * CALCUL ASSOCIE JOURNALIER/ANNUEL
+             */
+            // Pondéré par Beta : représente NBP14 sur le papier
+            double nbPassagerPondere = getFrequentationJournaliere(cal.getTime())
+                    + moyVariationAnnuelle * getFrequentationJournaliere(cal.getTime());
+            System.out.println("NBP14 = " + nbPassagerPondere);
 
-            Double var = getVariation(firstDate, secondDate, true);
-            System.out.println("Variation : " + var);
+            // Représente le M14 sur le papier
+            double moyenneJournalierAnnuelle = (nbPassagerJournalier + nbPassagerPondere) / 2;
+            System.out.println("M14 = " + moyenneJournalierAnnuelle);
 
-            variationsJournaliere.add(var);
+            /**
+             * CALCUL PROFIL GLOBAL
+             */
+            ArrayList<Double> calculPourcentageAnnuelle = new ArrayList<Double>();
+            for (int i = 0; i < GlobalVariableUtils.getFrequentationAnnuelleMap().size() - 1; i++) {
+                int diff = getFrequentationAnnuelle(yearSelected - 1 - i) - getFrequentationAnnuelle(yearSelected - 2 - i);
+                System.out.println("Diff = " + diff);
+
+                Double percent = new Integer(diff).doubleValue() / new Integer(getFrequentationAnnuelle(yearSelected - 1 - i)).doubleValue();
+                System.out.println("Percent = " + percent);
+
+                calculPourcentageAnnuelle.add(percent);
+            }
+
+            double moyPourcentage = 0;
+            for (int i = 0; i < calculPourcentageAnnuelle.size(); i++) {
+                moyPourcentage += calculPourcentageAnnuelle.get(i);
+            }
+
+            // Représente Ppg sur le papier
+            moyPourcentage = moyPourcentage / calculPourcentageAnnuelle.size();
+            System.out.println("Calcul Moy Percent (Ppg) : " + moyPourcentage);
+
+            // Moyenne pondéré par le profil (MP14 sur le papier)
+            double moyPondere = moyenneJournalierAnnuelle + moyenneJournalierAnnuelle * moyPourcentage;
+            // Représente le (M14 + MP14) /2 sur papier....
+            double moySalut = (moyPondere + moyenneJournalierAnnuelle) / 2;
+
+            // Réinitialisation de la date
+            cal.setTime(dateSelected);
+            // Initialisation à l'année précédente
+            cal.add(Calendar.YEAR, -1);
+
+            System.out.println("Freq Journaliere 2013 : " + cal.getTime());
+            System.out.println("Freq Journaliere 2013 : " + getFrequentationJournaliere(cal.getTime()));
+
+            int result = (int) (nbPassagerJournalier + nbPassagerPondere + moyPondere) / 3;
+
+            System.out.println("RESULT : " + result);
+
+            algoResult.setPrevisionPassager(result);
         }
-
-        // calcul moyenne journaliere
-        double moyVariationJournaliere;
-        double sommeJournaliere = 0;
-        for (int i = 0; i < YEARS_TO_COMPARE - 1; i++) {
-            sommeJournaliere += variationsJournaliere.get(i);
-        }
-        // Représente le Alpha sur le papier
-        moyVariationJournaliere = sommeJournaliere / (YEARS_TO_COMPARE - 1);
-        System.out.println("Alpha = " + moyVariationJournaliere);
-
-        // Réinitialisation de la date
-        cal.setTime(dateSelected);
-        // Initialisation à l'année précédente
-        cal.set(Calendar.YEAR, yearSelected - 1);
-        cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
-        cal.set(Calendar.DAY_OF_WEEK, jour);
-
-        // représente le J1 sur le papier
-        double nbPassagerJournalier = getFrequentationJournaliere(cal.getTime())
-                + moyVariationJournaliere * getFrequentationJournaliere(cal.getTime());
-        System.out.println("J1 = " + nbPassagerJournalier);
-
-        // Réinitialisation pour l'année
-        cal.setTime(dateSelected);
-
-        /**
-         * CALCUL ANNUEL
-         */
-        ArrayList<Double> variationsAnnuelle = new ArrayList<Double>();
-        for (int i = YEARS_TO_COMPARE; i > 1; i--) {
-
-            cal.set(yearSelected - i, currentMonth, currentDay);
-            firstDate = cal.getTime();
-            cal.set(yearSelected - (i - 1), currentMonth, currentDay);
-            secondDate = cal.getTime();
-
-            System.out.println("First Date : " + firstDate);
-            System.out.println("Second Date : " + secondDate);
-
-            Double var = getVariation(firstDate, secondDate, false);
-            System.out.println("Variation : " + var);
-
-            variationsAnnuelle.add(var);
-        }
-
-        // Calcul moyenne annuelle
-        double moyVariationAnnuelle;
-        double sommeAnnuelle = 0;
-        for (int i = 0; i < YEARS_TO_COMPARE - 1; i++) {
-            sommeAnnuelle += variationsAnnuelle.get(i);
-        }
-        // Représente le Beta sur le papier
-        moyVariationAnnuelle = sommeAnnuelle / (YEARS_TO_COMPARE - 1);
-        System.out.println("Beta = " + moyVariationAnnuelle);
-
-        // représente le A1 sur le papier
-        double nbPassagerAnnuelle = getFrequentationAnnuelle(yearSelected - 1)
-                + moyVariationAnnuelle * getFrequentationAnnuelle(yearSelected - 1);
-        System.out.println("A1 = " + nbPassagerAnnuelle);
-
-        // Réinitialisation de la date
-        cal.setTime(dateSelected);
-        // Initialisation à l'année précédente
-        cal.set(Calendar.YEAR, yearSelected - 1);
-        cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
-        cal.set(Calendar.DAY_OF_WEEK, jour);
-
-        /**
-         * CALCUL ASSOCIE JOURNALIER/ANNUEL
-         */
-        // Pondéré par Beta : représente NBP14 sur le papier
-        double nbPassagerPondere = getFrequentationJournaliere(cal.getTime())
-                + moyVariationAnnuelle * getFrequentationJournaliere(cal.getTime());
-        System.out.println("NBP14 = " + nbPassagerPondere);
-
-        // Représente le M14 sur le papier
-        double moyenneJournalierAnnuelle = (nbPassagerJournalier + nbPassagerPondere) / 2;
-        System.out.println("M14 = " + moyenneJournalierAnnuelle);
-
-        /**
-         * CALCUL PROFIL GLOBAL
-         */
-        ArrayList<Double> calculPourcentageAnnuelle = new ArrayList<Double>();
-        for (int i = 0; i < GlobalVariableUtils.getFrequentationAnnuelleMap().size() - 1; i++) {
-            int diff = getFrequentationAnnuelle(yearSelected - 1 - i) - getFrequentationAnnuelle(yearSelected - 2 - i);
-            System.out.println("Diff = " + diff);
-
-            Double percent = new Integer(diff).doubleValue() / new Integer(getFrequentationAnnuelle(yearSelected - 1 - i)).doubleValue();
-            System.out.println("Percent = " + percent);
-
-            calculPourcentageAnnuelle.add(percent);
-        }
-
-        double moyPourcentage = 0;
-        for (int i = 0; i < calculPourcentageAnnuelle.size(); i++) {
-            moyPourcentage += calculPourcentageAnnuelle.get(i);
-        }
-
-        // Représente Ppg sur le papier
-        moyPourcentage = moyPourcentage / calculPourcentageAnnuelle.size();
-        System.out.println("Calcul Moy Percent (Ppg) : " + moyPourcentage);
-
-        // Moyenne pondéré par le profil (MP14 sur le papier)
-        double moyPondere = moyenneJournalierAnnuelle + moyenneJournalierAnnuelle * moyPourcentage;
-        // Représente le (M14 + MP14) /2 sur papier....
-        double moySalut = (moyPondere + moyenneJournalierAnnuelle) / 2;
-
-        // Réinitialisation de la date
-        cal.setTime(dateSelected);
-        // Initialisation à l'année précédente
-        cal.add(Calendar.YEAR, -1);
-
-        System.out.println("Freq Journaliere 2013 : " + cal.getTime());
-        System.out.println("Freq Journaliere 2013 : " + getFrequentationJournaliere(cal.getTime()));
-
-        int result = (int) (nbPassagerJournalier + nbPassagerPondere + moyPondere) / 3;
-
-        System.out.println("RESULT : " + result);
-
-        AlgoResult algoResult = new AlgoResult();
-        algoResult.setPrevisionPassager(result);
 
         return algoResult;
     }
@@ -392,10 +396,17 @@ public class Algorithm {
 
         return algoResult;
     }
-    
-    public static ArrayList paques(int y) {
 
-        ArrayList DatePaques = new ArrayList();
+    public static JourFerie paques(int y) {
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.YEAR, y);
+
+        JourFerie datePaques = new JourFerie();
 
         int month;
 
@@ -414,35 +425,72 @@ public class Algorithm {
         }
         int day = n + 7 - ((d + n) % 7);
         day = day + 1;
+
         if (day > 31) {
-            month = 4;
-            day = day - 31;
-            DatePaques.add(0, day);
-            DatePaques.add(1, month);
-            return DatePaques;
-        } else {
             month = 3;
+            day = day - 31;
+            cal.set(Calendar.MONTH, month);
+        } else {
+            month = 2;
+            cal.set(Calendar.MONTH, month);
         }
-        DatePaques.add(0, day);
-        DatePaques.add(1, month);
-        return DatePaques;
+
+        cal.set(Calendar.DAY_OF_MONTH, day);
+
+        datePaques.setDate(cal.getTime());
+        datePaques.setLibelle("Pâques");
+
+        System.out.println(datePaques.getLibelle() + " " + datePaques.getDate());
+
+        return datePaques;
     }
 
-    public static ArrayList ascencion(int y) {
+    public static JourFerie ascension(JourFerie paques) {
 
-        ArrayList DateAscencion = new ArrayList();
-        int MonthAscencion;
-        int DayAscencion;
-        
+        JourFerie dateAscencion = new JourFerie();
+
         Calendar cal = Calendar.getInstance();
-                
-        
-        if (month == 4) {
-            MonthAscencion = (MonthAscencion + 1);
-            DayAscencion =
-        
-        }
+        cal.setTime(paques.getDate());
+        cal.add(Calendar.DAY_OF_YEAR, 38);
 
+        dateAscencion.setDate(cal.getTime());
+        dateAscencion.setLibelle("Ascension");
+
+        System.out.println(dateAscencion.getLibelle() + " " + dateAscencion.getDate());
+
+        return dateAscencion;
+    }
+
+    public static JourFerie pentecote(JourFerie paques) {
+
+        JourFerie date = new JourFerie();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(paques.getDate());
+        cal.add(Calendar.DAY_OF_MONTH, 49);
+
+        date.setDate(cal.getTime());
+        date.setLibelle("Pentecôte");
+
+        System.out.println(date.getLibelle() + " " + date.getDate());
+
+        return date;
+    }
+
+    public static JourFerie vendrediSaint(JourFerie paques) {
+
+        JourFerie date = new JourFerie();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(paques.getDate());
+        cal.add(Calendar.DAY_OF_MONTH, -3);
+
+        date.setDate(cal.getTime());
+        date.setLibelle("Vendredi Saint");
+
+        System.out.println(date.getLibelle() + " " + date.getDate());
+
+        return date;
     }
 
     private static Boolean isFerie(Date date, ArrayList<JourFerie> jours) {
