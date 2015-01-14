@@ -5,6 +5,7 @@ import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.Employee;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
+import fr.ece.pfe_project.model.ListingVols;
 import fr.ece.pfe_project.panel.MainPanel.FaceDetectorListener;
 import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
@@ -13,8 +14,14 @@ import fr.ece.pfe_project.widget.CameraCellComponent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import real_time_image_processing.FaceDetectorThread;
 
 /**
@@ -27,6 +34,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     private final Comptoir comptoirs[];
     private final Camera cameras[];
     private final Employee employees[];
+    private final ListingVols listingVols[];
 
     FaceDetectorListener faceDetectorListener;
 
@@ -43,6 +51,9 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         // Listener
         addMouseListener(this);
         addMouseMotionListener(this);
+        
+        //Initialisation de la liste des vols
+        listingVols = new ListingVols[]{};
 
         // Data initialization
         comptoirs = new Comptoir[]{
@@ -153,6 +164,38 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         
         comboBox.setModel(new DefaultComboBoxModel(months));
         
+    }
+    
+    //Fonction pour récupérer la liste des vols
+    private void listingVolsrecup(){
+        try{
+            //On se connecte au site et on charge le document html
+	        	Document doc = Jsoup.connect("http://www.strasbourg.aeroport.fr/destinations/vols").get();
+	        	//On récupère dans ce document la premiere balise ayant comme nom td et pour attribut class="center"
+	        	int el = doc.select("td .center").size();
+	        	int nb = 0;
+                        String[] tab = new String[5];
+                        ArrayList ensembleDesVols = new ArrayList();
+	        	for(int i=0;i<el;i++){
+	        	Element element = doc.select("td .center").get(i);
+	        	String element1 =  element.text();
+                        tab[nb] = element1;
+	        	nb++;
+	        	if(nb == 5){
+                                for(int j=0;j<5;j++){
+                                    ensembleDesVols.add(i, tab[nb]);
+                                }
+                                nb = 0;
+	        	}
+	        	}
+        }
+        catch(MalformedURLException | NumberFormatException | java.lang.ArrayIndexOutOfBoundsException e){
+	        System.out.println(e);
+	        }
+        	catch(IOException ex){
+        	System.out.println(ex);
+        	}
+	        	
     }
     
 
