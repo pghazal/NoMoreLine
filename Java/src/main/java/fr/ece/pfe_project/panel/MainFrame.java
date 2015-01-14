@@ -1,6 +1,8 @@
 package fr.ece.pfe_project.panel;
 
+import fr.ece.pfe_project.algo.Algorithm;
 import fr.ece.pfe_project.database.DatabaseHelper;
+import fr.ece.pfe_project.model.JourFerie;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import javax.swing.JOptionPane;
 import fr.ece.pfe_project.widget.StartingProgressDialog;
