@@ -392,6 +392,58 @@ public class Algorithm {
 
         return algoResult;
     }
+    
+    public static ArrayList paques(int y) {
+
+        ArrayList DatePaques = new ArrayList();
+
+        int month;
+
+        int g = (y % 19) + 1;
+        int c = y / 100 + 1;
+        int x = 3 * c / 4 - 12;
+        int z = (8 * c + 5) / 25 - 5;
+        int d = 5 * y / 4 - x - 10;
+        int e = (11 * g + 20 + z - x) % 30;
+        if (e == 25 && g > 11 || e == 24) {
+            ++e;
+        }
+        int n = 44 - e;
+        if (n < 21) {
+            n = n + 30;
+        }
+        int day = n + 7 - ((d + n) % 7);
+        day = day + 1;
+        if (day > 31) {
+            month = 4;
+            day = day - 31;
+            DatePaques.add(0, day);
+            DatePaques.add(1, month);
+            return DatePaques;
+        } else {
+            month = 3;
+        }
+        DatePaques.add(0, day);
+        DatePaques.add(1, month);
+        return DatePaques;
+    }
+
+    public static ArrayList ascencion(int y) {
+
+        ArrayList DateAscencion = new ArrayList();
+        int MonthAscencion;
+        int DayAscencion;
+        
+        Calendar cal = Calendar.getInstance();
+                
+        
+        if (month == 4) {
+            MonthAscencion = (MonthAscencion + 1);
+            DayAscencion =
+        
+        }
+
+    }
 
     private static Boolean isFerie(Date date, ArrayList<JourFerie> jours) {
         Boolean isFerie = false;
