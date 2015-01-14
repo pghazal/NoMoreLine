@@ -35,7 +35,7 @@
             <Property name="text" type="java.lang.String" value="S&#xe9;lectionner date :"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="ActivateCameraButton">
+        <Component class="javax.swing.JButton" name="CameraButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Activer cam&#xe9;ra"/>
           </Properties>
