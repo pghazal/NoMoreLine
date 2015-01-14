@@ -98,8 +98,10 @@ public class JourFerieTableModel extends DefaultTableModel {
 
     public void add(JourFerie jf) {
         if (jf != null) {
-            jours.add(jf);
-            this.fireTableDataChanged();
+            if (!jours.contains(jf)) {
+                jours.add(jf);
+                this.fireTableDataChanged();
+            }
         }
     }
 
