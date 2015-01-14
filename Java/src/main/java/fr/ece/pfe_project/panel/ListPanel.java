@@ -10,6 +10,9 @@ import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.widget.CameraCellComponent;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -22,11 +25,12 @@ import real_time_image_processing.FaceDetectorThread;
  * @author pierreghazal
  */
 public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.FaceDetectorInterface,
-        ToolbarEntityPanel.ToolbarEntityListener, MouseMotionListener, MouseListener {
+        ToolbarEntityPanel.ToolbarEntityListener, MouseMotionListener, MouseListener, ActionListener {
 
     private final Comptoir comptoirs[];
     private final Camera cameras[];
     private final Employee employees[];
+    private boolean isCameraActive;
 
     FaceDetectorListener faceDetectorListener;
 
@@ -50,10 +54,10 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             new Comptoir(3), new Comptoir(4),
             new Comptoir(5), new Comptoir(6)
         };
-        
+
         //setVisibility false pour rendre invisible les 2 combobox au démarrage
         setVisibility(false);
-        
+
         //SetCameraButtonVisibility false pour rendre invisible le bouton caméra au démmarage
         setCameraButtonVisibility(false);
 
@@ -62,17 +66,18 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         };
 
         //cameras[1].setState(Camera.CAMERA_STATE.ALERT); // SET THE 2ND CAMERA AS DECTECTING CROWD
-
         employees = new Employee[]{
             new Employee(), new Employee(),
             new Employee()
         };
+        
+        isCameraActive = false;
 
         itemsTable.setDefaultRenderer(Camera.class, new CameraCellRenderer());
         itemsTable.setDefaultEditor(Camera.class, new CameraCellEditor());
 
         this.itemsTable.setModel(new MyTableModel());
-        
+
     }
 
     @Override
@@ -95,7 +100,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 setCameraButtonVisibility(true);
                 itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
                 model.setData(cameras, false);
-                cameraInterface(false);
+                CameraButton.addActionListener(this);
+                //cameraInterface(false);
                 break;
             case EXCELROW:
                 setVisibility(true);
@@ -124,9 +130,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             jComboBox1.setVisible(false);
             jComboBox2.setVisible(false);
 
-        }
-
-        else  {
+        } else {
             jLabel1.setVisible(true);
             jComboBox1.setVisible(true);
             jComboBox2.setVisible(true);
@@ -134,29 +138,45 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         }
 
     }
-    
-    private void setCameraButtonVisibility(boolean bool){
-        
-        if (bool==false){
-            ActivateCameraButton.setVisible(false);
-        }
-        else {
-            ActivateCameraButton.setVisible(true);
+
+    private void setCameraButtonVisibility(boolean bool) {
+
+        if (bool == false) {
+            CameraButton.setVisible(false);
+        } else {
+            CameraButton.setVisible(true);
+            CameraButton.setOpaque(true);
+            //CameraButton.setForeground(Color.green);
         }
     }
-    
-    private void JComboboxItems (JComboBox comboBox)
-    {
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if (isCameraActive == true) {
+            //On désactive les caméras 
+            cameraInterface(!isCameraActive);
+            CameraButton.setText("Activer caméra");
+        } else //On change le label du bouton (de "activer caméra" à "désactiver caméra) et sa couleur
+        {
+            CameraButton.setText("Désactiver caméra");
+            //On lance l'activation des caméras une fois qu'on appuie sur le bouton
+            cameraInterface(!isCameraActive);
+        }
+
+    }
+
+    private void JComboboxItems(JComboBox comboBox) {
         String[] months = {"January", "February", "March", "April", "Mei", "June",
-                "July", "August", "September", "October", "November", "December"};
-        
-        
+            "July", "August", "September", "October", "November", "December"};
+
         comboBox.setModel(new DefaultComboBoxModel(months));
-        
+
     }
-    
 
     private void cameraInterface(boolean on) {
+
+        isCameraActive = !isCameraActive;
         // On souhaite lancer l'activation des cameras
         if (on) {
             for (int i = 0; i < cameras.length; i++) {
@@ -195,6 +215,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 }
             }
         }
+
     }
 
     @Override
@@ -213,7 +234,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
         jSpinnerPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        ActivateCameraButton = new javax.swing.JButton();
+        CameraButton = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox();
         jComboBox2 = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -226,8 +247,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         jLabel1.setText("Sélectionner date :");
         jSpinnerPanel.add(jLabel1);
 
-        ActivateCameraButton.setText("Activer caméra");
-        jSpinnerPanel.add(ActivateCameraButton);
+        CameraButton.setText("Activer caméra");
+        jSpinnerPanel.add(CameraButton);
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jSpinnerPanel.add(jComboBox1);
@@ -249,7 +270,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton ActivateCameraButton;
+    private javax.swing.JButton CameraButton;
     private javax.swing.JTable itemsTable;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
