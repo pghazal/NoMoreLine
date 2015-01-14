@@ -35,6 +35,11 @@
             <Property name="text" type="java.lang.String" value="S&#xe9;lectionner date :"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JButton" name="ActivateCameraButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Activer cam&#xe9;ra"/>
+          </Properties>
+        </Component>
         <Component class="javax.swing.JComboBox" name="jComboBox1">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
