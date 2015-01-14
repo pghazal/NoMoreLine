@@ -55,11 +55,10 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         setVisibility(false);
 
         cameras = new Camera[]{
-            new Camera(1), new Camera(2),
-            new Camera(3)
+            new Camera(1)
         };
 
-        cameras[1].setState(Camera.CAMERA_STATE.ALERT);
+        //cameras[1].setState(Camera.CAMERA_STATE.ALERT); // SET THE 2ND CAMERA AS DECTECTING CROWD
 
         employees = new Employee[]{
             new Employee(), new Employee(),
