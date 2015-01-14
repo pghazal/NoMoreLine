@@ -25,9 +25,15 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+=======
+import javax.swing.JLabel;
+import org.jdatepicker.ComponentIconDefaults;
+import org.jdatepicker.ComponentManager;
+>>>>>>> 7f8ce799a1fb2c6951c727cdd2a867b28105053c
 =======
 import javax.swing.JLabel;
 import org.jdatepicker.ComponentIconDefaults;
@@ -46,7 +52,11 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     private final Camera cameras[];
     private final Employee employees[];
 <<<<<<< HEAD
+<<<<<<< HEAD
     private final ListingVols listingVols[];
+=======
+    private boolean isCameraActive;
+>>>>>>> 7f8ce799a1fb2c6951c727cdd2a867b28105053c
 =======
     private boolean isCameraActive;
 >>>>>>> 7f8ce799a1fb2c6951c727cdd2a867b28105053c
@@ -198,6 +208,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
         comboBox.setModel(new DefaultComboBoxModel(months));
 
+<<<<<<< HEAD
     }
 <<<<<<< HEAD
     
@@ -234,6 +245,9 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     }
     
 =======
+>>>>>>> 7f8ce799a1fb2c6951c727cdd2a867b28105053c
+=======
+    }
 >>>>>>> 7f8ce799a1fb2c6951c727cdd2a867b28105053c
 
     private void cameraInterface(boolean on) {
