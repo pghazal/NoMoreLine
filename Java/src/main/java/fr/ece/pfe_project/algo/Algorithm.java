@@ -392,10 +392,17 @@ public class Algorithm {
 
         return algoResult;
     }
-    
-    public static ArrayList paques(int y) {
 
-        ArrayList DatePaques = new ArrayList();
+    public static JourFerie paques(int y) {
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.YEAR, y);
+
+        JourFerie datePaques = new JourFerie();
 
         int month;
 
@@ -414,35 +421,72 @@ public class Algorithm {
         }
         int day = n + 7 - ((d + n) % 7);
         day = day + 1;
+
         if (day > 31) {
-            month = 4;
-            day = day - 31;
-            DatePaques.add(0, day);
-            DatePaques.add(1, month);
-            return DatePaques;
-        } else {
             month = 3;
+            day = day - 31;
+            cal.set(Calendar.MONTH, month);
+        } else {
+            month = 2;
+            cal.set(Calendar.MONTH, month);
         }
-        DatePaques.add(0, day);
-        DatePaques.add(1, month);
-        return DatePaques;
+
+        cal.set(Calendar.DAY_OF_MONTH, day);
+
+        datePaques.setDate(cal.getTime());
+        datePaques.setLibelle("Pâques");
+
+        System.out.println(datePaques.getLibelle() + " " + datePaques.getDate());
+
+        return datePaques;
     }
 
-    public static ArrayList ascencion(int y) {
+    public static JourFerie ascension(JourFerie paques) {
 
-        ArrayList DateAscencion = new ArrayList();
-        int MonthAscencion;
-        int DayAscencion;
-        
+        JourFerie dateAscencion = new JourFerie();
+
         Calendar cal = Calendar.getInstance();
-                
-        
-        if (month == 4) {
-            MonthAscencion = (MonthAscencion + 1);
-            DayAscencion =
-        
-        }
+        cal.setTime(paques.getDate());
+        cal.add(Calendar.DAY_OF_YEAR, 38);
 
+        dateAscencion.setDate(cal.getTime());
+        dateAscencion.setLibelle("Ascension");
+
+        System.out.println(dateAscencion.getLibelle() + " " + dateAscencion.getDate());
+
+        return dateAscencion;
+    }
+
+    public static JourFerie pentecote(JourFerie paques) {
+
+        JourFerie date = new JourFerie();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(paques.getDate());
+        cal.add(Calendar.DAY_OF_MONTH, 49);
+
+        date.setDate(cal.getTime());
+        date.setLibelle("Pentecôte");
+
+        System.out.println(date.getLibelle() + " " + date.getDate());
+
+        return date;
+    }
+
+    public static JourFerie vendrediSaint(JourFerie paques) {
+
+        JourFerie date = new JourFerie();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(paques.getDate());
+        cal.add(Calendar.DAY_OF_MONTH, -3);
+
+        date.setDate(cal.getTime());
+        date.setLibelle("Vendredi Saint");
+
+        System.out.println(date.getLibelle() + " " + date.getDate());
+
+        return date;
     }
 
     private static Boolean isFerie(Date date, ArrayList<JourFerie> jours) {
