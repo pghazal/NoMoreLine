@@ -15,7 +15,12 @@ public class JourFerie implements Serializable {
 
     public JourFerie() {
         this.libelle = "label";
-        this.date = Calendar.getInstance().getTime();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.HOUR, 0);
+        this.date = cal.getTime();
     }
 
     public JourFerie(String libelle, Date date) {
