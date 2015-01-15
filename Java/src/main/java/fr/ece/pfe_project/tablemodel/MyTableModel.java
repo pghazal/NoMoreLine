@@ -20,6 +20,7 @@ public class MyTableModel extends AbstractTableModel {
     private final String[] columnCamera = {"Cameras"};
     private final String[] columnExcel = {"Date", "Flux de la journée"};
     private final String[] columnListingVols = {"Date", "Heure de départ", "Destination", "N° de vol", "Compagnie", "Observation"};
+    private final String[] columnCarnetAdresses = {"Compagnie", "Nombre de guiche", "Societe d'assistance", "Téléphone"};
 
     private final String[][] columnNames = {
         columnNone, columnComptoir, columnCamera, columnExcel, columnListingVols
