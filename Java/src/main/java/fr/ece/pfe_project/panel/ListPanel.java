@@ -18,14 +18,19 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import org.jdatepicker.ComponentManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jdatepicker.ComponentManager;
 import real_time_image_processing.FaceDetectorThread;
 
 /**
@@ -121,7 +126,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 itemsTable.setRowHeight(16);
                 //listingVols.addActionListener(this);
                 //Fonction à lancer lors du clique bouton: listingVolsrecup
-                model.setData((ListingVols[]) listingVolsrecup().toArray(new ListingVols[0]), false);
+                if(!testConnexion()) model.setData((ListingVols[]) listingVolsrecup().toArray(new ListingVols[0]), false);
+                else JOptionPane.showMessageDialog(this, "Pas de connexion internet", "Warning", JOptionPane.WARNING_MESSAGE);
                 break;
             case EXCELROW:
                 setVisibility(true);
@@ -196,6 +202,29 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         comboBox.setModel(new DefaultComboBoxModel(months));
 
     }
+    
+    public boolean testConnexion() {
+                boolean internet = false;
+		URL url;
+        try {
+            url = new URL("http://www.google.fr");
+            HttpURLConnection urlConn;
+            urlConn = (HttpURLConnection)url.openConnection();
+            urlConn.connect();
+            internet = false;
+        }
+            catch (MalformedURLException ex) {
+            Logger.getLogger(ListPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+		
+         catch (IOException ex) {
+             internet = true;
+             Logger.getLogger(ListPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+                return internet;
+	}
+    
 
     //Fonction pour récupérer la liste des vols
     private ArrayList listingVolsrecup() {
