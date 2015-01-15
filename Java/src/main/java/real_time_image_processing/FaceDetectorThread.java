@@ -122,9 +122,9 @@ public class FaceDetectorThread extends Thread {
             CvMat mat_template = new CvMat(grayTemplate);
             System.out.println("B&W template matrix has been created");
 
-            CanvasFrame gray_frame_template = new CanvasFrame("Template");
+            //CanvasFrame gray_frame_template = new CanvasFrame("Template");
             System.out.println("B&W template frame created");
-            gray_frame_template.showImage(grayTemplate);
+            //gray_frame_template.showImage(grayTemplate);
             System.out.println("B&W template frame display");
 
             // Timer between template pitcure capture and new image capture
@@ -144,8 +144,8 @@ public class FaceDetectorThread extends Thread {
             CvMat mat_img_to_compare = new CvMat(grayTemplate);
             System.out.println("B&W img_to_compare matrix has been created");
 
-            CanvasFrame frame_img_to_compare = new CanvasFrame("New Image For comparison");
-            frame_img_to_compare.showImage(gray_img_to_compare);
+            //CanvasFrame frame_img_to_compare = new CanvasFrame("New Image For comparison");
+            //frame_img_to_compare.showImage(gray_img_to_compare);
 
             // Are the images equal?
             if (mat_img_to_compare.equals(mat_template)) {
@@ -160,16 +160,16 @@ public class FaceDetectorThread extends Thread {
             cvAbsDiff(grayTemplate, gray_img_to_compare, result);
 
             System.out.println("Display Image comparison result");
-            CanvasFrame result_frame = new CanvasFrame("result");
-            result_frame.showImage(result);
+            //CanvasFrame result_frame = new CanvasFrame("result");
+            //result_frame.showImage(result);
 
             // Threshold definition
             System.out.println("Affichage de l'image binaire");
             IplImage bitImage = IplImage.create(template_width, template_height, IPL_DEPTH_8U, 1);
             cvThreshold(result, bitImage, 100, 255, CV_THRESH_BINARY);
             Mat mat_changes = new Mat(bitImage);
-            CanvasFrame test_frame = new CanvasFrame("bitImage");
-            test_frame.showImage(bitImage); // Display threshold image
+            //CanvasFrame test_frame = new CanvasFrame("bitImage");
+            //test_frame.showImage(bitImage); // Display threshold image
 
             // Percentage of differences calculation
             int number_of_white_pixels = countNonZero(mat_changes); // Count changed pixel in Image
@@ -211,7 +211,7 @@ public class FaceDetectorThread extends Thread {
 
                 System.out.println("Number of faces detected: " + number_of_faces_detected);
 
-                faceDetectorListener.getCountFaceDetected(number_of_faces_detected);
+                faceDetectorListener.getCountFaceDetected(number_of_faces_detected); // sending number_of_faces_detected
 
                 // Let's find some contours! but first some thresholding...
                 cvThreshold(grayImage, grayImage, 64, 255, CV_THRESH_BINARY);
@@ -231,7 +231,7 @@ public class FaceDetectorThread extends Thread {
                     }
                     contour = contour.h_next();
                 }
-
+                
             } // END OF WHILE
 
             grabber.stop();
