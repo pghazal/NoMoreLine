@@ -22,6 +22,15 @@ public class ListingVols implements ModelInterface {
     private String compagnie;
     private String observation;
     private String date1;
+    private String heure;
+
+    public void setHeure(String heure) {
+        this.heure = heure;
+    }
+
+    public String getHeure() {
+        return heure;
+    }
 
     public void setDate1(String date1) {
         this.date1 = date1;

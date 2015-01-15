@@ -136,7 +136,7 @@ public class MyTableModel extends AbstractTableModel {
                     case 0:
                         return ((ListingVols) myData).getDate1();
                     case 1:
-                        return "NR";
+                        return ((ListingVols) myData).getHeure();
                     case 2:
                         return ((ListingVols) myData).getDestination();
                     case 3:
@@ -201,8 +201,8 @@ public class MyTableModel extends AbstractTableModel {
                 switch (column) {
                     case 0:
                         return String.class;
-                    case 1:break;
-                        //return String.class;
+                    case 1:
+                        return String.class;
                     case 2:
                         return String.class;
                     case 3:

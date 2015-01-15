@@ -203,35 +203,34 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             //On se connecte au site et on charge le document html
             Document doc = Jsoup.connect("http://www.strasbourg.aeroport.fr/destinations/vols").get();
             //On récupère dans ce document la premiere balise ayant comme nom td et pour attribut class="center"
-            int el = doc.select("td .center").size();
+            int el = doc.select("td").size();
             int nb = 0;
-            String[] tab = new String[5];
+            String[] tab = new String[6];
             ArrayList<ListingVols> ensembleDesVols = new ArrayList<ListingVols>();
             ListingVols listingVols = null;
-            for (int i = 0; i < el; i++) {
+            for (int i = 3; i < el; i++) {
                 listingVols = new ListingVols();
-                Element element = doc.select("td .center").get(i);
+                Element element = doc.select("td").get(i);
                 String element1 = element.text();
                 tab[nb] = element1;
                 nb++;
-                if (nb == 5) {
-                    for (int j = 0; j < 5; j++) {
-                       // ensembleDesVols.add(i - 5, tab[j]);
+                if (nb == 6) {
+                    for (int j = 0; j < 6; j++) {
                         switch (j){
                             case 0:listingVols.setDate1(tab[j]);
                                 break;
-                            case 1:listingVols.setDestination(tab[j]);
+                            case 1:listingVols.setHeure(tab[j]);
                                 break;
-                            case 2:listingVols.setNumeroVol(tab[j]);
+                            case 2:listingVols.setDestination(tab[j]);
                                 break;
-                            case 3:listingVols.setCompagnie(tab[j]);
+                            case 3:listingVols.setNumeroVol(tab[j]);
                                 break;
-                            case 4:listingVols.setObservation(tab[j]);
+                            case 4:listingVols.setCompagnie(tab[j]);
                                 break;
+                            case 5:listingVols.setObservation(tab[j]);
                             default:
                                 break;
                         }
-                        //listingVols.setElement(element1);
                         
                     }
                     nb = 0;
