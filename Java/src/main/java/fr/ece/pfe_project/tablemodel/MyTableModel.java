@@ -6,6 +6,7 @@ import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.ModelInterface;
+import fr.ece.pfe_project.model.ListingVols;
 import java.util.Date;
 
 /**
@@ -18,9 +19,10 @@ public class MyTableModel extends AbstractTableModel {
     private final String[] columnComptoir = {"ID", "Numéro"};
     private final String[] columnCamera = {"Cameras"};
     private final String[] columnExcel = {"Date", "Flux de la journée"};
+    private final String[] columnListingVols = {"Date", "Heure de départ", "Destination", "N° de vol", "Compagnie", "Observation"};
 
     private final String[][] columnNames = {
-        columnNone, columnComptoir, columnCamera, columnExcel
+        columnNone, columnComptoir, columnCamera, columnExcel, columnListingVols
     };
 
     private ModelInterface[] data;
@@ -49,6 +51,9 @@ public class MyTableModel extends AbstractTableModel {
 
             case EXCELROW:
                 return columnNames[ToolbarEntityPanel.ENTITY.EXCELROW.ordinal()].length;
+                
+            case LISTINGVOLS:
+            return columnNames[ToolbarEntityPanel.ENTITY.LISTINGVOLS.ordinal()].length;
 
             default:
                 break;
@@ -76,6 +81,9 @@ public class MyTableModel extends AbstractTableModel {
 
             case EXCELROW:
                 return columnNames[ToolbarEntityPanel.ENTITY.EXCELROW.ordinal()][column];
+                
+            case LISTINGVOLS:
+                return columnNames[ToolbarEntityPanel.ENTITY.LISTINGVOLS.ordinal()][column];
 
             default:
                 break;
@@ -114,6 +122,21 @@ public class MyTableModel extends AbstractTableModel {
                         return ((Comptoir) myData).getId();
                     case 1:
                         return ((Comptoir) myData).getNumber();
+                    default:
+                        System.err.println("Logic Error");
+                        break;
+                }
+                break;
+                
+            case LISTINGVOLS:
+
+                myData = (ListingVols) data[row];
+
+                switch (column) {
+                    case 0:
+                        return ((ListingVols) myData).getType();
+                    case 1:
+                        return ((ListingVols) myData).getElement();
                     default:
                         System.err.println("Logic Error");
                         break;
@@ -162,6 +185,16 @@ public class MyTableModel extends AbstractTableModel {
                         return Long.class;
                     case 1:
                         return Integer.class;
+                }
+                break;
+                
+            case LISTINGVOLS:
+
+                switch (column) {
+                    case 0:
+                        return Integer.class;
+                    case 1:
+                        return String.class;
                 }
                 break;
 

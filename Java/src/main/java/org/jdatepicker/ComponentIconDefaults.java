@@ -17,6 +17,8 @@ import org.jdatepicker.graphics.JPreviousIcon;
 public class ComponentIconDefaults {
 
     private static String LOGO = "/org/jdatepicker/icons/logo.png";
+    private static String CAMERAGREEN = "/org/jdatepicker/icons/greencamera.png";
+    private static String CAMERARED = "/org/jdatepicker/icons/redcamera.png";
 
     private Icon logoIcon;
     private Icon nextMonthIcon;
@@ -24,11 +26,15 @@ public class ComponentIconDefaults {
     private Icon previousMonthIcon;
     private Icon previousYearIcon;
     private Icon popupButtonIcon;
+    private Icon greenCameraIcon;
+    private Icon redCameraIcon;
 
     public ComponentIconDefaults() {
         try {
             //TODO consider making all the icons vector images which will scale
             logoIcon = loadIcon(LOGO);
+            greenCameraIcon = loadIcon(CAMERAGREEN);
+            redCameraIcon = loadIcon(CAMERARED);
             nextMonthIcon = new JNextIcon(4, 7, false);
             nextYearIcon = new JNextIcon(8, 7, true);
             previousMonthIcon = new JPreviousIcon(4, 7, false);
@@ -93,5 +99,27 @@ public class ComponentIconDefaults {
     public void setPopupButtonIcon(Icon popupButtonIcon) {
         this.popupButtonIcon = popupButtonIcon;
     }
+    
+    public Icon getgreenCameraIcon(){
+        return greenCameraIcon;
+    }
+     
+    public void setgreenCameraIcon(Icon greenCameraIcon ){
+        this.greenCameraIcon = greenCameraIcon;
+    }
+    
+    public Icon getredCameraIcon(){
+        return redCameraIcon;
+    }
+    
+    public void setredCameraIcon(Icon redCameraIcon ){
+        this.redCameraIcon = redCameraIcon;
+    }
+    
+    public Icon getIcon() {
+        return logoIcon;
+    }
+     
+   
 
 }
