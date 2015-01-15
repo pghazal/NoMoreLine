@@ -164,8 +164,8 @@ public class FaceDetectorThread extends Thread {
             IplImage bitImage = IplImage.create(template_width, template_height, IPL_DEPTH_8U, 1);
             cvThreshold( result, bitImage, 30, 255, CV_THRESH_BINARY );
             Mat mat_changes = new Mat(bitImage);
-            CanvasFrame test_frame = new CanvasFrame("bitImage");
-            test_frame.showImage(bitImage); // Display threshold image
+            //CanvasFrame test_frame = new CanvasFrame("bitImage");
+            //test_frame.showImage(bitImage); // Display threshold image
             
             
             // Percentage of differences calculation
