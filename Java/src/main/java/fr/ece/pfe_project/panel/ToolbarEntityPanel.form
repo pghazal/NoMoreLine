@@ -32,7 +32,7 @@
                   <Component id="excelButton" alignment="0" pref="0" max="32767" attributes="0"/>
                   <Component id="listingVols" pref="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="20" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

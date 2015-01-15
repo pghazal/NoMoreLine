@@ -134,9 +134,17 @@ public class MyTableModel extends AbstractTableModel {
 
                 switch (column) {
                     case 0:
-                        return ((ListingVols) myData).getType();
+                        return ((ListingVols) myData).getDate1();
                     case 1:
-                        return ((ListingVols) myData).getElement();
+                        return "NR";
+                    case 2:
+                        return ((ListingVols) myData).getDestination();
+                    case 3:
+                        return ((ListingVols) myData).getNumeroVol();
+                    case 4:
+                        return ((ListingVols) myData).getCompagnie();
+                    case 5:
+                        return ((ListingVols) myData).getObservation();
                     default:
                         System.err.println("Logic Error");
                         break;
@@ -192,8 +200,16 @@ public class MyTableModel extends AbstractTableModel {
 
                 switch (column) {
                     case 0:
-                        return Integer.class;
-                    case 1:
+                        return String.class;
+                    case 1:break;
+                        //return String.class;
+                    case 2:
+                        return String.class;
+                    case 3:
+                        return String.class;
+                    case 4:
+                        return String.class;
+                    case 5:
                         return String.class;
                 }
                 break;

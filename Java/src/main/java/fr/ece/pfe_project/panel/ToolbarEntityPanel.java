@@ -46,7 +46,7 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
         this.excelButton.addActionListener(this);
         this.excelButton.setActionCommand(ENTITY.EXCELROW.toString());
         this.listingVols.addActionListener(this);
-        this.listingVols.setActionCommand(ENTITY.EXCELROW.toString());
+        this.listingVols.setActionCommand(ENTITY.LISTINGVOLS.toString());
     }
 
     @Override
@@ -95,8 +95,8 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
             
         } else if (ENTITY.LISTINGVOLS.toString().equals(e.getActionCommand())) {
 
-            if (!cameraButton.isSelected()) {
-                this.cameraButton.setSelected(false);
+            if (!listingVols.isSelected()) {
+                this.listingVols.setSelected(false);
                 this.toolbarsListener.entityHasChange(ENTITY.NONE);
             } else {
                 this.cameraButton.setSelected(false);

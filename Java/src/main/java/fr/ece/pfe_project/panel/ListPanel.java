@@ -6,6 +6,7 @@ import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.Employee;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.ListingVols;
+import fr.ece.pfe_project.model.ModelInterface;
 import fr.ece.pfe_project.panel.MainPanel.FaceDetectorListener;
 import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
@@ -114,6 +115,14 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 CameraButton.addActionListener(this);
                 //cameraInterface(false);
                 break;
+            case LISTINGVOLS:
+                setVisibility(false);
+                setCameraButtonVisibility(false);
+                itemsTable.setRowHeight(16);
+                //listingVols.addActionListener(this);
+                //Fonction à lancer lors du clique bouton: listingVolsrecup
+                model.setData((ListingVols[]) listingVolsrecup().toArray(new ListingVols[0]), false);
+                break;
             case EXCELROW:
                 setVisibility(true);
                 setCameraButtonVisibility(false);
@@ -189,7 +198,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     }
 
     //Fonction pour récupérer la liste des vols
-    private void listingVolsrecup() {
+    private ArrayList listingVolsrecup() {
         try {
             //On se connecte au site et on charge le document html
             Document doc = Jsoup.connect("http://www.strasbourg.aeroport.fr/destinations/vols").get();
@@ -197,24 +206,46 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             int el = doc.select("td .center").size();
             int nb = 0;
             String[] tab = new String[5];
-            ArrayList ensembleDesVols = new ArrayList();
+            ArrayList<ListingVols> ensembleDesVols = new ArrayList<ListingVols>();
+            ListingVols listingVols = null;
             for (int i = 0; i < el; i++) {
+                listingVols = new ListingVols();
                 Element element = doc.select("td .center").get(i);
                 String element1 = element.text();
                 tab[nb] = element1;
                 nb++;
                 if (nb == 5) {
                     for (int j = 0; j < 5; j++) {
-                        ensembleDesVols.add(i, tab[nb]);
+                       // ensembleDesVols.add(i - 5, tab[j]);
+                        switch (j){
+                            case 0:listingVols.setDate1(tab[j]);
+                                break;
+                            case 1:listingVols.setDestination(tab[j]);
+                                break;
+                            case 2:listingVols.setNumeroVol(tab[j]);
+                                break;
+                            case 3:listingVols.setCompagnie(tab[j]);
+                                break;
+                            case 4:listingVols.setObservation(tab[j]);
+                                break;
+                            default:
+                                break;
+                        }
+                        //listingVols.setElement(element1);
+                        ensembleDesVols.add(listingVols);
                     }
                     nb = 0;
                 }
             }
+
+            return ensembleDesVols;
         } catch (MalformedURLException | NumberFormatException | java.lang.ArrayIndexOutOfBoundsException e) {
             System.out.println(e);
         } catch (IOException ex) {
             System.out.println(ex);
         }
+
+        return null;
     }
 
     private void cameraInterface(boolean on) {
