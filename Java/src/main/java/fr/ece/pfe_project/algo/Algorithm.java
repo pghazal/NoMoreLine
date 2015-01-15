@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -653,6 +654,8 @@ public class Algorithm {
         } else {
             // DISPLAY POP UP
             // Aucunes données en Base blabla
+
+            JOptionPane.showMessageDialog(null, "Mettre un message stylé tavu 2", "Warning", JOptionPane.WARNING_MESSAGE);
         }
 
         return algoResult;

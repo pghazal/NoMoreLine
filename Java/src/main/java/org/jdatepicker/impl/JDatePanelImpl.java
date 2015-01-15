@@ -50,6 +50,7 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
@@ -748,6 +749,8 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
                 if (gap <= 0 || gap > 2) {
                     // Display Pop-up 
                     // Donnees manquantes
+                    JOptionPane.showMessageDialog(JDatePanelImpl.this.getParent(), "Mettre un message stylé tavu", "Warning", JOptionPane.WARNING_MESSAGE);
+
                 } else if (gap == 1) {
                     AlgoResult algoResult = Algorithm.process1(StatisticPanel.getDate());
                     StatisticPanel.setAlgoResult(Algorithm.process2(StatisticPanel.getDate(), algoResult));
