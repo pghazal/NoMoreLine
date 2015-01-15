@@ -8,7 +8,9 @@ import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  *
@@ -27,7 +29,6 @@ public class Algorithm {
         int YEARS_TO_COMPARE = DatabaseHelper.getYearsComplete().size();
         System.out.println("NB ANNEE : " + YEARS_TO_COMPARE);
 
-        // METTRE > 1 ?? Division par 0
         if (YEARS_TO_COMPARE > 0) {
 
             if (YEARS_TO_COMPARE == 1 || YEARS_TO_COMPARE == 2) {
@@ -194,8 +195,9 @@ public class Algorithm {
             algoResult.setPrevisionPassager(result);
         } else {
             // DISPLAY POP UP
+            // Aucunes données en Base blabla
         }
-        
+
         return algoResult;
     }
 
@@ -401,6 +403,256 @@ public class Algorithm {
                 default:
                     break;
             }
+        }
+
+        return algoResult;
+    }
+
+    public static AlgoResult processBlindageAlgo(Date dateSelected, int gap) {
+        AlgoResult algoResult = new AlgoResult();
+
+        int yearSelected = getYear(dateSelected);
+        int currentMonth = getMonth(dateSelected);
+        int currentDay = getDayOfMonth(dateSelected);
+        int dayOfWeek = getDayOfWeek(dateSelected);
+
+        HashMap<Date, FrequentationJournaliere> yearGappedMap
+                = new HashMap<Date, FrequentationJournaliere>();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateSelected);
+        cal.set(Calendar.YEAR, yearSelected - (gap - 1));
+        cal.set(Calendar.MONTH, currentMonth);
+        cal.set(Calendar.DAY_OF_YEAR, 1);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Integer yearGapped = cal.get(Calendar.YEAR);
+        Integer freqAnnuelleGapped = 0;
+
+        System.out.println("#######################################");
+        System.out.println("## " + cal.getTime());
+
+        // Changer 365 pour année bis
+        // Calcul des années manquantes
+        for (int i = 1; i < 365 + 1; i++) {
+            cal.set(Calendar.DAY_OF_YEAR, i);
+
+            int freq = process1(cal.getTime()).getPrevisionPassager();
+
+            yearGappedMap.put(cal.getTime(),
+                    new FrequentationJournaliere(cal.getTime(), freq));
+
+            freqAnnuelleGapped += freq;
+
+            System.out.println("Date : " + cal.getTime() + " => " + freq);
+        }
+
+        cal.setTime(dateSelected);
+        cal.set(Calendar.YEAR, yearSelected - (gap - 1));
+        cal.set(Calendar.WEEK_OF_YEAR, getWeekOfYear(dateSelected));
+        cal.set(Calendar.DAY_OF_WEEK, getDayOfWeek(dateSelected));
+        System.out.println("#######################################");
+        System.out.println("Freq 2014 : " + yearGappedMap.get(cal.getTime()).getDate());
+        System.out.println("Freq 2014 : " + yearGappedMap.get(cal.getTime()).getFrequentation());
+
+        System.out.println("Frequentation Annuelle " + cal.get(Calendar.YEAR)
+                + " : " + freqAnnuelleGapped);
+
+        ArrayList<Integer> yearsComplete = DatabaseHelper.getYearsComplete();
+        yearsComplete.add(yearGapped);
+        Collections.sort(yearsComplete);
+
+        int YEARS_TO_COMPARE = yearsComplete.size();
+        System.out.println("NB ANNEE : " + YEARS_TO_COMPARE);
+
+        if (YEARS_TO_COMPARE > 0) {
+
+            if (YEARS_TO_COMPARE == 1 || YEARS_TO_COMPARE == 2) {
+                algoResult.setPrevisionPassager(DatabaseHelper
+                        .getLastFrequentationOfCompleteYear(dateSelected));
+                return algoResult;
+            }
+
+            int nbSemaine = getWeekOfYear(dateSelected);
+            int jour = getDayOfWeek(dateSelected);
+
+            cal.setTime(dateSelected);
+
+            /**
+             * CALCUL JOURNALIER
+             */
+            ArrayList<Double> variationsJournaliere = new ArrayList<Double>();
+            Date firstDate;
+            Date secondDate;
+            for (int i = YEARS_TO_COMPARE; i > 1; i--) {
+
+                cal.set(Calendar.YEAR, yearSelected - i);
+                cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+                cal.set(Calendar.DAY_OF_WEEK, jour);
+                firstDate = cal.getTime();
+
+                cal.set(Calendar.YEAR, yearSelected - (i - 1));
+                cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+                cal.set(Calendar.DAY_OF_WEEK, jour);
+                secondDate = cal.getTime();
+
+                System.out.println("First Date : " + firstDate);
+                System.out.println("Second Date : " + secondDate);
+
+                Double var;
+
+                if (cal.get(Calendar.YEAR) == yearGapped) {
+                    double freq1 = new Integer(getFrequentationJournaliere(firstDate)).doubleValue();
+                    double freq2 = yearGappedMap.get(secondDate).getFrequentation().doubleValue();
+
+                    var = (freq1 - freq2) / freq2;
+                } else {
+                    var = getVariation(firstDate, secondDate, true);
+                }
+
+                System.out.println("Variation : " + var);
+
+                variationsJournaliere.add(var);
+            }
+
+            // calcul moyenne journaliere
+            double moyVariationJournaliere;
+            double sommeJournaliere = 0;
+            for (int i = 0; i < YEARS_TO_COMPARE - 1; i++) {
+                sommeJournaliere += variationsJournaliere.get(i);
+            }
+            // Représente le Alpha sur le papier
+            moyVariationJournaliere = sommeJournaliere / (YEARS_TO_COMPARE - 1);
+            System.out.println("Alpha = " + moyVariationJournaliere);
+
+            // Réinitialisation de la date
+            cal.setTime(dateSelected);
+            // Initialisation à l'année précédente
+            cal.set(Calendar.YEAR, yearSelected - 1);
+            cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+            cal.set(Calendar.DAY_OF_WEEK, jour);
+
+            // représente le J1 sur le papier
+            double nbPassagerJournalier = yearGappedMap.get(cal.getTime()).getFrequentation()
+                    + moyVariationJournaliere * yearGappedMap.get(cal.getTime()).getFrequentation();
+            System.out.println("J1 = " + nbPassagerJournalier);
+
+            // Réinitialisation pour l'année
+            cal.setTime(dateSelected);
+
+            /**
+             * CALCUL ANNUEL
+             */
+            ArrayList<Double> variationsAnnuelle = new ArrayList<Double>();
+            for (int i = YEARS_TO_COMPARE; i > 1; i--) {
+
+                cal.set(yearSelected - i, currentMonth, currentDay);
+                firstDate = cal.getTime();
+                cal.set(yearSelected - (i - 1), currentMonth, currentDay);
+                secondDate = cal.getTime();
+
+                System.out.println("First Date : " + firstDate);
+                System.out.println("Second Date : " + secondDate);
+
+                Double var;
+
+                if (cal.get(Calendar.YEAR) == yearGapped) {
+                    double freq1 = new Integer(getFrequentationAnnuelle(getYear(firstDate))).doubleValue();
+                    double freq2 = freqAnnuelleGapped.doubleValue();
+
+                    var = (freq1 - freq2) / freq2;
+                } else {
+                    var = getVariation(firstDate, secondDate, false);
+                }
+
+                System.out.println("Variation : " + var);
+
+                variationsAnnuelle.add(var);
+            }
+
+            // Calcul moyenne annuelle
+            double moyVariationAnnuelle;
+            double sommeAnnuelle = 0;
+            for (int i = 0; i < YEARS_TO_COMPARE - 1; i++) {
+                sommeAnnuelle += variationsAnnuelle.get(i);
+            }
+            // Représente le Beta sur le papier
+            moyVariationAnnuelle = sommeAnnuelle / (YEARS_TO_COMPARE - 1);
+            System.out.println("Beta = " + moyVariationAnnuelle);
+
+            // représente le A1 sur le papier
+            double nbPassagerAnnuelle = freqAnnuelleGapped
+                    + moyVariationAnnuelle * freqAnnuelleGapped;
+            System.out.println("A1 = " + nbPassagerAnnuelle);
+
+            // Réinitialisation de la date
+            cal.setTime(dateSelected);
+            // Initialisation à l'année précédente
+            cal.set(Calendar.YEAR, yearSelected - 1);
+            cal.set(Calendar.WEEK_OF_YEAR, nbSemaine);
+            cal.set(Calendar.DAY_OF_WEEK, jour);
+
+            /**
+             * CALCUL ASSOCIE JOURNALIER/ANNUEL
+             */
+            // Pondéré par Beta : représente NBP14 sur le papier
+            double nbPassagerPondere = yearGappedMap.get(cal.getTime()).getFrequentation()
+                    + moyVariationAnnuelle * yearGappedMap.get(cal.getTime()).getFrequentation();
+            System.out.println("NBP14 = " + nbPassagerPondere);
+
+            // Représente le M14 sur le papier
+            double moyenneJournalierAnnuelle = (nbPassagerJournalier + nbPassagerPondere) / 2;
+            System.out.println("M14 = " + moyenneJournalierAnnuelle);
+
+            HashMap<Integer, Integer> annuelleMap = GlobalVariableUtils.getFrequentationAnnuelleMap();
+            annuelleMap.put(yearGapped, freqAnnuelleGapped);
+
+            /**
+             * CALCUL PROFIL GLOBAL
+             */
+            ArrayList<Double> calculPourcentageAnnuelle = new ArrayList<Double>();
+            for (int i = 0; i < annuelleMap.size() - 1; i++) {
+                int diff = annuelleMap.get(yearSelected - 1 - i) - annuelleMap.get(yearSelected - 2 - i);
+                System.out.println("Diff = " + diff);
+
+                Double percent = new Integer(diff).doubleValue() / annuelleMap.get(yearSelected - 1 - i).doubleValue();
+                System.out.println("Percent = " + percent);
+
+                calculPourcentageAnnuelle.add(percent);
+            }
+
+            annuelleMap.remove(yearGapped);
+
+            double moyPourcentage = 0;
+            for (int i = 0; i < calculPourcentageAnnuelle.size(); i++) {
+                moyPourcentage += calculPourcentageAnnuelle.get(i);
+            }
+
+            // Représente Ppg sur le papier
+            moyPourcentage = moyPourcentage / calculPourcentageAnnuelle.size();
+            System.out.println("Calcul Moy Percent (Ppg) : " + moyPourcentage);
+
+            // Moyenne pondéré par le profil (MP14 sur le papier)
+            double moyPondere = moyenneJournalierAnnuelle + moyenneJournalierAnnuelle * moyPourcentage;
+            // Représente le (M14 + MP14) /2 sur papier....
+            double moySalut = (moyPondere + moyenneJournalierAnnuelle) / 2;
+
+            // Réinitialisation de la date
+            cal.setTime(dateSelected);
+            // Initialisation à l'année précédente
+            cal.add(Calendar.YEAR, -1);
+
+            int result = (int) (nbPassagerJournalier + nbPassagerPondere + moyPondere) / 3;
+
+            System.out.println("RESULT : " + result);
+
+            algoResult.setPrevisionPassager(result);
+        } else {
+            // DISPLAY POP UP
+            // Aucunes données en Base blabla
         }
 
         return algoResult;

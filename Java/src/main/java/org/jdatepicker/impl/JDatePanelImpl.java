@@ -29,6 +29,7 @@
 package org.jdatepicker.impl;
 
 import fr.ece.pfe_project.algo.Algorithm;
+import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.model.AlgoResult;
 import fr.ece.pfe_project.panel.StatisticPanel;
 import java.awt.Component;
@@ -741,9 +742,19 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
             } else if (arg0.getSource() == internalView.getPreviousYearButton()) {
                 internalModel.getModel().addYear(-1);
             } else if (arg0.getSource() == internalView.dateConfirmation()) {
-                AlgoResult algoResult = Algorithm.process1(StatisticPanel.getDate());
-                StatisticPanel.setAlgoResult(Algorithm.process2(StatisticPanel.getDate(), algoResult));
-                //Algorithm.displayJour(StatisticPanel.getDate());
+
+                int gap = DatabaseHelper.getGap(StatisticPanel.getDate());
+
+                if (gap <= 0 || gap > 2) {
+                    // Display Pop-up 
+                    // Donnees manquantes
+                } else if (gap == 1) {
+                    AlgoResult algoResult = Algorithm.process1(StatisticPanel.getDate());
+                    StatisticPanel.setAlgoResult(Algorithm.process2(StatisticPanel.getDate(), algoResult));
+                } else if (gap == 2) {
+                    StatisticPanel.setAlgoResult(Algorithm.processBlindageAlgo(StatisticPanel.getDate(), gap));
+                }
+
             } else {
                 for (int month = 0; month < internalView.getMonthPopupMenuItems().length; month++) {
                     if (arg0.getSource() == internalView.getMonthPopupMenuItems()[month]) {

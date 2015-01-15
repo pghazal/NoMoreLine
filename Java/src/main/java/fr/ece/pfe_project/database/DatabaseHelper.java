@@ -146,6 +146,24 @@ public class DatabaseHelper {
         return true;
     }
 
+    /**
+     * Permet d'obtenir l'écart entre l'année saisie par l'utilisateur et la
+     * dernière année complète en base
+     *
+     * @param date
+     * @return gap
+     */
+    public static int getGap(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        ArrayList<Integer> yearsComplete = getYearsComplete();
+        int lastYearComplete = Collections.max(yearsComplete);
+        int yearUser = cal.get(Calendar.YEAR);
+
+        return yearUser - lastYearComplete;
+    }
+
     public static boolean frequentationAnnuelleExists(Integer year) {
         FrequentationAnnuelle fa = getFrequentationAnnuelle(year);
 
@@ -454,6 +472,43 @@ public class DatabaseHelper {
             rs.close();
             stmt.close();
             c.close();
+
+            return list;
+
+        } catch (SQLException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+
+        return null;
+    }
+
+    public static ArrayList<Integer> getYearsCompletePlusActual() {
+        Calendar cal = Calendar.getInstance();
+        int actualYear = cal.get(Calendar.YEAR);
+
+        ArrayList<Integer> list = new ArrayList<Integer>();
+
+        try {
+            Connection c = getConnection();
+
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT ANNEE FROM " + TABLE_FREQUENTATION_JOURNALIERE
+                    + " WHERE JOUR=31 AND MOIS=11 AND ANNEE<>" + actualYear + ";");
+
+            while (rs.next()) {
+                int nbYear = rs.getInt("ANNEE");
+
+                System.out.println("ANNEE : " + nbYear);
+
+                list.add(nbYear);
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+            
+            list.add(actualYear);
 
             return list;
 
