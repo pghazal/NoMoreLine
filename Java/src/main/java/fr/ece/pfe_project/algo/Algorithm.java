@@ -29,6 +29,13 @@ public class Algorithm {
 
         // METTRE > 1 ?? Division par 0
         if (YEARS_TO_COMPARE > 0) {
+
+            if (YEARS_TO_COMPARE == 1 || YEARS_TO_COMPARE == 2) {
+                algoResult.setPrevisionPassager(DatabaseHelper
+                        .getLastFrequentationOfCompleteYear(dateSelected));
+                return algoResult;
+            }
+
             int nbSemaine = getWeekOfYear(dateSelected);
             int jour = getDayOfWeek(dateSelected);
 
@@ -185,8 +192,10 @@ public class Algorithm {
             System.out.println("RESULT : " + result);
 
             algoResult.setPrevisionPassager(result);
+        } else {
+            // DISPLAY POP UP
         }
-
+        
         return algoResult;
     }
 

@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -34,7 +35,7 @@ public class DatabaseHelper {
         try {
             connection = getConnection();
             System.out.println("Opened database successfully");
-            
+
             createTableFrequentationJournaliere();
             createTableFrequentationAnnuelle();
         } catch (SQLException ex) {
@@ -118,6 +119,8 @@ public class DatabaseHelper {
                 stmt.executeUpdate(sql);
 
                 stmt.close();
+
+                System.out.println("Add Journalier success");
             }
 
             c.commit();
@@ -127,7 +130,6 @@ public class DatabaseHelper {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Add Journalier success");
     }
 
     public static boolean frequentationJournaliereExists(Date date) {
@@ -156,6 +158,22 @@ public class DatabaseHelper {
         System.err.println(year + " DOES EXIST");
 
         return true;
+    }
+
+    public static int getLastFrequentationOfCompleteYear(Date date) {
+
+        ArrayList<Integer> yearsComplete = getYearsComplete();
+        Integer lastYearComplete = Collections.max(yearsComplete);
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.YEAR, lastYearComplete);
+
+        FrequentationJournaliere freq = getFrequentationJournaliere(cal.getTime());
+
+        System.out.println("Last Freq of Year " + lastYearComplete + " is : " + freq.getFrequentation());
+
+        return freq.getFrequentation();
     }
 
     public static void addFrequentationAnnuelle(Integer year, Integer freq) {
@@ -353,7 +371,7 @@ public class DatabaseHelper {
     public static int aggregateFrequentationOfYear(int year) {
         try {
             Connection c = getConnection();
-            
+
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT SUM(FREQUENTATION) AS SOMME FROM " + TABLE_FREQUENTATION_JOURNALIERE
                     + " WHERE ANNEE=" + year + ";");
@@ -362,7 +380,7 @@ public class DatabaseHelper {
             while (rs.next()) {
                 sumFreq = rs.getInt("SOMME");
 
-                System.out.println("SOMME : " + sumFreq);                
+                System.out.println("SOMME : " + sumFreq);
             }
 
             rs.close();
@@ -370,12 +388,12 @@ public class DatabaseHelper {
             c.close();
 
             return sumFreq;
-            
+
         } catch (SQLException e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        
+
         return -1;
     }
 
