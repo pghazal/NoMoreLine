@@ -171,7 +171,9 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             CameraButton.setVisible(false);
         } else {
             CameraButton.setVisible(true);
-            CameraButton.setOpaque(true);
+            CameraButton.setOpaque(false);
+            CameraButton.setContentAreaFilled(false);
+            CameraButton.setBorderPainted(false);
             CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
 
         }
