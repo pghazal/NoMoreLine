@@ -118,7 +118,6 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
                 model.setData(cameras, false);
                 CameraButton.addActionListener(this);
-                //cameraInterface(false);
                 break;
             case LISTINGVOLS:
                 setVisibility(false);
@@ -184,13 +183,13 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
         if (isCameraActive == true) {
             //On désactive les caméras 
-            CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getredCameraIcon());
+            CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
             cameraInterface(!isCameraActive);
 
             // CameraButton.setText("Activer caméra");
         } else //On change le label du bouton (de "activer caméra" à "désactiver caméra) et sa couleur
         {
-            CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
+            CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getredCameraIcon());
             //On lance l'activation des caméras une fois qu'on appuie sur le bouton
             cameraInterface(!isCameraActive);
         }
@@ -228,6 +227,57 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 	}
     
 
+
+    private void cameraInterface(boolean on) {
+
+        isCameraActive = !isCameraActive;
+        // On souhaite lancer l'activation des cameras
+        if (on) {
+            for (int i = 0; i < cameras.length; i++) {
+                Camera cam = cameras[i];
+                if (cam != null && cam.getFaceDetectorThread() != null
+                        && !cam.getFaceDetectorThread().isActive()) {
+                    cam.getFaceDetectorThread().launch(0);
+                } else if (cam == null) {
+                    cam = new Camera(i);
+                    cam.setFaceDetectorThread(new FaceDetectorThread(faceDetectorListener));
+                    cam.getFaceDetectorThread().launch(0);
+                } else if (cam.getFaceDetectorThread() == null) {
+                    cam.setFaceDetectorThread(new FaceDetectorThread(faceDetectorListener));
+                    cam.getFaceDetectorThread().launch(0);
+                } else if (cam.getFaceDetectorThread() != null
+                        && cam.getFaceDetectorThread().isActive()) {
+                    // do nothing
+                }
+            }
+        } // Extinction du systeme de detection
+        else {
+            for (int i = 0; i < cameras.length; i++) {
+                Camera cam = cameras[i];
+
+                if (cam != null && cam.getFaceDetectorThread() != null
+                        && !cam.getFaceDetectorThread().isActive()) {
+                    // do nothing
+                } else if (cam == null) {
+                    // do nothing
+                } else if (cam.getFaceDetectorThread() == null) {
+                    // do nothing
+                } else if (cam.getFaceDetectorThread() != null
+                        && cam.getFaceDetectorThread().isActive()) {
+                    cam.getFaceDetectorThread().stopFaceDetection();
+                    cam.setFaceDetectorThread(null);
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void getCountFaceDetected(int number_of_faces) {
+        System.out.println("List Panel NB FACES : " + number_of_faces);
+    }
+    
+    
     //Fonction pour récupérer la liste des vols
     private ArrayList listingVolsrecup() {
         try {
@@ -278,55 +328,6 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         }
 
         return null;
-    }
-
-    private void cameraInterface(boolean on) {
-
-        isCameraActive = !isCameraActive;
-        // On souhaite lancer l'activation des cameras
-        if (on) {
-            for (int i = 0; i < cameras.length; i++) {
-                Camera cam = cameras[i];
-                if (cam != null && cam.getFaceDetectorThread() != null
-                        && !cam.getFaceDetectorThread().isActive()) {
-                    cam.getFaceDetectorThread().launch(0);
-                } else if (cam == null) {
-                    cam = new Camera(i);
-                    cam.setFaceDetectorThread(new FaceDetectorThread(faceDetectorListener));
-                    cam.getFaceDetectorThread().launch(0);
-                } else if (cam.getFaceDetectorThread() == null) {
-                    cam.setFaceDetectorThread(new FaceDetectorThread(faceDetectorListener));
-                    cam.getFaceDetectorThread().launch(0);
-                } else if (cam.getFaceDetectorThread() != null
-                        && cam.getFaceDetectorThread().isActive()) {
-                    // do nothing
-                }
-            }
-        } // Extinction du systeme de detection
-        else {
-            for (int i = 0; i < cameras.length; i++) {
-                Camera cam = cameras[i];
-
-                if (cam != null && cam.getFaceDetectorThread() != null
-                        && !cam.getFaceDetectorThread().isActive()) {
-                    // do nothing
-                } else if (cam == null) {
-                    // do nothing
-                } else if (cam.getFaceDetectorThread() == null) {
-                    // do nothing
-                } else if (cam.getFaceDetectorThread() != null
-                        && cam.getFaceDetectorThread().isActive()) {
-                    cam.getFaceDetectorThread().stopFaceDetection();
-                    cam.setFaceDetectorThread(null);
-                }
-            }
-        }
-
-    }
-
-    @Override
-    public void getCountFaceDetected(int number_of_faces) {
-        System.out.println("List Panel NB FACES : " + number_of_faces);
     }
 
     /**
