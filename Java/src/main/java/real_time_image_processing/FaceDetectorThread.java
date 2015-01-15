@@ -154,13 +154,29 @@ public class FaceDetectorThread extends Thread {
             IplImage result = IplImage.create(template_width, template_height, IPL_DEPTH_8U, 1);
             System.out.println("Start Image comparison ");
             cvAbsDiff( grayTemplate, gray_img_to_compare, result);
+            
             System.out.println("Display Image comaprison result");
             //CanvasFrame result_frame = new CanvasFrame("result");
             //result_frame.showImage(result);
             
+            // Threshold definition
+            System.out.println("Affichage de l'image binaire");
             IplImage bitImage = IplImage.create(template_width, template_height, IPL_DEPTH_8U, 1);
+            cvThreshold( result, bitImage, 30, 255, CV_THRESH_BINARY );
+            Mat mat_changes = new Mat(bitImage);
+            //CanvasFrame test_frame = new CanvasFrame("bitImage");
+            //test_frame.showImage(bitImage); // Display threshold image
             
-            //cvThreshold(result,bitImage,tr,255,CV_THRESH_BINARY);
+            
+            // Percentage of differences calculation
+            int number_of_white_pixels = countNonZero(mat_changes); // Count changed pixel in Image
+            System.out.println(" Number of white pixels: "+number_of_white_pixels);
+            
+            int total_number_of_pixels = 180000; // number total of pixels X2 -> to check
+            int percentage_of_differences = (100*number_of_white_pixels)/total_number_of_pixels;
+            System.out.println(" Percentage of differences: "+percentage_of_differences+"%");
+
+            
 
 //***************************************************************************************************************//
             
