@@ -73,19 +73,14 @@ public class FaceDetectorThread extends Thread {
         try {
             String classifierName = null;
 
-            URL url = null;
-            try {
-                url = new URL("https://raw.github.com/Itseez/opencv/2.4/data/haarcascades/haarcascade_frontalface_alt.xml");
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
             File file = null;
+
             try {
-                file = Loader.extractResource(url, null, "classifier", ".xml");
+                file = Loader.extractResource("/JavaCV-xml/haarcascade_frontalface_alt.xml", null, "classifier", ".xml");
             } catch (IOException ex) {
                 Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
             }
+
             file.deleteOnExit();
             classifierName = file.getAbsolutePath();
 
