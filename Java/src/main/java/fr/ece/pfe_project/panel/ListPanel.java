@@ -11,7 +11,6 @@ import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.widget.CameraCellComponent;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -21,24 +20,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
-<<<<<<< HEAD
-<<<<<<< HEAD
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-=======
-import javax.swing.JLabel;
-import org.jdatepicker.ComponentIconDefaults;
 import org.jdatepicker.ComponentManager;
->>>>>>> 7f8ce799a1fb2c6951c727cdd2a867b28105053c
-=======
-import javax.swing.JLabel;
-import org.jdatepicker.ComponentIconDefaults;
-import org.jdatepicker.ComponentManager;
->>>>>>> 7f8ce799a1fb2c6951c727cdd2a867b28105053c
 import real_time_image_processing.FaceDetectorThread;
 
 /**
@@ -51,15 +37,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     private final Comptoir comptoirs[];
     private final Camera cameras[];
     private final Employee employees[];
-<<<<<<< HEAD
-<<<<<<< HEAD
     private final ListingVols listingVols[];
-=======
     private boolean isCameraActive;
->>>>>>> 7f8ce799a1fb2c6951c727cdd2a867b28105053c
-=======
-    private boolean isCameraActive;
->>>>>>> 7f8ce799a1fb2c6951c727cdd2a867b28105053c
 
     FaceDetectorListener faceDetectorListener;
 
@@ -76,7 +55,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         // Listener
         addMouseListener(this);
         addMouseMotionListener(this);
-        
+
         //Initialisation de la liste des vols
         listingVols = new ListingVols[]{};
 
@@ -102,7 +81,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             new Employee(), new Employee(),
             new Employee()
         };
-        
+
         isCameraActive = false;
 
         itemsTable.setDefaultRenderer(Camera.class, new CameraCellRenderer());
@@ -173,14 +152,13 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
     private void setCameraButtonVisibility(boolean bool) {
 
-    
         if (bool == false) {
             CameraButton.setVisible(false);
         } else {
             CameraButton.setVisible(true);
             CameraButton.setOpaque(true);
             CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
-            
+
         }
     }
 
@@ -191,8 +169,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             //On désactive les caméras 
             CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getredCameraIcon());
             cameraInterface(!isCameraActive);
-            
-           // CameraButton.setText("Activer caméra");
+
+            // CameraButton.setText("Activer caméra");
         } else //On change le label du bouton (de "activer caméra" à "désactiver caméra) et sa couleur
         {
             CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
@@ -208,47 +186,36 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
         comboBox.setModel(new DefaultComboBoxModel(months));
 
-<<<<<<< HEAD
     }
-<<<<<<< HEAD
-    
+
     //Fonction pour récupérer la liste des vols
-    private void listingVolsrecup(){
-        try{
+    private void listingVolsrecup() {
+        try {
             //On se connecte au site et on charge le document html
-	        	Document doc = Jsoup.connect("http://www.strasbourg.aeroport.fr/destinations/vols").get();
-	        	//On récupère dans ce document la premiere balise ayant comme nom td et pour attribut class="center"
-	        	int el = doc.select("td .center").size();
-	        	int nb = 0;
-                        String[] tab = new String[5];
-                        ArrayList ensembleDesVols = new ArrayList();
-	        	for(int i=0;i<el;i++){
-	        	Element element = doc.select("td .center").get(i);
-	        	String element1 =  element.text();
-                        tab[nb] = element1;
-	        	nb++;
-	        	if(nb == 5){
-                                for(int j=0;j<5;j++){
-                                    ensembleDesVols.add(i, tab[nb]);
-                                }
-                                nb = 0;
-	        	}
-	        	}
+            Document doc = Jsoup.connect("http://www.strasbourg.aeroport.fr/destinations/vols").get();
+            //On récupère dans ce document la premiere balise ayant comme nom td et pour attribut class="center"
+            int el = doc.select("td .center").size();
+            int nb = 0;
+            String[] tab = new String[5];
+            ArrayList ensembleDesVols = new ArrayList();
+            for (int i = 0; i < el; i++) {
+                Element element = doc.select("td .center").get(i);
+                String element1 = element.text();
+                tab[nb] = element1;
+                nb++;
+                if (nb == 5) {
+                    for (int j = 0; j < 5; j++) {
+                        ensembleDesVols.add(i, tab[nb]);
+                    }
+                    nb = 0;
+                }
+            }
+        } catch (MalformedURLException | NumberFormatException | java.lang.ArrayIndexOutOfBoundsException e) {
+            System.out.println(e);
+        } catch (IOException ex) {
+            System.out.println(ex);
         }
-        catch(MalformedURLException | NumberFormatException | java.lang.ArrayIndexOutOfBoundsException e){
-	        System.out.println(e);
-	        }
-        	catch(IOException ex){
-        	System.out.println(ex);
-        	}
-	        	
     }
-    
-=======
->>>>>>> 7f8ce799a1fb2c6951c727cdd2a867b28105053c
-=======
-    }
->>>>>>> 7f8ce799a1fb2c6951c727cdd2a867b28105053c
 
     private void cameraInterface(boolean on) {
 
