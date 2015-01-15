@@ -6,6 +6,7 @@ import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.Employee;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.ListingVols;
+import fr.ece.pfe_project.model.ModelInterface;
 import fr.ece.pfe_project.panel.MainPanel.FaceDetectorListener;
 import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
@@ -17,14 +18,19 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import org.jdatepicker.ComponentManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jdatepicker.ComponentManager;
 import real_time_image_processing.FaceDetectorThread;
 
 /**
@@ -112,7 +118,15 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
                 model.setData(cameras, false);
                 CameraButton.addActionListener(this);
-                //cameraInterface(false);
+                break;
+            case LISTINGVOLS:
+                setVisibility(false);
+                setCameraButtonVisibility(false);
+                itemsTable.setRowHeight(16);
+                //listingVols.addActionListener(this);
+                //Fonction à lancer lors du clique bouton: listingVolsrecup
+                if(!testConnexion()) model.setData((ListingVols[]) listingVolsrecup().toArray(new ListingVols[0]), false);
+                else JOptionPane.showMessageDialog(this, "Pas de connexion internet", "Warning", JOptionPane.WARNING_MESSAGE);
                 break;
             case EXCELROW:
                 setVisibility(true);
@@ -156,7 +170,9 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             CameraButton.setVisible(false);
         } else {
             CameraButton.setVisible(true);
-            CameraButton.setOpaque(true);
+            CameraButton.setOpaque(false);
+            CameraButton.setContentAreaFilled(false);
+            CameraButton.setBorderPainted(false);
             CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
 
         }
@@ -167,13 +183,13 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
         if (isCameraActive == true) {
             //On désactive les caméras 
-            CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getredCameraIcon());
+            CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
             cameraInterface(!isCameraActive);
 
             // CameraButton.setText("Activer caméra");
         } else //On change le label du bouton (de "activer caméra" à "désactiver caméra) et sa couleur
         {
-            CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
+            CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getredCameraIcon());
             //On lance l'activation des caméras une fois qu'on appuie sur le bouton
             cameraInterface(!isCameraActive);
         }
@@ -187,35 +203,30 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         comboBox.setModel(new DefaultComboBoxModel(months));
 
     }
-
-    //Fonction pour récupérer la liste des vols
-    private void listingVolsrecup() {
+    
+    public boolean testConnexion() {
+                boolean internet = false;
+		URL url;
         try {
-            //On se connecte au site et on charge le document html
-            Document doc = Jsoup.connect("http://www.strasbourg.aeroport.fr/destinations/vols").get();
-            //On récupère dans ce document la premiere balise ayant comme nom td et pour attribut class="center"
-            int el = doc.select("td .center").size();
-            int nb = 0;
-            String[] tab = new String[5];
-            ArrayList ensembleDesVols = new ArrayList();
-            for (int i = 0; i < el; i++) {
-                Element element = doc.select("td .center").get(i);
-                String element1 = element.text();
-                tab[nb] = element1;
-                nb++;
-                if (nb == 5) {
-                    for (int j = 0; j < 5; j++) {
-                        ensembleDesVols.add(i, tab[nb]);
-                    }
-                    nb = 0;
-                }
-            }
-        } catch (MalformedURLException | NumberFormatException | java.lang.ArrayIndexOutOfBoundsException e) {
-            System.out.println(e);
-        } catch (IOException ex) {
-            System.out.println(ex);
+            url = new URL("http://www.google.fr");
+            HttpURLConnection urlConn;
+            urlConn = (HttpURLConnection)url.openConnection();
+            urlConn.connect();
+            internet = false;
         }
-    }
+            catch (MalformedURLException ex) {
+            Logger.getLogger(ListPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+		
+         catch (IOException ex) {
+             internet = true;
+             Logger.getLogger(ListPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+                return internet;
+	}
+    
+
 
     private void cameraInterface(boolean on) {
 
@@ -264,6 +275,59 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     @Override
     public void getCountFaceDetected(int number_of_faces) {
         System.out.println("List Panel NB FACES : " + number_of_faces);
+    }
+    
+    
+    //Fonction pour récupérer la liste des vols
+    private ArrayList listingVolsrecup() {
+        try {
+            //On se connecte au site et on charge le document html
+            Document doc = Jsoup.connect("http://www.strasbourg.aeroport.fr/destinations/vols").get();
+            //On récupère dans ce document la premiere balise ayant comme nom td et pour attribut class="center"
+            int el = doc.select("td").size();
+            int nb = 0;
+            String[] tab = new String[6];
+            ArrayList<ListingVols> ensembleDesVols = new ArrayList<ListingVols>();
+            ListingVols listingVols = null;
+            for (int i = 3; i < el; i++) {
+                listingVols = new ListingVols();
+                Element element = doc.select("td").get(i);
+                String element1 = element.text();
+                tab[nb] = element1;
+                nb++;
+                if (nb == 6) {
+                    for (int j = 0; j < 6; j++) {
+                        switch (j){
+                            case 0:listingVols.setDate1(tab[j]);
+                                break;
+                            case 1:listingVols.setHeure(tab[j]);
+                                break;
+                            case 2:listingVols.setDestination(tab[j]);
+                                break;
+                            case 3:listingVols.setNumeroVol(tab[j]);
+                                break;
+                            case 4:listingVols.setCompagnie(tab[j]);
+                                break;
+                            case 5:listingVols.setObservation(tab[j]);
+                            default:
+                                break;
+                        }
+                        
+                    }
+                    nb = 0;
+                    ensembleDesVols.add(listingVols);
+                }
+                
+            }
+
+            return ensembleDesVols;
+        } catch (MalformedURLException | NumberFormatException | java.lang.ArrayIndexOutOfBoundsException e) {
+            System.out.println(e);
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+
+        return null;
     }
 
     /**

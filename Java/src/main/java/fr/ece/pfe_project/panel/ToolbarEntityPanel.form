@@ -26,11 +26,14 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="comptoirButton" max="32767" attributes="0"/>
-                  <Component id="cameraButton" alignment="0" max="32767" attributes="0"/>
-                  <Component id="excelButton" alignment="0" pref="0" max="32767" attributes="0"/>
-                  <Component id="listingVols" pref="0" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Component id="carnetAdressesButton" pref="0" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="comptoirButton" max="32767" attributes="0"/>
+                      <Component id="cameraButton" alignment="0" max="32767" attributes="0"/>
+                      <Component id="excelButton" alignment="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="listingVols" pref="0" max="32767" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace pref="20" max="32767" attributes="0"/>
           </Group>
@@ -47,7 +50,9 @@
               <Component id="excelButton" min="-2" pref="68" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="listingVols" min="-2" pref="70" max="-2" attributes="0"/>
-              <EmptySpace pref="283" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="carnetAdressesButton" min="-2" pref="70" max="-2" attributes="0"/>
+              <EmptySpace pref="207" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -86,6 +91,11 @@
     <Component class="javax.swing.JToggleButton" name="listingVols">
       <Properties>
         <Property name="text" type="java.lang.String" value="Listing des vols"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JToggleButton" name="carnetAdressesButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Carnet d&apos;adresses"/>
       </Properties>
     </Component>
   </SubComponents>

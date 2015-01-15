@@ -20,6 +20,7 @@ public class MyTableModel extends AbstractTableModel {
     private final String[] columnCamera = {"Cameras"};
     private final String[] columnExcel = {"Date", "Flux de la journée"};
     private final String[] columnListingVols = {"Date", "Heure de départ", "Destination", "N° de vol", "Compagnie", "Observation"};
+    private final String[] columnCarnetAdresses = {"Compagnie", "Nombre de guiche", "Societe d'assistance", "Téléphone"};
 
     private final String[][] columnNames = {
         columnNone, columnComptoir, columnCamera, columnExcel, columnListingVols
@@ -134,9 +135,17 @@ public class MyTableModel extends AbstractTableModel {
 
                 switch (column) {
                     case 0:
-                        return ((ListingVols) myData).getType();
+                        return ((ListingVols) myData).getDate1();
                     case 1:
-                        return ((ListingVols) myData).getElement();
+                        return ((ListingVols) myData).getHeure();
+                    case 2:
+                        return ((ListingVols) myData).getDestination();
+                    case 3:
+                        return ((ListingVols) myData).getNumeroVol();
+                    case 4:
+                        return ((ListingVols) myData).getCompagnie();
+                    case 5:
+                        return ((ListingVols) myData).getObservation();
                     default:
                         System.err.println("Logic Error");
                         break;
@@ -192,8 +201,16 @@ public class MyTableModel extends AbstractTableModel {
 
                 switch (column) {
                     case 0:
-                        return Integer.class;
+                        return String.class;
                     case 1:
+                        return String.class;
+                    case 2:
+                        return String.class;
+                    case 3:
+                        return String.class;
+                    case 4:
+                        return String.class;
+                    case 5:
                         return String.class;
                 }
                 break;
