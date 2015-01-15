@@ -232,10 +232,12 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                                 break;
                         }
                         //listingVols.setElement(element1);
-                        ensembleDesVols.add(listingVols);
+                        
                     }
                     nb = 0;
+                    ensembleDesVols.add(listingVols);
                 }
+                
             }
 
             return ensembleDesVols;
