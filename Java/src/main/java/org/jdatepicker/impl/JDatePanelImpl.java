@@ -388,6 +388,9 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
                 dateConfirmation.setForeground(getColors().fgTodaySelector());
                 dateConfirmation.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
                 dateConfirmation.addActionListener(internalController);
+                dateConfirmation.setOpaque(false);
+                dateConfirmation.setContentAreaFilled(false);
+                dateConfirmation.setBorderPainted(false);
                 dateConfirmation.setFocusable(false);
                 dateConfirmation.setFont(new Font(dateConfirmation.getFont().getName(), Font.PLAIN, 10));
                 //TODO get the translations for each language before adding this in

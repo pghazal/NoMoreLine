@@ -30,7 +30,6 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         setLocationRelativeTo(null);
-        //setIconImage((Image) ComponentManager.getInstance().getComponentIconDefaults().getProjetIcon());
 
         mainPanel = new MainPanel();
 
