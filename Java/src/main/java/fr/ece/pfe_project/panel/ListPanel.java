@@ -125,6 +125,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 setCameraButtonVisibility(false);
                 itemsTable.setRowHeight(16);
                 model.setData(comptoirs, false);
+                System.out.println(isCameraActive);
                 break;
             case CAMERA:
                 setVisibilityRefresh(false);
@@ -133,6 +134,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
                 model.setData(cameras, false);
                 CameraButton.addActionListener(this);
+                System.out.println(isCameraActive);
                 break;
             case EXCELROW:
                 setVisibilityRefresh(false);
@@ -141,6 +143,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 JComboboxItems(jComboBox1);
                 itemsTable.setRowHeight(16);
                 model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new FrequentationJournaliere[0]), false);
+                System.out.println(isCameraActive);
                 break;
             case LISTINGVOLS:
                 setVisibilityRefresh(true);
@@ -154,13 +157,14 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 } else {
                     JOptionPane.showMessageDialog(this, "Pas de connexion internet", "Warning", JOptionPane.WARNING_MESSAGE);
                 }
-
+                System.out.println(isCameraActive);
                 break;
             case NONE:
                 setVisibility(false);
                 setVisibilityRefresh(false);
                 setCameraButtonVisibility(false);
                 cameraInterface(false);
+                System.out.println(isCameraActive);
                 break;
 
             default:
