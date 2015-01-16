@@ -2,6 +2,7 @@ package fr.ece.pfe_project.panel;
 
 import fr.ece.pfe_project.editor.CameraCellEditor;
 import fr.ece.pfe_project.model.Camera;
+import fr.ece.pfe_project.model.CarnetAdresses;
 import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.Employee;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
@@ -50,6 +51,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     private final Camera cameras[];
     private final Employee employees[];
     private final ListingVols listingVols[];
+    private final CarnetAdresses carnetAdresses[];
     private boolean isCameraActive;
 
     FaceDetectorListener faceDetectorListener;
@@ -73,6 +75,11 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
         //Initialisation de la liste des vols
         listingVols = new ListingVols[]{};
+        
+        //Initialisation du carnet d'adresses
+        carnetAdresses = new CarnetAdresses[]{
+            new CarnetAdresses("Air Test", 10, "Test compagny", "Test Tel")
+        };
 
         // Data initialization
         comptoirs = new Comptoir[]{
@@ -86,6 +93,9 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
         //Rendre invisible au démarrage le bouton refresh
         setVisibilityRefresh(false);
+        
+        //Rendre invisible au démarrage les boutons pour le carnet d'adresses
+        setVisibilityCarnetAdresses(false);
 
         //SetCameraButtonVisibility false pour rendre invisible le bouton caméra au démmarage
         setCameraButtonVisibility(false);
@@ -101,8 +111,11 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         };
 
         isCameraActive = false;
-        // isRefreshBoutonActive = false;
         refreshButton.addActionListener(this);
+        //Ajout des listerner sur les boutons de la page carnet d'adresses
+        AjouterCA.addActionListener(this);
+        modifierCA.addActionListener(this);
+        supprimerCA.addActionListener(this);
         itemsTable.setDefaultRenderer(Camera.class, new CameraCellRenderer());
         itemsTable.setDefaultEditor(Camera.class, new CameraCellEditor());
 
@@ -122,6 +135,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             case COMPTOIR:
                 setVisibilityRefresh(false);
                 setVisibility(false);
+                setVisibilityCarnetAdresses(false);
                 setCameraButtonVisibility(false);
                 itemsTable.setRowHeight(16);
                 model.setData(comptoirs, false);
@@ -129,6 +143,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             case CAMERA:
                 setVisibilityRefresh(false);
                 setVisibility(false);
+                setVisibilityCarnetAdresses(false);
                 setCameraButtonVisibility(true);
                 itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
                 model.setData(cameras, false);
@@ -138,6 +153,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 setVisibilityRefresh(false);
                 setVisibility(true);
                 setCameraButtonVisibility(false);
+                setVisibilityCarnetAdresses(false);
                 JComboboxItems(jComboBox1);
                 itemsTable.setRowHeight(16);
                 model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new FrequentationJournaliere[0]), false);
@@ -146,20 +162,27 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 setVisibilityRefresh(true);
                 setVisibility(false);
                 setCameraButtonVisibility(false);
+                setVisibilityCarnetAdresses(false);
                 itemsTable.setRowHeight(16);
-                //listingVols.addActionListener(this);
-                //Fonction à lancer lors du clique bouton: listingVolsrecup
                 if (!testConnexion()) {
                     model.setData((ListingVols[]) listingVolsrecup().toArray(new ListingVols[0]), false);
                 } else {
                     JOptionPane.showMessageDialog(this, "Pas de connexion internet", "Warning", JOptionPane.WARNING_MESSAGE);
                 }
-
+                break;
+            case CARNETADRESSE:
+                setVisibilityRefresh(false);
+                setVisibility(false);
+                setCameraButtonVisibility(false);
+                setVisibilityCarnetAdresses(true);
+                itemsTable.setRowHeight(16);
+                model.setData(carnetAdresses,false);
                 break;
             case NONE:
                 setVisibility(false);
                 setVisibilityRefresh(false);
                 setCameraButtonVisibility(false);
+                setVisibilityCarnetAdresses(false);
                 cameraInterface(false);
                 break;
 
@@ -320,6 +343,23 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         }
 
     }
+    
+    //Fonction pour rendre le bouton refresh visible
+    private void setVisibilityCarnetAdresses(boolean bool) {
+
+        if (bool == false) {
+            AjouterCA.setVisible(false);
+            modifierCA.setVisible(false);
+            supprimerCA.setVisible(false);
+
+        } else {
+            AjouterCA.setVisible(true);
+            modifierCA.setVisible(true);
+            supprimerCA.setVisible(true);
+
+        }
+
+    }
 
     //Fonction pour récupérer la liste des vols
     private ArrayList listingVolsrecup() {
@@ -395,6 +435,9 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         jComboBox1 = new javax.swing.JComboBox();
         jComboBox2 = new javax.swing.JComboBox();
         refreshButton = new javax.swing.JButton();
+        supprimerCA = new javax.swing.JButton();
+        modifierCA = new javax.swing.JButton();
+        AjouterCA = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         itemsTable = new javax.swing.JTable();
 
@@ -425,6 +468,15 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         });
         jSpinnerPanel.add(refreshButton);
 
+        supprimerCA.setText("Supprimer");
+        jSpinnerPanel.add(supprimerCA);
+
+        modifierCA.setText("Modifier");
+        jSpinnerPanel.add(modifierCA);
+
+        AjouterCA.setText("Ajouter");
+        jSpinnerPanel.add(AjouterCA);
+
         add(jSpinnerPanel, java.awt.BorderLayout.PAGE_START);
 
         itemsTable.setAutoCreateRowSorter(true);
@@ -443,6 +495,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton AjouterCA;
     private javax.swing.JButton CameraButton;
     private javax.swing.JTable itemsTable;
     private javax.swing.JComboBox jComboBox1;
@@ -450,7 +503,9 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jSpinnerPanel;
+    private javax.swing.JButton modifierCA;
     private javax.swing.JButton refreshButton;
+    private javax.swing.JButton supprimerCA;
     // End of variables declaration//GEN-END:variables
 
     @Override
