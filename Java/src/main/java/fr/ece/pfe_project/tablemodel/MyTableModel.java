@@ -3,6 +3,7 @@ package fr.ece.pfe_project.tablemodel;
 import javax.swing.table.AbstractTableModel;
 import fr.ece.pfe_project.panel.ToolbarEntityPanel;
 import fr.ece.pfe_project.model.Camera;
+import fr.ece.pfe_project.model.CarnetAdresses;
 import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.ModelInterface;
@@ -20,10 +21,10 @@ public class MyTableModel extends AbstractTableModel {
     private final String[] columnCamera = {"Cameras"};
     private final String[] columnExcel = {"Date", "Flux de la journée"};
     private final String[] columnListingVols = {"Date", "Heure de départ", "Destination", "N° de vol", "Compagnie", "Observation"};
-    private final String[] columnCarnetAdresses = {"Compagnie", "Nombre de guiche", "Societe d'assistance", "Téléphone"};
+    private final String[] columnCarnetAdresses = {"Compagnie", "Nombre de guichets", "Societe d'assistance", "Téléphone"};
 
     private final String[][] columnNames = {
-        columnNone, columnComptoir, columnCamera, columnExcel, columnListingVols
+        columnNone, columnComptoir, columnCamera, columnExcel, columnListingVols, columnCarnetAdresses
     };
 
     private ModelInterface[] data;
@@ -55,6 +56,9 @@ public class MyTableModel extends AbstractTableModel {
                 
             case LISTINGVOLS:
             return columnNames[ToolbarEntityPanel.ENTITY.LISTINGVOLS.ordinal()].length;
+                
+            case CARNETADRESSE:
+            return columnNames[ToolbarEntityPanel.ENTITY.CARNETADRESSE.ordinal()].length;
 
             default:
                 break;
@@ -85,6 +89,9 @@ public class MyTableModel extends AbstractTableModel {
                 
             case LISTINGVOLS:
                 return columnNames[ToolbarEntityPanel.ENTITY.LISTINGVOLS.ordinal()][column];
+                
+            case CARNETADRESSE:
+                return columnNames[ToolbarEntityPanel.ENTITY.CARNETADRESSE.ordinal()][column];
 
             default:
                 break;
@@ -166,6 +173,25 @@ public class MyTableModel extends AbstractTableModel {
                         break;
                 }
                 break;
+                
+            case CARNETADRESSE:
+
+                myData = (CarnetAdresses) data[row];
+
+                switch (column) {
+                    case 0:
+                        return ((CarnetAdresses) myData).getCompagnieca();
+                    case 1:
+                        return ((CarnetAdresses) myData).getNombreGuichet();
+                    case 2:
+                        return ((CarnetAdresses) myData).getSocieteAssistance();
+                    case 3:
+                        return ((CarnetAdresses) myData).getTelephone();
+                    default:
+                        System.err.println("Logic Error");
+                        break;
+                }
+                break;
 
             default:
                 break;
@@ -221,6 +247,20 @@ public class MyTableModel extends AbstractTableModel {
                     case 4:
                         return String.class;
                     case 5:
+                        return String.class;
+                }
+                break;
+                
+            case CARNETADRESSE:
+
+                switch (column) {
+                    case 0:
+                        return String.class;
+                    case 1:
+                        return Integer.class;
+                    case 2:
+                        return String.class;
+                    case 3:
                         return String.class;
                 }
                 break;
