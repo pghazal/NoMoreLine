@@ -64,6 +64,7 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
                 this.comptoirButton.setSelected(true);
                 this.excelButton.setSelected(false);
                 this.listingVols.setSelected(false);
+                this.carnetAdressesButton.setSelected(false);
                 this.toolbarsListener.entityHasChange(ENTITY.COMPTOIR);
             }
 
@@ -77,6 +78,7 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
                 this.comptoirButton.setSelected(false);              
                 this.excelButton.setSelected(false);
                 this.listingVols.setSelected(false);
+                this.carnetAdressesButton.setSelected(false);
                 this.toolbarsListener.entityHasChange(ENTITY.CAMERA);
             }
 
@@ -90,6 +92,7 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
                 this.cameraButton.setSelected(false);
                 this.comptoirButton.setSelected(false);
                 this.excelButton.setSelected(true);
+                this.carnetAdressesButton.setSelected(false);
                 this.listingVols.setSelected(false);
                 this.toolbarsListener.entityHasChange(ENTITY.EXCELROW);
             }
@@ -104,6 +107,7 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
                 this.cameraButton.setSelected(false);
                 this.comptoirButton.setSelected(false);              
                 this.excelButton.setSelected(false);
+                this.carnetAdressesButton.setSelected(false);
                 this.listingVols.setSelected(true);
                 this.toolbarsListener.entityHasChange(ENTITY.LISTINGVOLS);
             }
