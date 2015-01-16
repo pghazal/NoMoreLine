@@ -226,6 +226,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 setCameraButtonVisibility(false);
                 itemsTable.setRowHeight(16);
                 model.setData(comptoirs, false);
+                System.out.println(isCameraActive);
                 break;
             case CAMERA:
                 setVisibilityRefresh(false);
@@ -233,6 +234,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 setCameraButtonVisibility(true);
                 itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
                 model.setData(cameras, false);
+                System.out.println(isCameraActive);
                 break;
             case EXCELROW:
                 setVisibilityRefresh(false);
@@ -241,6 +243,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 JComboboxItems(jComboBox1);
                 itemsTable.setRowHeight(16);
                 model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new FrequentationJournaliere[0]), false);
+                System.out.println(isCameraActive);
                 break;
             case LISTINGVOLS:
                 setVisibilityRefresh(true);
@@ -254,13 +257,14 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 } else {
                     JOptionPane.showMessageDialog(this, "Pas de connexion internet", "Warning", JOptionPane.WARNING_MESSAGE);
                 }
-
+                System.out.println(isCameraActive);
                 break;
             case NONE:
                 setVisibility(false);
                 setVisibilityRefresh(false);
                 setCameraButtonVisibility(false);
                 cameraInterface(false);
+                System.out.println(isCameraActive);
                 break;
 
             default:
@@ -295,12 +299,11 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             CameraButton.setOpaque(false);
             CameraButton.setContentAreaFilled(false);
             CameraButton.setBorderPainted(false);
-            CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
+            //CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
 
         }
     }
 
-    @Override
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == CameraButton) {
@@ -503,6 +506,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         jLabel1.setText("Sélectionner date :");
         jSpinnerPanel.add(jLabel1);
 
+        CameraButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/greencamera.png"))); // NOI18N
         CameraButton.setPreferredSize(new java.awt.Dimension(35, 35));
         jSpinnerPanel.add(CameraButton);
 
