@@ -50,7 +50,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     private final Employee employees[];
     private final ListingVols listingVols[];
     private boolean isCameraActive;
-
+  
+            
     FaceDetectorListener faceDetectorListener;
     ToolbarsListener toolbarsListener;
 
@@ -133,6 +134,21 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 model.setData(cameras, false);
                 CameraButton.addActionListener(this);
                 break;
+<<<<<<< HEAD
+=======
+            case LISTINGVOLS:
+                setVisibility(false);
+                setCameraButtonVisibility(false);
+                itemsTable.setRowHeight(16);
+                //listingVols.addActionListener(this);
+                //Fonction à lancer lors du clique bouton: listingVolsrecup
+                if (!testConnexion()) {
+                    model.setData((ListingVols[]) listingVolsrecup().toArray(new ListingVols[0]), false);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Pas de connexion internet", "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+                break;
+>>>>>>> 3d98a818d702da7ec47b86c253a5a1fff2b05816
             case EXCELROW:
                 setVisibilityRefresh(false);
                 setVisibility(true);
@@ -217,6 +233,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             //On lance l'activation des caméras une fois qu'on appuie sur le bouton
             cameraInterface(!isCameraActive);
             
+<<<<<<< HEAD
         }
 
         if (e.getSource() == refreshButton) {
@@ -225,6 +242,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             //if (isRefreshBoutonActive) {
                 listingVolsrecup();
             //}
+=======
+>>>>>>> 3d98a818d702da7ec47b86c253a5a1fff2b05816
         }
 
     }
@@ -305,6 +324,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         System.out.println("List Panel NB FACES : " + number_of_faces);
     }
 
+<<<<<<< HEAD
     //Fonction pour rendre le bouton refresh visible
     private void setVisibilityRefresh(boolean bool) {
 
@@ -318,6 +338,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
     }
 
+=======
+>>>>>>> 3d98a818d702da7ec47b86c253a5a1fff2b05816
     //Fonction pour récupérer la liste des vols
     private ArrayList listingVolsrecup() {
         //isRefreshBoutonActive = !isRefreshBoutonActive;
