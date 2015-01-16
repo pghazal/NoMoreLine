@@ -21,12 +21,12 @@ public class ComponentIconDefaults {
     private static final String CAMERARED = "/org/jdatepicker/icons/redcamera.png";
     private static final String ONLED = "/org/jdatepicker/icons/on_led_icon.png";
     private static final String OFFLED = "/org/jdatepicker/icons/off_led_icon.png";
-    private static final String CHECK = "/org/jdatepicker/icons/check.png";
-    private static final String CAMERA = "/org/jdatepicker/icons/check.png";
-    private static final String LISTINGVOL = "/org/jdatepicker/icons/check.png";
-    private static final String CARNETADRESSE = "/org/jdatepicker/icons/check.png";
-    private static final String PROJET = "/org/jdatepicker/icons/check.png";
-    private static final String EXCEL = "/org/jdatepicker/icons/check.png";
+    private static final String CHECK = "/org/jdatepicker/icons/check-icon.png";
+    private static final String CAMERA = "/org/jdatepicker/icons/video.png";
+    private static final String LISTINGVOL = "/org/jdatepicker/icons/plane.png";
+    private static final String CARNETADRESSE = "/org/jdatepicker/icons/directory.png";
+    private static final String PROJET = "/org/jdatepicker/icons/project.png";
+    private static final String EXCEL = "/org/jdatepicker/icons/excel.png";
 
     private Icon logoIcon;
     private Icon nextMonthIcon;
@@ -54,6 +54,13 @@ public class ComponentIconDefaults {
             onLedIcon = loadIcon(ONLED);
             offLedIcon = loadIcon(OFFLED);
             checkIcon = loadIcon(CHECK);
+            
+            cameraIcon = loadIcon(CAMERA);
+            listingVolIcon = loadIcon(LISTINGVOL);
+            carnetIcon = loadIcon(CARNETADRESSE);
+            projetIcon = loadIcon(PROJET);
+            excelIcon = loadIcon(EXCEL);
+            
             nextMonthIcon = new JNextIcon(4, 7, false);
             nextYearIcon = new JNextIcon(8, 7, true);
             previousMonthIcon = new JPreviousIcon(4, 7, false);

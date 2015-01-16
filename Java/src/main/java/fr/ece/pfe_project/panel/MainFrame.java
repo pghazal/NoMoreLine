@@ -6,12 +6,14 @@ import fr.ece.pfe_project.model.JourFerie;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import javax.swing.JOptionPane;
 import fr.ece.pfe_project.widget.StartingProgressDialog;
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.jdatepicker.ComponentManager;
 
 /**
  *
@@ -28,6 +30,7 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         setLocationRelativeTo(null);
+        //setIconImage((Image) ComponentManager.getInstance().getComponentIconDefaults().getProjetIcon());
 
         mainPanel = new MainPanel();
 

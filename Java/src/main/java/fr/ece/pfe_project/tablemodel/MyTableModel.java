@@ -4,7 +4,6 @@ import javax.swing.table.AbstractTableModel;
 import fr.ece.pfe_project.panel.ToolbarEntityPanel;
 import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.CarnetAdresses;
-import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.ModelInterface;
 import fr.ece.pfe_project.model.ListingVols;
@@ -17,14 +16,13 @@ import java.util.Date;
 public class MyTableModel extends AbstractTableModel {
 
     private final String[] columnNone = {};
-    private final String[] columnComptoir = {"ID", "Numéro"};
     private final String[] columnCamera = {"Cameras"};
     private final String[] columnExcel = {"Date", "Flux de la journée"};
     private final String[] columnListingVols = {"Date", "Heure de départ", "Destination", "N° de vol", "Compagnie", "Observation"};
     private final String[] columnCarnetAdresses = {"Compagnie", "Nombre de guichets", "Societe d'assistance", "Téléphone"};
 
     private final String[][] columnNames = {
-        columnNone, columnComptoir, columnCamera, columnExcel, columnListingVols, columnCarnetAdresses
+        columnNone, columnCamera, columnExcel, columnListingVols, columnCarnetAdresses
     };
 
     private ModelInterface[] data;
@@ -47,9 +45,6 @@ public class MyTableModel extends AbstractTableModel {
 
             case CAMERA:
                 return columnNames[ToolbarEntityPanel.ENTITY.CAMERA.ordinal()].length;
-
-            case COMPTOIR:
-                return columnNames[ToolbarEntityPanel.ENTITY.COMPTOIR.ordinal()].length;
 
             case EXCELROW:
                 return columnNames[ToolbarEntityPanel.ENTITY.EXCELROW.ordinal()].length;
@@ -80,9 +75,6 @@ public class MyTableModel extends AbstractTableModel {
 
             case CAMERA:
                 return columnNames[ToolbarEntityPanel.ENTITY.CAMERA.ordinal()][column];
-
-            case COMPTOIR:
-                return columnNames[ToolbarEntityPanel.ENTITY.COMPTOIR.ordinal()][column];
 
             case EXCELROW:
                 return columnNames[ToolbarEntityPanel.ENTITY.EXCELROW.ordinal()][column];
@@ -115,21 +107,6 @@ public class MyTableModel extends AbstractTableModel {
                 switch (column) {
                     case 0:
                         return (Camera) myData;
-                    default:
-                        System.err.println("Logic Error");
-                        break;
-                }
-                break;
-
-            case COMPTOIR:
-
-                myData = (Comptoir) data[row];
-
-                switch (column) {
-                    case 0:
-                        return ((Comptoir) myData).getId();
-                    case 1:
-                        return ((Comptoir) myData).getNumber();
                     default:
                         System.err.println("Logic Error");
                         break;
@@ -210,16 +187,6 @@ public class MyTableModel extends AbstractTableModel {
                 switch (column) {
                     case 0:
                         return Camera.class;
-                }
-                break;
-
-            case COMPTOIR:
-
-                switch (column) {
-                    case 0:
-                        return Long.class;
-                    case 1:
-                        return Integer.class;
                 }
                 break;
 

@@ -5,6 +5,7 @@
  */
 package fr.ece.pfe_project.panel;
 
+import java.awt.Dimension;
 import javax.swing.Box;
 import real_time_image_processing.FaceDetectorThread;
 
@@ -74,6 +75,7 @@ public class MainPanel extends javax.swing.JPanel {
         hLeftBox.add(listPanel);
         hLeftBox.add(toolbarEntity);
         vLeftBox.add(hLeftBox);
+        vLeftBox.add(Box.createRigidArea(new Dimension(0, 20)));
         hMainBox.add(vLeftBox);
 
         add(hMainBox);

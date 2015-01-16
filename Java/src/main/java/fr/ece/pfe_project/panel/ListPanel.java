@@ -3,7 +3,6 @@ package fr.ece.pfe_project.panel;
 import fr.ece.pfe_project.editor.CameraCellEditor;
 import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.CarnetAdresses;
-import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.ListingVols;
 import fr.ece.pfe_project.panel.MainPanel.FaceDetectorListener;
@@ -149,7 +148,6 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         }
     }
 
-    private final Comptoir comptoirs[];
     private final Camera cameras[];
     private final ListingVols listingVols[];
     private final CarnetAdresses carnetAdresses[];
@@ -180,13 +178,6 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         //Initialisation du carnet d'adresses
         carnetAdresses = new CarnetAdresses[]{
             new CarnetAdresses("Air Test", 10, "Test compagny", "Test Tel")
-        };
-
-        // Data initialization
-        comptoirs = new Comptoir[]{
-            new Comptoir(1), new Comptoir(2),
-            new Comptoir(3), new Comptoir(4),
-            new Comptoir(5), new Comptoir(6)
         };
 
         //setVisibility false pour rendre invisible les 2 combobox au démarrage
@@ -236,15 +227,6 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         // TODO : model.setData() avec les nouvelles données
         switch (typeEntity) {
 
-            case COMPTOIR:
-                setVisibilityRefresh(false);
-                setVisibility(false);
-                setVisibilityCarnetAdresses(false);
-                setCameraButtonVisibility(false);
-                itemsTable.setRowHeight(16);
-                model.setData(comptoirs, false);
-                System.out.println(isCameraActive);
-                break;
             case CAMERA:
                 setVisibilityRefresh(false);
                 setVisibility(false);
@@ -332,6 +314,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         }
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == CameraButton) {
@@ -355,9 +338,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         if (e.getSource() == refreshButton) {
 
             System.out.println("Button Refresh clicked");
-            //if (isRefreshBoutonActive) {
             listingVolsrecup();
-            //}
         }
 
     }
@@ -445,9 +426,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
         } else {
             refreshButton.setVisible(true);
-
         }
-
     }
 
     //Fonction pour rendre le bouton refresh visible
@@ -462,9 +441,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             AjouterCA.setVisible(true);
             modifierCA.setVisible(true);
             supprimerCA.setVisible(true);
-
         }
-
     }
 
     //Fonction pour récupérer la liste des vols
@@ -646,17 +623,4 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     @Override
     public void mouseExited(MouseEvent e) {
     }
-
-//    @Override
-//    public void tableChanged(TableModelEvent e) {
-//        
-//        System.out.println("# Table Changed");
-//        int row = e.getFirstRow();
-//        int column = e.getColumn();
-//        MyTableModel model = (MyTableModel) e.getSource();
-//        String columnName = model.getColumnName(column);
-//
-//        Object data = model.getValueAt(row, column);
-//
-//    }
 }

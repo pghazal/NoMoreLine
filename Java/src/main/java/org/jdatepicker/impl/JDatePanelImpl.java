@@ -249,7 +249,7 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
         private JButton previousMonthButton;
         private JButton previousYearButton;
         private JButton nextYearButton;
-        private JLabel dateConfirmation;
+        private JButton dateConfirmation;
         private JSpinner yearSpinner;
 
         /**
@@ -381,12 +381,13 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
          *
          * @return javax.swing.JButton
          */
-        private JLabel getDateConfirmation() {
+        private JButton getDateConfirmation() {
             if (dateConfirmation == null) {
-                dateConfirmation = new javax.swing.JLabel(getIcons().getCheckIcon());
+                dateConfirmation = new javax.swing.JButton();
+                dateConfirmation.setIcon(getIcons().getCheckIcon());
                 dateConfirmation.setForeground(getColors().fgTodaySelector());
                 dateConfirmation.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-                dateConfirmation.addMouseListener(internalController);
+                dateConfirmation.addActionListener(internalController);
                 dateConfirmation.setFocusable(false);
                 dateConfirmation.setFont(new Font(dateConfirmation.getFont().getName(), Font.PLAIN, 10));
                 //TODO get the translations for each language before adding this in

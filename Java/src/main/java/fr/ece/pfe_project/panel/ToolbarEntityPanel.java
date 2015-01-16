@@ -19,7 +19,7 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
 
     public enum ENTITY {
 
-        NONE, COMPTOIR, CAMERA, EXCELROW, LISTINGVOLS, CARNETADRESSE
+        NONE, CAMERA, EXCELROW, LISTINGVOLS, CARNETADRESSE
     }
 
     public interface ToolbarEntityListener {
@@ -39,8 +39,6 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
 
         this.toolbarsListener = listener;
 
-        this.comptoirButton.addActionListener(this);
-        this.comptoirButton.setActionCommand(ENTITY.COMPTOIR.toString());
         this.cameraButton.addActionListener(this);
         this.cameraButton.setActionCommand(ENTITY.CAMERA.toString());
         this.excelButton.addActionListener(this);
@@ -54,34 +52,18 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (ENTITY.COMPTOIR.toString().equals(e.getActionCommand())) {
-
-            if (!comptoirButton.isSelected()) {
-                this.comptoirButton.setSelected(false);
-                this.toolbarsListener.entityHasChange(ENTITY.NONE);
-            } else {
-                this.cameraButton.setSelected(false);
-                this.comptoirButton.setSelected(true);
-                this.excelButton.setSelected(false);
-                this.listingVols.setSelected(false);
-                this.carnetAdressesButton.setSelected(false);
-                this.toolbarsListener.entityHasChange(ENTITY.COMPTOIR);
-            }
-
-        } else if (ENTITY.CAMERA.toString().equals(e.getActionCommand())) {
+        if (ENTITY.CAMERA.toString().equals(e.getActionCommand())) {
 
             if (!cameraButton.isSelected()) {
                 this.cameraButton.setSelected(false);
                 this.toolbarsListener.entityHasChange(ENTITY.NONE);
             } else {
                 this.cameraButton.setSelected(true);
-                this.comptoirButton.setSelected(false);              
                 this.excelButton.setSelected(false);
                 this.listingVols.setSelected(false);
                 this.carnetAdressesButton.setSelected(false);
                 this.toolbarsListener.entityHasChange(ENTITY.CAMERA);
             }
-
                
         } else if (ENTITY.EXCELROW.toString().equals(e.getActionCommand())) {
 
@@ -90,7 +72,6 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
                 this.toolbarsListener.entityHasChange(ENTITY.NONE);
             } else {
                 this.cameraButton.setSelected(false);
-                this.comptoirButton.setSelected(false);
                 this.excelButton.setSelected(true);
                 this.carnetAdressesButton.setSelected(false);
                 this.listingVols.setSelected(false);
@@ -105,7 +86,6 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
                 this.toolbarsListener.entityHasChange(ENTITY.NONE);
             } else {
                 this.cameraButton.setSelected(false);
-                this.comptoirButton.setSelected(false);              
                 this.excelButton.setSelected(false);
                 this.carnetAdressesButton.setSelected(false);
                 this.listingVols.setSelected(true);
@@ -119,7 +99,6 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
                 this.toolbarsListener.entityHasChange(ENTITY.NONE);
             } else {
                 this.cameraButton.setSelected(false);
-                this.comptoirButton.setSelected(false);              
                 this.excelButton.setSelected(false);
                 this.listingVols.setSelected(false);
                 this.carnetAdressesButton.setSelected(true);
@@ -150,7 +129,6 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        comptoirButton = new javax.swing.JToggleButton();
         cameraButton = new javax.swing.JToggleButton();
         excelButton = new javax.swing.JToggleButton();
         listingVols = new javax.swing.JToggleButton();
@@ -159,16 +137,14 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
         setMaximumSize(new java.awt.Dimension(90, 32767));
         setPreferredSize(new java.awt.Dimension(90, 600));
 
-        comptoirButton.setText("Comptoir");
-
-        cameraButton.setText("Camera");
+        cameraButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/video.png"))); // NOI18N
         cameraButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cameraButtonActionPerformed(evt);
             }
         });
 
-        excelButton.setText("Excel");
+        excelButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/excel.png"))); // NOI18N
         excelButton.setMaximumSize(new java.awt.Dimension(104, 29));
         excelButton.setMinimumSize(new java.awt.Dimension(104, 29));
         excelButton.setPreferredSize(new java.awt.Dimension(104, 29));
@@ -178,9 +154,9 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
             }
         });
 
-        listingVols.setText("Listing \ndes \nvols");
+        listingVols.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/plane.png"))); // NOI18N
 
-        carnetAdressesButton.setText("Carnet d'adresses");
+        carnetAdressesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/directory.png"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -189,19 +165,19 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(comptoirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cameraButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(excelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listingVols, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(carnetAdressesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(36, Short.MAX_VALUE))
+                    .addComponent(listingVols, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(carnetAdressesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(comptoirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap()
                 .addComponent(cameraButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(excelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -209,7 +185,7 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
                 .addComponent(listingVols, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(carnetAdressesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(184, Short.MAX_VALUE))
+                .addContainerGap(293, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -225,7 +201,6 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton cameraButton;
     private javax.swing.JToggleButton carnetAdressesButton;
-    private javax.swing.JToggleButton comptoirButton;
     private javax.swing.JToggleButton excelButton;
     private javax.swing.JToggleButton listingVols;
     // End of variables declaration//GEN-END:variables

@@ -27,21 +27,22 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="comptoirButton" alignment="0" min="-2" pref="79" max="-2" attributes="0"/>
                   <Component id="cameraButton" alignment="0" min="-2" pref="79" max="-2" attributes="0"/>
                   <Component id="excelButton" alignment="0" min="-2" pref="79" max="-2" attributes="0"/>
                   <Component id="listingVols" alignment="0" min="-2" pref="79" max="-2" attributes="0"/>
-                  <Component id="carnetAdressesButton" alignment="0" min="-2" pref="79" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="carnetAdressesButton" min="-2" pref="79" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
-              <Component id="comptoirButton" min="-2" pref="75" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="cameraButton" min="-2" pref="75" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -50,20 +51,17 @@
               <Component id="listingVols" min="-2" pref="70" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="carnetAdressesButton" min="-2" pref="70" max="-2" attributes="0"/>
-              <EmptySpace pref="184" max="32767" attributes="0"/>
+              <EmptySpace pref="293" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JToggleButton" name="comptoirButton">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Comptoir"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JToggleButton" name="cameraButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Camera"/>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/org/jdatepicker/icons/video.png"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cameraButtonActionPerformed"/>
@@ -71,7 +69,9 @@
     </Component>
     <Component class="javax.swing.JToggleButton" name="excelButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Excel"/>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/org/jdatepicker/icons/excel.png"/>
+        </Property>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[104, 29]"/>
         </Property>
@@ -88,12 +88,16 @@
     </Component>
     <Component class="javax.swing.JToggleButton" name="listingVols">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Listing &#xa;des &#xa;vols"/>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/org/jdatepicker/icons/plane.png"/>
+        </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JToggleButton" name="carnetAdressesButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Carnet d&apos;adresses"/>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/org/jdatepicker/icons/directory.png"/>
+        </Property>
       </Properties>
     </Component>
   </SubComponents>

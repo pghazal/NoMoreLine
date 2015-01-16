@@ -21,7 +21,9 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
      */
     public ToolbarActionsPanel() {
         initComponents();
-        //cameraState = new JLabel(ComponentManager.getInstance().getComponentIconDefaults().getoffLedIcon());
+
+        this.buttonAdd.setVisible(false);
+        this.buttonDelete.setVisible(false);
     }
 
     @Override
@@ -102,7 +104,6 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
         switch (typeEntity) {
 
             case CAMERA:
-            case COMPTOIR:
             case EXCELROW:
                 buttonAdd.setEnabled(true);
                 buttonDelete.setEnabled(true);
