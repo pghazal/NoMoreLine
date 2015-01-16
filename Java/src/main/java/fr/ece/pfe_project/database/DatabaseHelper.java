@@ -527,7 +527,7 @@ public class DatabaseHelper {
             Connection c = getConnection();
 
             Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_FREQUENTATION_JOURNALIERE + ";");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_FREQUENTATION_JOURNALIERE + " ORDER BY ANNEE, MOIS, JOUR ASC;");
 
             Calendar cal = Calendar.getInstance();
 
