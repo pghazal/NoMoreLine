@@ -6,8 +6,8 @@ import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.Employee;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.ListingVols;
-import fr.ece.pfe_project.model.ModelInterface;
 import fr.ece.pfe_project.panel.MainPanel.FaceDetectorListener;
+import fr.ece.pfe_project.panel.MainPanel.ToolbarsListener;
 import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
@@ -40,6 +40,11 @@ import real_time_image_processing.FaceDetectorThread;
 public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.FaceDetectorInterface,
         ToolbarEntityPanel.ToolbarEntityListener, MouseMotionListener, MouseListener, ActionListener {
 
+    public interface CameraStatusListener {
+
+        public void changeCameraStatus(boolean cameraStatus);
+    }
+
     private final Comptoir comptoirs[];
     private final Camera cameras[];
     private final Employee employees[];
@@ -47,16 +52,19 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     private boolean isCameraActive;
 
     FaceDetectorListener faceDetectorListener;
+    ToolbarsListener toolbarsListener;
 
     /**
      * Creates new form DrawingPanel
      *
      * @param faceListener
+     * @param toolbarsListener
      */
-    public ListPanel(FaceDetectorListener faceListener) {
+    public ListPanel(FaceDetectorListener faceListener, ToolbarsListener toolbarsListener) {
         initComponents();
 
-        faceDetectorListener = faceListener;
+        this.faceDetectorListener = faceListener;
+        this.toolbarsListener = toolbarsListener;
 
         // Listener
         addMouseListener(this);
@@ -125,8 +133,11 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 itemsTable.setRowHeight(16);
                 //listingVols.addActionListener(this);
                 //Fonction à lancer lors du clique bouton: listingVolsrecup
-                if(!testConnexion()) model.setData((ListingVols[]) listingVolsrecup().toArray(new ListingVols[0]), false);
-                else JOptionPane.showMessageDialog(this, "Pas de connexion internet", "Warning", JOptionPane.WARNING_MESSAGE);
+                if (!testConnexion()) {
+                    model.setData((ListingVols[]) listingVolsrecup().toArray(new ListingVols[0]), false);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Pas de connexion internet", "Warning", JOptionPane.WARNING_MESSAGE);
+                }
                 break;
             case EXCELROW:
                 setVisibility(true);
@@ -185,13 +196,14 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             //On désactive les caméras 
             CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
             cameraInterface(!isCameraActive);
-
+            toolbarsListener.changeCameraStatus(isCameraActive);
             // CameraButton.setText("Activer caméra");
         } else //On change le label du bouton (de "activer caméra" à "désactiver caméra) et sa couleur
         {
             CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getredCameraIcon());
             //On lance l'activation des caméras une fois qu'on appuie sur le bouton
             cameraInterface(!isCameraActive);
+            toolbarsListener.changeCameraStatus(isCameraActive);
         }
 
     }
@@ -203,30 +215,25 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         comboBox.setModel(new DefaultComboBoxModel(months));
 
     }
-    
+
     public boolean testConnexion() {
-                boolean internet = false;
-		URL url;
+        boolean internet = false;
+        URL url;
         try {
             url = new URL("http://www.google.fr");
             HttpURLConnection urlConn;
-            urlConn = (HttpURLConnection)url.openConnection();
+            urlConn = (HttpURLConnection) url.openConnection();
             urlConn.connect();
             internet = false;
-        }
-            catch (MalformedURLException ex) {
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ListPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            internet = true;
             Logger.getLogger(ListPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-		
-         catch (IOException ex) {
-             internet = true;
-             Logger.getLogger(ListPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
-                return internet;
-	}
-    
-
+        return internet;
+    }
 
     private void cameraInterface(boolean on) {
 
@@ -276,8 +283,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     public void getCountFaceDetected(int number_of_faces) {
         System.out.println("List Panel NB FACES : " + number_of_faces);
     }
-    
-    
+
     //Fonction pour récupérer la liste des vols
     private ArrayList listingVolsrecup() {
         try {
@@ -297,27 +303,33 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 nb++;
                 if (nb == 6) {
                     for (int j = 0; j < 6; j++) {
-                        switch (j){
-                            case 0:listingVols.setDate1(tab[j]);
+                        switch (j) {
+                            case 0:
+                                listingVols.setDate1(tab[j]);
                                 break;
-                            case 1:listingVols.setHeure(tab[j]);
+                            case 1:
+                                listingVols.setHeure(tab[j]);
                                 break;
-                            case 2:listingVols.setDestination(tab[j]);
+                            case 2:
+                                listingVols.setDestination(tab[j]);
                                 break;
-                            case 3:listingVols.setNumeroVol(tab[j]);
+                            case 3:
+                                listingVols.setNumeroVol(tab[j]);
                                 break;
-                            case 4:listingVols.setCompagnie(tab[j]);
+                            case 4:
+                                listingVols.setCompagnie(tab[j]);
                                 break;
-                            case 5:listingVols.setObservation(tab[j]);
+                            case 5:
+                                listingVols.setObservation(tab[j]);
                             default:
                                 break;
                         }
-                        
+
                     }
                     nb = 0;
                     ensembleDesVols.add(listingVols);
                 }
-                
+
             }
 
             return ensembleDesVols;

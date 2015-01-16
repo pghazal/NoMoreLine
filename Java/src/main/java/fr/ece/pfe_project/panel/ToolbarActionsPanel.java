@@ -9,7 +9,8 @@ package fr.ece.pfe_project.panel;
  *
  * @author pierreghazal
  */
-public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEntityPanel.ToolbarEntityListener {
+public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEntityPanel.ToolbarEntityListener,
+        ListPanel.CameraStatusListener {
 
     /**
      * Creates new form ToolbarTop
@@ -17,6 +18,11 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
      */
     public ToolbarActionsPanel() {
         initComponents();
+    }
+
+    @Override
+    public void changeCameraStatus(boolean cameraStatus) {
+        
     }
 
     /**
