@@ -19,6 +19,8 @@ public class ComponentIconDefaults {
     private static String LOGO = "/org/jdatepicker/icons/logo.png";
     private static String CAMERAGREEN = "/org/jdatepicker/icons/greencamera.png";
     private static String CAMERARED = "/org/jdatepicker/icons/redcamera.png";
+    private static String ONLED ="/org/jdatepicker/icons/on_led_icon.png";
+    private static String OFFLED ="/org/jdatepicker/icons/off_led_icon.png";
 
     private Icon logoIcon;
     private Icon nextMonthIcon;
@@ -28,6 +30,8 @@ public class ComponentIconDefaults {
     private Icon popupButtonIcon;
     private Icon greenCameraIcon;
     private Icon redCameraIcon;
+    private Icon onLedIcon;
+    private Icon offLedIcon;
 
     public ComponentIconDefaults() {
         try {
@@ -35,6 +39,8 @@ public class ComponentIconDefaults {
             logoIcon = loadIcon(LOGO);
             greenCameraIcon = loadIcon(CAMERAGREEN);
             redCameraIcon = loadIcon(CAMERARED);
+            onLedIcon = loadIcon(ONLED);
+            offLedIcon = loadIcon(OFFLED);
             nextMonthIcon = new JNextIcon(4, 7, false);
             nextYearIcon = new JNextIcon(8, 7, true);
             previousMonthIcon = new JPreviousIcon(4, 7, false);
@@ -114,6 +120,22 @@ public class ComponentIconDefaults {
     
     public void setredCameraIcon(Icon redCameraIcon ){
         this.redCameraIcon = redCameraIcon;
+    }
+    
+    public Icon getonLedIcon(){
+        return onLedIcon;
+    }
+    
+    public void setonLedIcon(Icon onLedIcon ){
+        this.onLedIcon = onLedIcon;
+    }
+    
+    public Icon getoffLedIcon(){
+        return offLedIcon;
+    }
+    
+    public void setoffLedIcon(Icon offLedIcon ){
+        this.offLedIcon = offLedIcon;
     }
     
     public Icon getIcon() {

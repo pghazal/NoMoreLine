@@ -5,6 +5,9 @@
  */
 package fr.ece.pfe_project.panel;
 
+import javax.swing.JLabel;
+import org.jdatepicker.ComponentManager;
+
 /**
  *
  * @author pierreghazal
@@ -17,6 +20,21 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
      */
     public ToolbarActionsPanel() {
         initComponents();
+        cameraState = new JLabel(ComponentManager.getInstance().getComponentIconDefaults().getoffLedIcon());
+    }
+    
+    public void changeCameraStatus(boolean cameraStatus){
+        
+        if(cameraStatus == true){    
+         cameraState.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getonLedIcon());
+        
+        }
+        else
+        {    
+         cameraState.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getoffLedIcon());
+           
+        }
+        
     }
 
     /**
@@ -30,6 +48,7 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
 
         buttonAdd = new javax.swing.JButton();
         buttonDelete = new javax.swing.JButton();
+        cameraState = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(32767, 50));
         setPreferredSize(new java.awt.Dimension(600, 50));
@@ -40,6 +59,9 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
         buttonDelete.setText("Delete");
         buttonDelete.setEnabled(false);
 
+        cameraState.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/off_led_icon.png"))); // NOI18N
+        cameraState.setText("Status Camera");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -49,7 +71,9 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
                 .addComponent(buttonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonDelete)
-                .addContainerGap(420, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 292, Short.MAX_VALUE)
+                .addComponent(cameraState)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -57,8 +81,9 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAdd)
-                    .addComponent(buttonDelete))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(buttonDelete)
+                    .addComponent(cameraState))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -66,6 +91,7 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAdd;
     private javax.swing.JButton buttonDelete;
+    private javax.swing.JLabel cameraState;
     // End of variables declaration//GEN-END:variables
 
     @Override

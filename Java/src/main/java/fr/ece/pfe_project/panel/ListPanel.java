@@ -45,7 +45,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     private final Employee employees[];
     private final ListingVols listingVols[];
     private boolean isCameraActive;
-
+  
+            
     FaceDetectorListener faceDetectorListener;
 
     /**
@@ -184,12 +185,14 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         if (isCameraActive == true) {
             //On désactive les caméras 
             CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
+          //  toolbarChangeStatusCamera.changeCameraStatus(isCameraActive);
             cameraInterface(!isCameraActive);
 
             // CameraButton.setText("Activer caméra");
         } else //On change le label du bouton (de "activer caméra" à "désactiver caméra) et sa couleur
         {
             CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getredCameraIcon());
+          //  toolbarChangeStatusCamera.changeCameraStatus(isCameraActive);
             //On lance l'activation des caméras une fois qu'on appuie sur le bouton
             cameraInterface(!isCameraActive);
         }
