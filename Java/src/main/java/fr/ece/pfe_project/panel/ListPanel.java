@@ -199,12 +199,11 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             CameraButton.setOpaque(false);
             CameraButton.setContentAreaFilled(false);
             CameraButton.setBorderPainted(false);
-            CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
+            //CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
 
         }
     }
 
-    @Override
     public void actionPerformed(ActionEvent e) {
 
         if (isCameraActive == true) {
@@ -405,6 +404,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         jLabel1.setText("Sélectionner date :");
         jSpinnerPanel.add(jLabel1);
 
+        CameraButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/greencamera.png"))); // NOI18N
         CameraButton.setPreferredSize(new java.awt.Dimension(35, 35));
         jSpinnerPanel.add(CameraButton);
 
