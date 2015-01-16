@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,8 +51,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     private final Employee employees[];
     private final ListingVols listingVols[];
     private boolean isCameraActive;
-  
-            
+
     FaceDetectorListener faceDetectorListener;
     ToolbarsListener toolbarsListener;
 
@@ -101,7 +101,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         };
 
         isCameraActive = false;
-       // isRefreshBoutonActive = false;
+        // isRefreshBoutonActive = false;
         refreshButton.addActionListener(this);
         itemsTable.setDefaultRenderer(Camera.class, new CameraCellRenderer());
         itemsTable.setDefaultEditor(Camera.class, new CameraCellEditor());
@@ -206,35 +206,34 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         if (isCameraActive == true) {
             //On désactive les caméras 
             CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
-          //  toolbarChangeStatusCamera.changeCameraStatus(isCameraActive);
+            //  toolbarChangeStatusCamera.changeCameraStatus(isCameraActive);
             cameraInterface(!isCameraActive);
             toolbarsListener.changeCameraStatus(isCameraActive);
             // CameraButton.setText("Activer caméra");
         } else //On change le label du bouton (de "activer caméra" à "désactiver caméra) et sa couleur
         {
             CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getredCameraIcon());
-            
+
             toolbarsListener.changeCameraStatus(!isCameraActive);
             //On lance l'activation des caméras une fois qu'on appuie sur le bouton
-            cameraInterface(!isCameraActive);   
+            cameraInterface(!isCameraActive);
         }
 
         if (e.getSource() == refreshButton) {
-            
+
             System.out.println("Button Refresh clicked");
             //if (isRefreshBoutonActive) {
-                listingVolsrecup();
+            listingVolsrecup();
             //}
         }
 
     }
 
     private void JComboboxItems(JComboBox comboBox) {
-        String[] months = {"January", "February", "March", "April", "Mei", "June",
-            "July", "August", "September", "October", "November", "December"};
+        DateFormatSymbols symbols = new DateFormatSymbols();
+        String[] monthNames = symbols.getMonths();
 
-        comboBox.setModel(new DefaultComboBoxModel(months));
-
+        comboBox.setModel(new DefaultComboBoxModel(monthNames));
     }
 
     public boolean testConnexion() {
