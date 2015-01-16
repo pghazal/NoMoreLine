@@ -21,7 +21,7 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
      */
     public ToolbarActionsPanel() {
         initComponents();
-        cameraState = new JLabel(ComponentManager.getInstance().getComponentIconDefaults().getoffLedIcon());
+        //cameraState = new JLabel(ComponentManager.getInstance().getComponentIconDefaults().getoffLedIcon());
     }
 
     @Override
@@ -29,8 +29,9 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
         if (cameraStatus == true) {
             
             cameraState.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getonLedIcon());
-
+            System.out.println("LED ON");
         } else {
+            System.out.println("LED OFF");
             cameraState.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getoffLedIcon());
 
         }
