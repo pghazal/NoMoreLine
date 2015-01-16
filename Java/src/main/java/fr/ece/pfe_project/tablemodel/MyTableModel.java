@@ -196,6 +196,16 @@ public class MyTableModel extends AbstractTableModel {
                         return Integer.class;
                 }
                 break;
+
+            case EXCELROW:
+
+                switch (column) {
+                    case 0:
+                        return Date.class;
+                    case 1:
+                        return Integer.class;
+                }
+                break;
                 
             case LISTINGVOLS:
 
@@ -212,16 +222,6 @@ public class MyTableModel extends AbstractTableModel {
                         return String.class;
                     case 5:
                         return String.class;
-                }
-                break;
-
-            case EXCELROW:
-
-                switch (column) {
-                    case 0:
-                        return Date.class;
-                    case 1:
-                        return Integer.class;
                 }
                 break;
 

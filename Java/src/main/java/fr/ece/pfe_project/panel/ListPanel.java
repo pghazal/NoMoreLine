@@ -84,6 +84,9 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         //setVisibility false pour rendre invisible les 2 combobox au démarrage
         setVisibility(false);
 
+        //Rendre invisible au démarrage le bouton refresh
+        setVisibilityRefresh(false);
+
         //SetCameraButtonVisibility false pour rendre invisible le bouton caméra au démmarage
         setCameraButtonVisibility(false);
 
@@ -98,7 +101,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         };
 
         isCameraActive = false;
-
+       // isRefreshBoutonActive = false;
+        refreshButton.addActionListener(this);
         itemsTable.setDefaultRenderer(Camera.class, new CameraCellRenderer());
         itemsTable.setDefaultEditor(Camera.class, new CameraCellEditor());
 
@@ -116,19 +120,30 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         switch (typeEntity) {
 
             case COMPTOIR:
+                setVisibilityRefresh(false);
                 setVisibility(false);
                 setCameraButtonVisibility(false);
                 itemsTable.setRowHeight(16);
                 model.setData(comptoirs, false);
                 break;
             case CAMERA:
+                setVisibilityRefresh(false);
                 setVisibility(false);
                 setCameraButtonVisibility(true);
                 itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
                 model.setData(cameras, false);
                 CameraButton.addActionListener(this);
                 break;
+            case EXCELROW:
+                setVisibilityRefresh(false);
+                setVisibility(true);
+                setCameraButtonVisibility(false);
+                JComboboxItems(jComboBox1);
+                itemsTable.setRowHeight(16);
+                model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new FrequentationJournaliere[0]), false);
+                break;
             case LISTINGVOLS:
+                setVisibilityRefresh(true);
                 setVisibility(false);
                 setCameraButtonVisibility(false);
                 itemsTable.setRowHeight(16);
@@ -139,16 +154,11 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 } else {
                     JOptionPane.showMessageDialog(this, "Pas de connexion internet", "Warning", JOptionPane.WARNING_MESSAGE);
                 }
-                break;
-            case EXCELROW:
-                setVisibility(true);
-                setCameraButtonVisibility(false);
-                JComboboxItems(jComboBox1);
-                itemsTable.setRowHeight(16);
-                model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new FrequentationJournaliere[0]), false);
+
                 break;
             case NONE:
                 setVisibility(false);
+                setVisibilityRefresh(false);
                 setCameraButtonVisibility(false);
                 cameraInterface(false);
                 break;
@@ -206,8 +216,15 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             
             toolbarsListener.changeCameraStatus(!isCameraActive);
             //On lance l'activation des caméras une fois qu'on appuie sur le bouton
-            cameraInterface(!isCameraActive);
+            cameraInterface(!isCameraActive);   
+        }
+
+        if (e.getSource() == refreshButton) {
             
+            System.out.println("Button Refresh clicked");
+            //if (isRefreshBoutonActive) {
+                listingVolsrecup();
+            //}
         }
 
     }
@@ -288,8 +305,22 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         System.out.println("List Panel NB FACES : " + number_of_faces);
     }
 
+    //Fonction pour rendre le bouton refresh visible
+    private void setVisibilityRefresh(boolean bool) {
+
+        if (bool == false) {
+            refreshButton.setVisible(false);
+
+        } else {
+            refreshButton.setVisible(true);
+
+        }
+
+    }
+
     //Fonction pour récupérer la liste des vols
     private ArrayList listingVolsrecup() {
+        //isRefreshBoutonActive = !isRefreshBoutonActive;
         try {
             //On se connecte au site et on charge le document html
             Document doc = Jsoup.connect("http://www.strasbourg.aeroport.fr/destinations/vols").get();
@@ -360,6 +391,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         CameraButton = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox();
         jComboBox2 = new javax.swing.JComboBox();
+        refreshButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         itemsTable = new javax.swing.JTable();
 
@@ -379,6 +411,17 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jSpinnerPanel.add(jComboBox2);
 
+        refreshButton.setText("Refresh");
+        refreshButton.setMaximumSize(new java.awt.Dimension(90, 23));
+        refreshButton.setMinimumSize(new java.awt.Dimension(35, 23));
+        refreshButton.setPreferredSize(new java.awt.Dimension(70, 23));
+        refreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshButtonActionPerformed(evt);
+            }
+        });
+        jSpinnerPanel.add(refreshButton);
+
         add(jSpinnerPanel, java.awt.BorderLayout.PAGE_START);
 
         itemsTable.setAutoCreateRowSorter(true);
@@ -391,6 +434,10 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_refreshButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CameraButton;
@@ -400,6 +447,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jSpinnerPanel;
+    private javax.swing.JButton refreshButton;
     // End of variables declaration//GEN-END:variables
 
     @Override
