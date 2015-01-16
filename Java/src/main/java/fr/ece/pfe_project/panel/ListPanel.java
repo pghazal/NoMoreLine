@@ -205,22 +205,26 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     }
 
     public void actionPerformed(ActionEvent e) {
-
-        if (isCameraActive == true) {
+        
+        if(e.getSource() == CameraButton){
+            if (isCameraActive == true) {
             //On désactive les caméras 
             CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
             //  toolbarChangeStatusCamera.changeCameraStatus(isCameraActive);
             cameraInterface(!isCameraActive);
             toolbarsListener.changeCameraStatus(isCameraActive);
             // CameraButton.setText("Activer caméra");
-        } else //On change le label du bouton (de "activer caméra" à "désactiver caméra) et sa couleur
-        {
-            CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getredCameraIcon());
+            } else //On change le label du bouton (de "activer caméra" à "désactiver caméra) et sa couleur
+            {
+                CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getredCameraIcon());
 
-            toolbarsListener.changeCameraStatus(!isCameraActive);
-            //On lance l'activation des caméras une fois qu'on appuie sur le bouton
-            cameraInterface(!isCameraActive);
+                toolbarsListener.changeCameraStatus(!isCameraActive);
+                //On lance l'activation des caméras une fois qu'on appuie sur le bouton
+                cameraInterface(!isCameraActive);
+            }
         }
+
+        
 
         if (e.getSource() == refreshButton) {
 
