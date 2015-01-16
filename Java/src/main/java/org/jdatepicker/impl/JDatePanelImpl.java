@@ -749,7 +749,9 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
                 if (gap <= 0 || gap > 2) {
                     // Display Pop-up 
                     // Donnees manquantes
-                    JOptionPane.showMessageDialog(JDatePanelImpl.this.getParent(), "Mettre un message stylé tavu", "Warning", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Une erreur est survenue, vérifier les erreurs possibles :\n"
+                            + "\t- Aucunes données disponibles pour la date saisie : date erronée."
+                            + "\t- Aucunes données de fréquentations importées.", "Warning", JOptionPane.WARNING_MESSAGE);
 
                 } else if (gap == 1) {
                     AlgoResult algoResult = Algorithm.process1(StatisticPanel.getDate());

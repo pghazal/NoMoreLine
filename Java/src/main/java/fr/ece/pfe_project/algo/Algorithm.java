@@ -461,7 +461,7 @@ public class Algorithm {
 
         System.out.println("Frequentation Annuelle " + cal.get(Calendar.YEAR)
                 + " : " + freqAnnuelleGapped);
-        
+
         ArrayList<Integer> yearsComplete = DatabaseHelper.getYearsComplete();
         yearsComplete.add(yearGapped);
         Collections.sort(yearsComplete);
@@ -654,7 +654,8 @@ public class Algorithm {
             // DISPLAY POP UP
             // Aucunes données en Base blabla
 
-            JOptionPane.showMessageDialog(null, "Mettre un message stylé tavu 2", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Une erreur est survenue, vérifier les erreurs possibles :\n"
+                    + "\t- Aucunes données de fréquentations importées.", "Warning", JOptionPane.WARNING_MESSAGE);
         }
 
         return algoResult;
