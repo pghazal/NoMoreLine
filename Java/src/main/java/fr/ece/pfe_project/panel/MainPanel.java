@@ -52,7 +52,6 @@ public class MainPanel extends javax.swing.JPanel {
      */
     public MainPanel() {
         initComponents();
-//        GridBagConstraints c = new GridBagConstraints();
 
         toolbarsListener = new ToolbarsListener();
         faceDetectorListener = new FaceDetectorListener();
@@ -62,10 +61,6 @@ public class MainPanel extends javax.swing.JPanel {
         toolbarEntity = new ToolbarEntityPanel(toolbarsListener);
         toolbarActions = new ToolbarActionsPanel();
 
-//        c.fill = GridBagConstraints.VERTICAL;
-//        c.gridx = 0;
-//        c.gridy = 0;
-//        c.gridheight = GridBagConstraints.REMAINDER;
         Box hMainBox = Box.createHorizontalBox();
         Box vLeftBox = Box.createVerticalBox();
         Box hLeftBox = Box.createHorizontalBox();
@@ -79,18 +74,6 @@ public class MainPanel extends javax.swing.JPanel {
         hMainBox.add(vLeftBox);
 
         add(hMainBox);
-
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//        c.gridx = 1;
-//        c.gridy = 0;
-//        c.gridheight = 0;
-//        c.gridwidth = GridBagConstraints.REMAINDER;
-//        c.fill = GridBagConstraints.BOTH;
-//        c.gridx = 1;
-//        c.gridy = 1;
-//        c.fill = GridBagConstraints.VERTICAL;
-//        c.gridx = 2;
-//        c.gridy = 1;
     }
 
     /**
