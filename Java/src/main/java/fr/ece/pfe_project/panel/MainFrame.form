@@ -36,7 +36,10 @@
       <Dimension value="[810, 600]"/>
     </Property>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[810, 600]"/>
+      <Dimension value="[1024, 768]"/>
+    </Property>
+    <Property name="size" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[1024, 768]"/>
     </Property>
   </Properties>
   <SyntheticProperties>

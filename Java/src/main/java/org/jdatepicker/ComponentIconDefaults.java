@@ -16,11 +16,17 @@ import org.jdatepicker.graphics.JPreviousIcon;
  */
 public class ComponentIconDefaults {
 
-    private static String LOGO = "/org/jdatepicker/icons/logo.png";
-    private static String CAMERAGREEN = "/org/jdatepicker/icons/greencamera.png";
-    private static String CAMERARED = "/org/jdatepicker/icons/redcamera.png";
-    private static String ONLED ="/org/jdatepicker/icons/on_led_icon.png";
-    private static String OFFLED ="/org/jdatepicker/icons/off_led_icon.png";
+    private static final String LOGO = "/org/jdatepicker/icons/logo.png";
+    private static final String CAMERAGREEN = "/org/jdatepicker/icons/greencamera.png";
+    private static final String CAMERARED = "/org/jdatepicker/icons/redcamera.png";
+    private static final String ONLED = "/org/jdatepicker/icons/on_led_icon.png";
+    private static final String OFFLED = "/org/jdatepicker/icons/off_led_icon.png";
+    private static final String CHECK = "/org/jdatepicker/icons/check.png";
+    private static final String CAMERA = "/org/jdatepicker/icons/check.png";
+    private static final String LISTINGVOL = "/org/jdatepicker/icons/check.png";
+    private static final String CARNETADRESSE = "/org/jdatepicker/icons/check.png";
+    private static final String PROJET = "/org/jdatepicker/icons/check.png";
+    private static final String EXCEL = "/org/jdatepicker/icons/check.png";
 
     private Icon logoIcon;
     private Icon nextMonthIcon;
@@ -32,6 +38,12 @@ public class ComponentIconDefaults {
     private Icon redCameraIcon;
     private Icon onLedIcon;
     private Icon offLedIcon;
+    private Icon checkIcon;
+    private Icon cameraIcon;
+    private Icon listingVolIcon;
+    private Icon carnetIcon;
+    private Icon projetIcon;
+    private Icon excelIcon;
 
     public ComponentIconDefaults() {
         try {
@@ -41,13 +53,13 @@ public class ComponentIconDefaults {
             redCameraIcon = loadIcon(CAMERARED);
             onLedIcon = loadIcon(ONLED);
             offLedIcon = loadIcon(OFFLED);
+            checkIcon = loadIcon(CHECK);
             nextMonthIcon = new JNextIcon(4, 7, false);
             nextYearIcon = new JNextIcon(8, 7, true);
             previousMonthIcon = new JPreviousIcon(4, 7, false);
             previousYearIcon = new JPreviousIcon(8, 7, true);
             popupButtonIcon = null;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -70,12 +82,36 @@ public class ComponentIconDefaults {
         return nextMonthIcon;
     }
 
+    public Icon getCheckIcon() {
+        return checkIcon;
+    }
+
     public void setNextMonthIcon(Icon nextMonthIcon) {
         this.nextMonthIcon = nextMonthIcon;
     }
 
     public Icon getNextYearIcon() {
         return nextYearIcon;
+    }
+
+    public Icon getCameraIcon() {
+        return cameraIcon;
+    }
+
+    public Icon getListingVolIcon() {
+        return listingVolIcon;
+    }
+
+    public Icon getCarnetIcon() {
+        return carnetIcon;
+    }
+
+    public Icon getProjetIcon() {
+        return projetIcon;
+    }
+
+    public Icon getExcelIcon() {
+        return excelIcon;
     }
 
     public void setNextYearIcon(Icon nextYearIcon) {
@@ -105,43 +141,41 @@ public class ComponentIconDefaults {
     public void setPopupButtonIcon(Icon popupButtonIcon) {
         this.popupButtonIcon = popupButtonIcon;
     }
-    
-    public Icon getgreenCameraIcon(){
+
+    public Icon getgreenCameraIcon() {
         return greenCameraIcon;
     }
-     
-    public void setgreenCameraIcon(Icon greenCameraIcon ){
+
+    public void setgreenCameraIcon(Icon greenCameraIcon) {
         this.greenCameraIcon = greenCameraIcon;
     }
-    
-    public Icon getredCameraIcon(){
+
+    public Icon getredCameraIcon() {
         return redCameraIcon;
     }
-    
-    public void setredCameraIcon(Icon redCameraIcon ){
+
+    public void setredCameraIcon(Icon redCameraIcon) {
         this.redCameraIcon = redCameraIcon;
     }
-    
-    public Icon getonLedIcon(){
+
+    public Icon getonLedIcon() {
         return onLedIcon;
     }
-    
-    public void setonLedIcon(Icon onLedIcon ){
+
+    public void setonLedIcon(Icon onLedIcon) {
         this.onLedIcon = onLedIcon;
     }
-    
-    public Icon getoffLedIcon(){
+
+    public Icon getoffLedIcon() {
         return offLedIcon;
     }
-    
-    public void setoffLedIcon(Icon offLedIcon ){
+
+    public void setoffLedIcon(Icon offLedIcon) {
         this.offLedIcon = offLedIcon;
     }
-    
+
     public Icon getIcon() {
         return logoIcon;
     }
-     
-   
 
 }

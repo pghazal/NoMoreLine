@@ -158,10 +158,15 @@ public class DatabaseHelper {
         cal.setTime(date);
 
         ArrayList<Integer> yearsComplete = getYearsComplete();
-        int lastYearComplete = Collections.max(yearsComplete);
-        int yearUser = cal.get(Calendar.YEAR);
 
-        return yearUser - lastYearComplete;
+        if (yearsComplete != null && yearsComplete.size() > 0) {
+            int lastYearComplete = Collections.max(yearsComplete);
+            int yearUser = cal.get(Calendar.YEAR);
+            
+            return yearUser - lastYearComplete;
+        }
+
+        return 0;
     }
 
     public static boolean frequentationAnnuelleExists(Integer year) {
@@ -507,7 +512,7 @@ public class DatabaseHelper {
             rs.close();
             stmt.close();
             c.close();
-            
+
             list.add(actualYear);
 
             return list;

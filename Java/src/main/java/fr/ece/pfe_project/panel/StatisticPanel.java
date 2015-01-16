@@ -131,15 +131,15 @@ public class StatisticPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setMaximumSize(new java.awt.Dimension(210, 32767));
-        setMinimumSize(new java.awt.Dimension(210, 0));
-        setPreferredSize(new java.awt.Dimension(210, 600));
+        setMaximumSize(new java.awt.Dimension(260, 32767));
+        setMinimumSize(new java.awt.Dimension(260, 0));
+        setPreferredSize(new java.awt.Dimension(260, 600));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 210, Short.MAX_VALUE)
+            .addGap(0, 260, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

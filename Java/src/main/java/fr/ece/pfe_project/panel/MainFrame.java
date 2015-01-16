@@ -3,7 +3,6 @@ package fr.ece.pfe_project.panel;
 import fr.ece.pfe_project.algo.Algorithm;
 import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.model.JourFerie;
-import fr.ece.pfe_project.tablemodel.JourFerieTableModel;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import javax.swing.JOptionPane;
 import fr.ece.pfe_project.widget.StartingProgressDialog;
@@ -146,7 +145,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(810, 600));
-        setPreferredSize(new java.awt.Dimension(810, 600));
+        setPreferredSize(new java.awt.Dimension(1024, 768));
+        setSize(new java.awt.Dimension(1024, 768));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);

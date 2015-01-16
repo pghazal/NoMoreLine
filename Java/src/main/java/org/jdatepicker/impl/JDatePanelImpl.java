@@ -249,7 +249,7 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
         private JButton previousMonthButton;
         private JButton previousYearButton;
         private JButton nextYearButton;
-        private JButton dateConfirmation;
+        private JLabel dateConfirmation;
         private JSpinner yearSpinner;
 
         /**
@@ -284,8 +284,8 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
          */
         private void initialise() {
             this.setLayout(new java.awt.BorderLayout());
-            this.setSize(200, 180);
-            this.setPreferredSize(new java.awt.Dimension(200, 180));
+            this.setSize(250, 190);
+            this.setPreferredSize(new java.awt.Dimension(250, 190));
             this.setOpaque(false);
             this.add(getNorthPanel(), java.awt.BorderLayout.NORTH);
             this.add(getSouthPanel(), java.awt.BorderLayout.SOUTH);
@@ -371,7 +371,7 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
                 southPanel.setBackground(getColors().bgTodaySelector());
                 southPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
                 southPanel.add(getTodayLabel(), java.awt.BorderLayout.CENTER);
-                southPanel.add(dateConfirmation(), java.awt.BorderLayout.EAST);
+                southPanel.add(getDateConfirmation(), java.awt.BorderLayout.EAST);
             }
             return southPanel;
         }
@@ -381,12 +381,12 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
          *
          * @return javax.swing.JButton
          */
-        private JButton dateConfirmation() {
+        private JLabel getDateConfirmation() {
             if (dateConfirmation == null) {
-                dateConfirmation = new javax.swing.JButton("OK");
+                dateConfirmation = new javax.swing.JLabel(getIcons().getCheckIcon());
                 dateConfirmation.setForeground(getColors().fgTodaySelector());
                 dateConfirmation.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-                dateConfirmation.addActionListener(internalController);
+                dateConfirmation.addMouseListener(internalController);
                 dateConfirmation.setFocusable(false);
                 dateConfirmation.setFont(new Font(dateConfirmation.getFont().getName(), Font.PLAIN, 10));
                 //TODO get the translations for each language before adding this in
@@ -442,7 +442,7 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
                 dayTable = new javax.swing.JTable();
                 dayTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
                 dayTable.setRowHeight(18);
-                dayTable.setPreferredSize(new java.awt.Dimension(100, 80));
+                dayTable.setPreferredSize(new java.awt.Dimension(100, 100));
                 dayTable.setModel(internalModel);
                 dayTable.setShowGrid(true);
                 dayTable.setGridColor(getColors().bgGrid());
@@ -742,7 +742,7 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
                 internalModel.getModel().addYear(1);
             } else if (arg0.getSource() == internalView.getPreviousYearButton()) {
                 internalModel.getModel().addYear(-1);
-            } else if (arg0.getSource() == internalView.dateConfirmation()) {
+            } else if (arg0.getSource() == internalView.getDateConfirmation()) {
 
                 int gap = DatabaseHelper.getGap(StatisticPanel.getDate());
 
@@ -750,7 +750,7 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
                     // Display Pop-up 
                     // Donnees manquantes
                     JOptionPane.showMessageDialog(null, "Une erreur est survenue, vérifier les erreurs possibles :\n"
-                            + "\t- Aucunes données disponibles pour la date saisie : date erronée."
+                            + "\t- Aucunes données disponibles pour la date saisie : date erronée.\n"
                             + "\t- Aucunes données de fréquentations importées.", "Warning", JOptionPane.WARNING_MESSAGE);
 
                 } else if (gap == 1) {
