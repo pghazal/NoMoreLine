@@ -12,7 +12,8 @@ import org.jdatepicker.ComponentManager;
  *
  * @author pierreghazal
  */
-public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEntityPanel.ToolbarEntityListener {
+public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEntityPanel.ToolbarEntityListener,
+        ListPanel.CameraStatusListener {
 
     /**
      * Creates new form ToolbarTop
@@ -34,6 +35,11 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
          cameraState.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getoffLedIcon());
            
         }
+        
+    }
+
+    @Override
+    public void changeCameraStatus(boolean cameraStatus) {
         
     }
 
