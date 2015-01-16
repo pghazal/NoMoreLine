@@ -13,28 +13,34 @@ import real_time_image_processing.FaceDetectorThread;
  * @author pierreghazal
  */
 public class MainPanel extends javax.swing.JPanel {
-    
-    public class ToolbarsListener implements ToolbarEntityPanel.ToolbarEntityListener {
-        
+
+    public class ToolbarsListener implements ToolbarEntityPanel.ToolbarEntityListener, 
+            ListPanel.CameraStatusListener {
+
         @Override
         public void entityHasChange(ToolbarEntityPanel.ENTITY typeEntity) {
             listPanel.entityHasChange(typeEntity);
             toolbarActions.entityHasChange(typeEntity);
         }
+
+        @Override
+        public void changeCameraStatus(boolean cameraStatus) {
+            toolbarActions.changeCameraStatus(cameraStatus);
+        }
     }
-    
+
     public class FaceDetectorListener implements FaceDetectorThread.FaceDetectorInterface {
-        
+
         @Override
         public void getCountFaceDetected(int number_of_faces) {
             listPanel.getCountFaceDetected(number_of_faces);
         }
-        
+
     }
-    
+
     ToolbarsListener toolbarsListener;
     FaceDetectorListener faceDetectorListener;
-    
+
     private ToolbarEntityPanel toolbarEntity;
     private ToolbarActionsPanel toolbarActions;
     private ListPanel listPanel;
@@ -49,9 +55,9 @@ public class MainPanel extends javax.swing.JPanel {
 
         toolbarsListener = new ToolbarsListener();
         faceDetectorListener = new FaceDetectorListener();
-        
+
         statisticPanel = new StatisticPanel();
-        listPanel = new ListPanel(faceDetectorListener);
+        listPanel = new ListPanel(faceDetectorListener, toolbarsListener);
         toolbarEntity = new ToolbarEntityPanel(toolbarsListener);
         toolbarActions = new ToolbarActionsPanel();
 
@@ -62,14 +68,14 @@ public class MainPanel extends javax.swing.JPanel {
         Box hMainBox = Box.createHorizontalBox();
         Box vLeftBox = Box.createVerticalBox();
         Box hLeftBox = Box.createHorizontalBox();
-        
+
         hMainBox.add(statisticPanel);
         vLeftBox.add(toolbarActions);
         hLeftBox.add(listPanel);
         hLeftBox.add(toolbarEntity);
         vLeftBox.add(hLeftBox);
         hMainBox.add(vLeftBox);
-        
+
         add(hMainBox);
 
 //        c.fill = GridBagConstraints.HORIZONTAL;

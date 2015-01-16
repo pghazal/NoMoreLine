@@ -4,6 +4,7 @@ import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.model.AlgoResult;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.JourFerie;
+import fr.ece.pfe_project.utils.ExcelUtils;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import java.util.ArrayList;
@@ -130,10 +131,9 @@ public class Algorithm {
             System.out.println("Beta = " + moyVariationAnnuelle);
 
             // représente le A1 sur le papier
-            double nbPassagerAnnuelle = getFrequentationAnnuelle(yearSelected - 1)
-                    + moyVariationAnnuelle * getFrequentationAnnuelle(yearSelected - 1);
-            System.out.println("A1 = " + nbPassagerAnnuelle);
-
+//            double nbPassagerAnnuelle = getFrequentationAnnuelle(yearSelected - 1)
+//                    + moyVariationAnnuelle * getFrequentationAnnuelle(yearSelected - 1);
+//            System.out.println("A1 = " + nbPassagerAnnuelle);
             // Réinitialisation de la date
             cal.setTime(dateSelected);
             // Initialisation à l'année précédente
@@ -461,7 +461,7 @@ public class Algorithm {
 
         System.out.println("Frequentation Annuelle " + cal.get(Calendar.YEAR)
                 + " : " + freqAnnuelleGapped);
-
+        
         ArrayList<Integer> yearsComplete = DatabaseHelper.getYearsComplete();
         yearsComplete.add(yearGapped);
         Collections.sort(yearsComplete);
@@ -585,10 +585,9 @@ public class Algorithm {
             System.out.println("Beta = " + moyVariationAnnuelle);
 
             // représente le A1 sur le papier
-            double nbPassagerAnnuelle = freqAnnuelleGapped
-                    + moyVariationAnnuelle * freqAnnuelleGapped;
-            System.out.println("A1 = " + nbPassagerAnnuelle);
-
+//            double nbPassagerAnnuelle = freqAnnuelleGapped
+//                    + moyVariationAnnuelle * freqAnnuelleGapped;
+//            System.out.println("A1 = " + nbPassagerAnnuelle);
             // Réinitialisation de la date
             cal.setTime(dateSelected);
             // Initialisation à l'année précédente

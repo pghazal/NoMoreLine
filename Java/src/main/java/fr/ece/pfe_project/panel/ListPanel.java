@@ -6,8 +6,8 @@ import fr.ece.pfe_project.model.Comptoir;
 import fr.ece.pfe_project.model.Employee;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.ListingVols;
-import fr.ece.pfe_project.model.ModelInterface;
 import fr.ece.pfe_project.panel.MainPanel.FaceDetectorListener;
+import fr.ece.pfe_project.panel.MainPanel.ToolbarsListener;
 import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
@@ -40,24 +40,31 @@ import real_time_image_processing.FaceDetectorThread;
 public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.FaceDetectorInterface,
         ToolbarEntityPanel.ToolbarEntityListener, MouseMotionListener, MouseListener, ActionListener {
 
+    public interface CameraStatusListener {
+
+        public void changeCameraStatus(boolean cameraStatus);
+    }
+
     private final Comptoir comptoirs[];
     private final Camera cameras[];
     private final Employee employees[];
     private final ListingVols listingVols[];
     private boolean isCameraActive;
-    //private boolean isRefreshBoutonActive;
 
     FaceDetectorListener faceDetectorListener;
+    ToolbarsListener toolbarsListener;
 
     /**
      * Creates new form DrawingPanel
      *
      * @param faceListener
+     * @param toolbarsListener
      */
-    public ListPanel(FaceDetectorListener faceListener) {
+    public ListPanel(FaceDetectorListener faceListener, ToolbarsListener toolbarsListener) {
         initComponents();
 
-        faceDetectorListener = faceListener;
+        this.faceDetectorListener = faceListener;
+        this.toolbarsListener = toolbarsListener;
 
         // Listener
         addMouseListener(this);
@@ -198,14 +205,18 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         if (isCameraActive == true) {
             //On désactive les caméras 
             CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
+          //  toolbarChangeStatusCamera.changeCameraStatus(isCameraActive);
             cameraInterface(!isCameraActive);
-
+            toolbarsListener.changeCameraStatus(isCameraActive);
             // CameraButton.setText("Activer caméra");
         } else //On change le label du bouton (de "activer caméra" à "désactiver caméra) et sa couleur
         {
             CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getredCameraIcon());
+            
+            toolbarsListener.changeCameraStatus(!isCameraActive);
             //On lance l'activation des caméras une fois qu'on appuie sur le bouton
             cameraInterface(!isCameraActive);
+            
         }
 
         if (e.getSource() == refreshButton) {
