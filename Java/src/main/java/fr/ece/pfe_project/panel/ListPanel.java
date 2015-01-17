@@ -179,8 +179,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
         //Initialisation du carnet d'adresses
         carnetAdresses = new CarnetAdresses[]{
-            new CarnetAdresses("Air Test 1", 10, "Test compagny 1", "Test Tel 1"),
-            new CarnetAdresses("Air Test 2", 5, "Test compagny 2", "Test Tel 2")
+            new CarnetAdresses("Air France", 3, "AIR FRANCE", "0 970 808 816"),
+            new CarnetAdresses("Brussels Airlines", 2, "AVIAPARTNER", "03 88 64 73 11")
         };
 
         //setVisibility false pour rendre invisible les 2 combobox au démarrage
