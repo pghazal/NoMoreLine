@@ -32,6 +32,8 @@ import fr.ece.pfe_project.algo.Algorithm;
 import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.model.AlgoResult;
 import fr.ece.pfe_project.panel.StatisticPanel;
+import fr.ece.pfe_project.utils.ExcelUtils;
+import fr.ece.pfe_project.widget.ProgressDialog;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -48,6 +50,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -748,21 +751,30 @@ public class JDatePanelImpl extends JPanel implements JDatePanel {
                 internalModel.getModel().addYear(-1);
             } else if (arg0.getSource() == internalView.getDateConfirmation()) {
 
-                int gap = DatabaseHelper.getGap(StatisticPanel.getDate());
+                Runnable r = new Runnable() {
 
-                if (gap <= 0 || gap > 2) {
-                    // Display Pop-up 
-                    // Donnees manquantes
-                    JOptionPane.showMessageDialog(null, "Une erreur est survenue, vérifier les erreurs possibles :\n"
-                            + "\t- Aucunes données disponibles pour la date saisie : date erronée.\n"
-                            + "\t- Aucunes données de fréquentations importées.", "Warning", JOptionPane.WARNING_MESSAGE);
+                    @Override
+                    public void run() {
+                        int gap = DatabaseHelper.getGap(StatisticPanel.getDate());
 
-                } else if (gap == 1) {
-                    AlgoResult algoResult = Algorithm.process1(StatisticPanel.getDate());
-                    StatisticPanel.setAlgoResult(Algorithm.process2(StatisticPanel.getDate(), algoResult));
-                } else if (gap == 2) {
-                    StatisticPanel.setAlgoResult(Algorithm.processBlindageAlgo(StatisticPanel.getDate(), gap));
-                }
+                        if (gap <= 0 || gap > 2) {
+                            // Display Pop-up 
+                            // Donnees manquantes
+                            JOptionPane.showMessageDialog(null, "Une erreur est survenue, vérifier les erreurs possibles :\n"
+                                    + "\t- Aucunes données disponibles pour la date saisie : date erronée.\n"
+                                    + "\t- Aucunes données de fréquentations importées.", "Warning", JOptionPane.WARNING_MESSAGE);
+
+                        } else if (gap == 1) {
+                            AlgoResult algoResult = Algorithm.process1(StatisticPanel.getDate());
+                            StatisticPanel.setAlgoResult(Algorithm.process2(StatisticPanel.getDate(), algoResult));
+                        } else if (gap == 2) {
+                            StatisticPanel.setAlgoResult(Algorithm.processBlindageAlgo(StatisticPanel.getDate(), gap));
+                        }
+                    }
+                };
+
+                ProgressDialog progressDialog = new ProgressDialog(new JFrame(), r, "Traitement en cours...");
+                progressDialog.setVisible(true);
 
             } else {
                 for (int month = 0; month < internalView.getMonthPopupMenuItems().length; month++) {

@@ -138,21 +138,11 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
         setPreferredSize(new java.awt.Dimension(90, 600));
 
         cameraButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/video.png"))); // NOI18N
-        cameraButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cameraButtonActionPerformed(evt);
-            }
-        });
 
         excelButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/excel.png"))); // NOI18N
         excelButton.setMaximumSize(new java.awt.Dimension(104, 29));
         excelButton.setMinimumSize(new java.awt.Dimension(104, 29));
         excelButton.setPreferredSize(new java.awt.Dimension(104, 29));
-        excelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                excelButtonActionPerformed(evt);
-            }
-        });
 
         listingVols.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/plane.png"))); // NOI18N
 
@@ -188,14 +178,6 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
                 .addContainerGap(293, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void excelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excelButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_excelButtonActionPerformed
-
-    private void cameraButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cameraButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cameraButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

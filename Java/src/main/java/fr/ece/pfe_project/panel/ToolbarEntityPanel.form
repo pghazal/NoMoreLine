@@ -63,9 +63,6 @@
           <Image iconType="3" name="/org/jdatepicker/icons/video.png"/>
         </Property>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cameraButtonActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JToggleButton" name="excelButton">
       <Properties>
@@ -82,9 +79,6 @@
           <Dimension value="[104, 29]"/>
         </Property>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="excelButtonActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JToggleButton" name="listingVols">
       <Properties>

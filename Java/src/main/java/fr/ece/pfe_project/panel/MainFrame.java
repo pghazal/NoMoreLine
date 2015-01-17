@@ -146,8 +146,9 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuQuitter = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("No More Line");
         setMinimumSize(new java.awt.Dimension(810, 600));
-        setPreferredSize(new java.awt.Dimension(1024, 768));
+        setName("No More Line"); // NOI18N
         setSize(new java.awt.Dimension(1024, 768));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {

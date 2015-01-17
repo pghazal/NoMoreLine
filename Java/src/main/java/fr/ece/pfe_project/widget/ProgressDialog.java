@@ -6,7 +6,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.BorderFactory;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -70,7 +69,7 @@ public class ProgressDialog extends JDialog {
     public void setRunnable(Runnable runnable) {
         this.runnable = runnable;
     }
-    
+
     public Runnable getRunnable() {
         return runnable;
     }
@@ -87,9 +86,9 @@ public class ProgressDialog extends JDialog {
     protected void init(Runnable runnable, String message) {
         setupControls();
         setupComponent();
-        setupEventHandlers();
         setMessage(message);
         setRunnable(runnable);
+        setupEventHandlers();
     }
 
     protected void setupControls() {

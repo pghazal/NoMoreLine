@@ -1,5 +1,6 @@
 package fr.ece.pfe_project.panel;
 
+import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.editor.CameraCellEditor;
 import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.CarnetAdresses;
@@ -12,6 +13,7 @@ import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.widget.CameraCellComponent;
+import fr.ece.pfe_project.widget.ProgressDialog;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -28,15 +30,17 @@ import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.jdatepicker.ComponentManager;
 import org.jsoup.Jsoup;
@@ -149,9 +153,10 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     }
 
     private final Camera cameras[];
-    private final ListingVols listingVols[];
     private final CarnetAdresses carnetAdresses[];
     private boolean isCameraActive;
+
+    MyTableModel model;
 
     FaceDetectorListener faceDetectorListener;
     ToolbarsListener toolbarsListener;
@@ -172,16 +177,16 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         addMouseListener(this);
         addMouseMotionListener(this);
 
-        //Initialisation de la liste des vols
-        listingVols = new ListingVols[]{};
-
         //Initialisation du carnet d'adresses
         carnetAdresses = new CarnetAdresses[]{
-            new CarnetAdresses("Air Test", 10, "Test compagny", "Test Tel")
+            new CarnetAdresses("Air Test 1", 10, "Test compagny 1", "Test Tel 1"),
+            new CarnetAdresses("Air Test 2", 5, "Test compagny 2", "Test Tel 2")
         };
 
         //setVisibility false pour rendre invisible les 2 combobox au démarrage
-        setVisibility(false);
+        setExcelButtonVisibility(false);
+        setMonthComboboxItems();
+        setYearComboboxItems();
 
         //Rendre invisible au démarrage le bouton refresh
         setVisibilityRefresh(false);
@@ -189,7 +194,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         //Rendre invisible au démarrage les boutons pour le carnet d'adresses
         setVisibilityCarnetAdresses(false);
 
-        //SetCameraButtonVisibility false pour rendre invisible le bouton caméra au démmarage
+        //SetcameraButtonVisibility false pour rendre invisible le bouton caméra au démmarage
         setCameraButtonVisibility(false);
 
         cameras = new Camera[]{
@@ -201,10 +206,10 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         refreshButton.addActionListener(this);
 
         //Ajout des listerner sur les boutons de la page carnet d'adresses
-        AjouterCA.addActionListener(this);
+        ajouterCA.addActionListener(this);
         modifierCA.addActionListener(this);
         supprimerCA.addActionListener(this);
-        CameraButton.addActionListener(this);
+        cameraButton.addActionListener(this);
 
         this.itemsTable.setModel(new MyTableModel());
 
@@ -222,14 +227,14 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     public void entityHasChange(ToolbarEntityPanel.ENTITY typeEntity) {
         System.out.println("List entityHasChange : " + typeEntity.toString());
 
-        MyTableModel model = (MyTableModel) this.itemsTable.getModel();
+        model = (MyTableModel) this.itemsTable.getModel();
         model.setEntity(typeEntity);
-        // TODO : model.setData() avec les nouvelles données
+
         switch (typeEntity) {
 
             case CAMERA:
                 setVisibilityRefresh(false);
-                setVisibility(false);
+                setExcelButtonVisibility(false);
                 setVisibilityCarnetAdresses(false);
                 setCameraButtonVisibility(true);
                 itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
@@ -238,31 +243,45 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 break;
             case EXCELROW:
                 setVisibilityRefresh(false);
-                setVisibility(true);
+                setExcelButtonVisibility(true);
                 setCameraButtonVisibility(false);
                 setVisibilityCarnetAdresses(false);
-                JComboboxItems(jComboBox1);
                 itemsTable.setRowHeight(16);
                 model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new FrequentationJournaliere[0]), false);
                 System.out.println(isCameraActive);
                 break;
             case LISTINGVOLS:
-                setVisibilityRefresh(true);
-                setVisibility(false);
-                setCameraButtonVisibility(false);
-                setVisibilityCarnetAdresses(false);
-                itemsTable.setRowHeight(16);
-                //Fonction à lancer lors du clique bouton: listingVolsrecup
-                if (!testConnexion()) {
-                    model.setData((ListingVols[]) listingVolsrecup().toArray(new ListingVols[0]), false);
-                } else {
-                    JOptionPane.showMessageDialog(this, "Pas de connexion internet", "Warning", JOptionPane.WARNING_MESSAGE);
-                }
+
+                Runnable r = new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        //Fonction à lancer lors du clique bouton: listingVolsrecup
+                        if (!testConnexion()) {
+
+                            model.setData((ListingVols[]) listingVolsrecup().toArray(new ListingVols[0]), false);
+
+                            setExcelButtonVisibility(false);
+                            setCameraButtonVisibility(false);
+                            setVisibilityCarnetAdresses(false);
+                            setVisibilityRefresh(true);
+                            itemsTable.setRowHeight(16);
+                        } else {
+
+                            JOptionPane.showMessageDialog(ListPanel.this, "Pas de connexion internet :\n"
+                                    + "Veuillez vérifier votre connexion.", "Warning", JOptionPane.WARNING_MESSAGE);
+                        }
+                    }
+                };
+
+                ProgressDialog progressDialog = new ProgressDialog(new JFrame(), r, "Récupération des données en cours...");
+                progressDialog.setVisible(true);
 
                 break;
             case CARNETADRESSE:
                 setVisibilityRefresh(false);
-                setVisibility(false);
+                setExcelButtonVisibility(false);
                 setCameraButtonVisibility(false);
                 setVisibilityCarnetAdresses(true);
                 itemsTable.setRowHeight(16);
@@ -271,11 +290,10 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
                 break;
             case NONE:
-                setVisibility(false);
+                setExcelButtonVisibility(false);
                 setVisibilityRefresh(false);
                 setCameraButtonVisibility(false);
                 setVisibilityCarnetAdresses(false);
-                cameraInterface(false);
                 System.out.println(isCameraActive);
                 break;
 
@@ -286,68 +304,89 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         model.fireTableStructureChanged();
     }
 
-    private void setVisibility(boolean bool) {
+    private void setExcelButtonVisibility(boolean bool) {
 
         if (bool == false) {
             jLabel1.setVisible(false);
-            jComboBox1.setVisible(false);
-            jComboBox2.setVisible(false);
+            monthComboBox.setVisible(false);
+            yearComboBox.setVisible(false);
 
         } else {
             jLabel1.setVisible(true);
-            jComboBox1.setVisible(true);
-            jComboBox2.setVisible(true);
+            monthComboBox.setVisible(true);
+            yearComboBox.setVisible(true);
         }
     }
 
     private void setCameraButtonVisibility(boolean bool) {
 
         if (bool == false) {
-            CameraButton.setVisible(false);
+            cameraButton.setVisible(false);
         } else {
-            CameraButton.setVisible(true);
-            CameraButton.setOpaque(false);
-            CameraButton.setContentAreaFilled(false);
-            CameraButton.setBorderPainted(false);
-            //CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
-
+            cameraButton.setVisible(true);
+            cameraButton.setOpaque(false);
+            cameraButton.setContentAreaFilled(false);
+            cameraButton.setBorderPainted(false);
+            //cameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getSource() == CameraButton) {
+        if (e.getSource() == cameraButton) {
             if (isCameraActive == true) {
                 //On désactive les caméras 
-                CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
-                //  toolbarChangeStatusCamera.changeCameraStatus(isCameraActive);
                 cameraInterface(!isCameraActive);
+                cameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
                 toolbarsListener.changeCameraStatus(isCameraActive);
-                // CameraButton.setText("Activer caméra");
+                // cameraButton.setText("Activer caméra");
             } else //On change le label du bouton (de "activer caméra" à "désactiver caméra) et sa couleur
             {
-                CameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getredCameraIcon());
-
-                toolbarsListener.changeCameraStatus(!isCameraActive);
-                //On lance l'activation des caméras une fois qu'on appuie sur le bouton
                 cameraInterface(!isCameraActive);
+                toolbarsListener.changeCameraStatus(isCameraActive);
+                cameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getredCameraIcon());
+                //On lance l'activation des caméras une fois qu'on appuie sur le bouton
             }
         }
 
         if (e.getSource() == refreshButton) {
 
             System.out.println("Button Refresh clicked");
-            listingVolsrecup();
-        }
+            Runnable r = new Runnable() {
 
+                @Override
+                public void run() {
+
+                    //Fonction à lancer lors du clique bouton: listingVolsrecup
+                    if (!testConnexion()) {
+                        model.setData((ListingVols[]) listingVolsrecup().toArray(new ListingVols[0]), false);
+                    } else {
+
+                        JOptionPane.showMessageDialog(ListPanel.this, "Pas de connexion internet :\n"
+                                + "Veuillez vérifier votre connexion.", "Warning", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            };
+
+            ProgressDialog progressDialog = new ProgressDialog(new JFrame(), r, "Récupération des données en cours...");
+            progressDialog.setVisible(true);
+        }
     }
 
-    private void JComboboxItems(JComboBox comboBox) {
+    private void setMonthComboboxItems() {
         DateFormatSymbols symbols = new DateFormatSymbols();
         String[] monthNames = symbols.getMonths();
 
-        comboBox.setModel(new DefaultComboBoxModel(monthNames));
+        this.monthComboBox.setModel(new DefaultComboBoxModel(monthNames));
+    }
+
+    private void setYearComboboxItems() {
+        ArrayList<Integer> listYears = DatabaseHelper.getYearsCompletePlusActual();
+        Collections.sort(listYears);
+        Integer[] years = listYears.toArray(new Integer[0]);
+
+        yearComboBox.setModel(new DefaultComboBoxModel(years));
     }
 
     public boolean testConnexion() {
@@ -369,48 +408,63 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         return internet;
     }
 
-    private void cameraInterface(boolean on) {
+    private void cameraInterface(final boolean on) {
 
         isCameraActive = !isCameraActive;
-        // On souhaite lancer l'activation des cameras
-        if (on) {
-            for (int i = 0; i < cameras.length; i++) {
-                Camera cam = cameras[i];
-                if (cam != null && cam.getFaceDetectorThread() != null
-                        && !cam.getFaceDetectorThread().isActive()) {
-                    cam.getFaceDetectorThread().launch(0);
-                } else if (cam == null) {
-                    cam = new Camera(i);
-                    cam.setFaceDetectorThread(new FaceDetectorThread(faceDetectorListener));
-                    cam.getFaceDetectorThread().launch(0);
-                } else if (cam.getFaceDetectorThread() == null) {
-                    cam.setFaceDetectorThread(new FaceDetectorThread(faceDetectorListener));
-                    cam.getFaceDetectorThread().launch(0);
-                } else if (cam.getFaceDetectorThread() != null
-                        && cam.getFaceDetectorThread().isActive()) {
-                    // do nothing
-                }
-            }
-        } // Extinction du systeme de detection
-        else {
-            for (int i = 0; i < cameras.length; i++) {
-                Camera cam = cameras[i];
 
-                if (cam != null && cam.getFaceDetectorThread() != null
-                        && !cam.getFaceDetectorThread().isActive()) {
-                    // do nothing
-                } else if (cam == null) {
-                    // do nothing
-                } else if (cam.getFaceDetectorThread() == null) {
-                    // do nothing
-                } else if (cam.getFaceDetectorThread() != null
-                        && cam.getFaceDetectorThread().isActive()) {
-                    cam.getFaceDetectorThread().stopFaceDetection();
-                    cam.setFaceDetectorThread(null);
+        Runnable r = new Runnable() {
+
+            @Override
+            public void run() {
+                // On souhaite lancer l'activation des cameras
+                if (on) {
+                    for (int i = 0; i < cameras.length; i++) {
+                        Camera cam = cameras[i];
+                        if (cam != null && cam.getFaceDetectorThread() != null
+                                && !cam.getFaceDetectorThread().isActive()) {
+                            cam.getFaceDetectorThread().launch(0);
+                        } else if (cam == null) {
+                            cam = new Camera(i);
+                            cam.setFaceDetectorThread(new FaceDetectorThread(faceDetectorListener));
+                            cam.getFaceDetectorThread().launch(0);
+                        } else if (cam.getFaceDetectorThread() == null) {
+                            cam.setFaceDetectorThread(new FaceDetectorThread(faceDetectorListener));
+                            cam.getFaceDetectorThread().launch(0);
+                        } else if (cam.getFaceDetectorThread() != null
+                                && cam.getFaceDetectorThread().isActive()) {
+                            // do nothing
+                        }
+                    }
+                } // Extinction du systeme de detection
+                else {
+                    for (int i = 0; i < cameras.length; i++) {
+                        Camera cam = cameras[i];
+
+                        if (cam != null && cam.getFaceDetectorThread() != null
+                                && !cam.getFaceDetectorThread().isActive()) {
+                            // do nothing
+                        } else if (cam == null) {
+                            // do nothing
+                        } else if (cam.getFaceDetectorThread() == null) {
+                            // do nothing
+                        } else if (cam.getFaceDetectorThread() != null
+                                && cam.getFaceDetectorThread().isActive()) {
+                            cam.getFaceDetectorThread().stopFaceDetection();
+                            cam.setFaceDetectorThread(null);
+                        }
+                    }
                 }
             }
+        };
+
+        ProgressDialog progressDialog = new ProgressDialog(new JFrame(), r, "Traitement en cours...");
+        if (on) {
+            progressDialog.setMessage("Activation des caméras en cours...");
+        } else {
+            progressDialog.setMessage("Désactivation des caméras en cours...");
         }
 
+        progressDialog.setVisible(true);
     }
 
     @Override
@@ -433,19 +487,19 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     private void setVisibilityCarnetAdresses(boolean bool) {
 
         if (bool == false) {
-            AjouterCA.setVisible(false);
+            ajouterCA.setVisible(false);
             modifierCA.setVisible(false);
             supprimerCA.setVisible(false);
 
         } else {
-            AjouterCA.setVisible(true);
+            ajouterCA.setVisible(true);
             modifierCA.setVisible(true);
             supprimerCA.setVisible(true);
         }
     }
 
     //Fonction pour récupérer la liste des vols
-    private ArrayList listingVolsrecup() {
+    private ArrayList<ListingVols> listingVolsrecup() {
         //isRefreshBoutonActive = !isRefreshBoutonActive;
         try {
             //On se connecte au site et on charge le document html
@@ -514,13 +568,13 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
         jSpinnerPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        CameraButton = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox();
-        jComboBox2 = new javax.swing.JComboBox();
+        cameraButton = new javax.swing.JButton();
+        monthComboBox = new javax.swing.JComboBox();
+        yearComboBox = new javax.swing.JComboBox();
         refreshButton = new javax.swing.JButton();
         supprimerCA = new javax.swing.JButton();
         modifierCA = new javax.swing.JButton();
-        AjouterCA = new javax.swing.JButton();
+        ajouterCA = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         itemsTable = new javax.swing.JTable();
 
@@ -531,25 +585,22 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         jLabel1.setText("Sélectionner date :");
         jSpinnerPanel.add(jLabel1);
 
-        CameraButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/greencamera.png"))); // NOI18N
-        CameraButton.setPreferredSize(new java.awt.Dimension(35, 35));
-        jSpinnerPanel.add(CameraButton);
+        cameraButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/greencamera.png"))); // NOI18N
+        cameraButton.setPreferredSize(new java.awt.Dimension(35, 35));
+        jSpinnerPanel.add(cameraButton);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jSpinnerPanel.add(jComboBox1);
+        monthComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jSpinnerPanel.add(monthComboBox);
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jSpinnerPanel.add(jComboBox2);
+        yearComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jSpinnerPanel.add(yearComboBox);
 
-        refreshButton.setText("Refresh");
-        refreshButton.setMaximumSize(new java.awt.Dimension(90, 23));
-        refreshButton.setMinimumSize(new java.awt.Dimension(35, 23));
-        refreshButton.setPreferredSize(new java.awt.Dimension(70, 23));
-        refreshButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                refreshButtonActionPerformed(evt);
-            }
-        });
+        refreshButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/refresh.png"))); // NOI18N
+        refreshButton.setBorderPainted(false);
+        refreshButton.setContentAreaFilled(false);
+        refreshButton.setMaximumSize(new java.awt.Dimension(35, 35));
+        refreshButton.setMinimumSize(new java.awt.Dimension(35, 35));
+        refreshButton.setPreferredSize(new java.awt.Dimension(35, 35));
         jSpinnerPanel.add(refreshButton);
 
         supprimerCA.setText("Supprimer");
@@ -558,8 +609,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         modifierCA.setText("Modifier");
         jSpinnerPanel.add(modifierCA);
 
-        AjouterCA.setText("Ajouter");
-        jSpinnerPanel.add(AjouterCA);
+        ajouterCA.setText("Ajouter");
+        jSpinnerPanel.add(ajouterCA);
 
         add(jSpinnerPanel, java.awt.BorderLayout.PAGE_START);
 
@@ -575,23 +626,19 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_refreshButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton AjouterCA;
-    private javax.swing.JButton CameraButton;
+    private javax.swing.JButton ajouterCA;
+    private javax.swing.JButton cameraButton;
     private javax.swing.JTable itemsTable;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jSpinnerPanel;
     private javax.swing.JButton modifierCA;
+    private javax.swing.JComboBox monthComboBox;
     private javax.swing.JButton refreshButton;
     private javax.swing.JButton supprimerCA;
+    private javax.swing.JComboBox yearComboBox;
     // End of variables declaration//GEN-END:variables
 
     @Override

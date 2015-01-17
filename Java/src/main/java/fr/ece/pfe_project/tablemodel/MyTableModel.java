@@ -17,7 +17,7 @@ public class MyTableModel extends AbstractTableModel {
 
     private final String[] columnNone = {};
     private final String[] columnCamera = {"Cameras"};
-    private final String[] columnExcel = {"Date", "Flux de la journée"};
+    private final String[] columnExcel = {"Date", "Fréquentation"};
     private final String[] columnListingVols = {"Date", "Heure de départ", "Destination", "N° de vol", "Compagnie", "Observation"};
     private final String[] columnCarnetAdresses = {"Compagnie", "Nombre de guichets", "Societe d'assistance", "Téléphone"};
 
@@ -48,12 +48,12 @@ public class MyTableModel extends AbstractTableModel {
 
             case EXCELROW:
                 return columnNames[ToolbarEntityPanel.ENTITY.EXCELROW.ordinal()].length;
-                
+
             case LISTINGVOLS:
-            return columnNames[ToolbarEntityPanel.ENTITY.LISTINGVOLS.ordinal()].length;
-                
+                return columnNames[ToolbarEntityPanel.ENTITY.LISTINGVOLS.ordinal()].length;
+
             case CARNETADRESSE:
-            return columnNames[ToolbarEntityPanel.ENTITY.CARNETADRESSE.ordinal()].length;
+                return columnNames[ToolbarEntityPanel.ENTITY.CARNETADRESSE.ordinal()].length;
 
             default:
                 break;
@@ -78,10 +78,10 @@ public class MyTableModel extends AbstractTableModel {
 
             case EXCELROW:
                 return columnNames[ToolbarEntityPanel.ENTITY.EXCELROW.ordinal()][column];
-                
+
             case LISTINGVOLS:
                 return columnNames[ToolbarEntityPanel.ENTITY.LISTINGVOLS.ordinal()][column];
-                
+
             case CARNETADRESSE:
                 return columnNames[ToolbarEntityPanel.ENTITY.CARNETADRESSE.ordinal()][column];
 
@@ -112,7 +112,22 @@ public class MyTableModel extends AbstractTableModel {
                         break;
                 }
                 break;
-                
+
+            case EXCELROW:
+
+                myData = (FrequentationJournaliere) data[row];
+
+                switch (column) {
+                    case 0:
+                        return ((FrequentationJournaliere) myData).getDate();
+                    case 1:
+                        return ((FrequentationJournaliere) myData).getFrequentation();
+                    default:
+                        System.err.println("Logic Error");
+                        break;
+                }
+                break;
+
             case LISTINGVOLS:
 
                 myData = (ListingVols) data[row];
@@ -136,21 +151,6 @@ public class MyTableModel extends AbstractTableModel {
                 }
                 break;
 
-            case EXCELROW:
-
-                myData = (FrequentationJournaliere) data[row];
-
-                switch (column) {
-                    case 0:
-                        return ((FrequentationJournaliere) myData).getDate();
-                    case 1:
-                        return ((FrequentationJournaliere) myData).getFrequentation();
-                    default:
-                        System.err.println("Logic Error");
-                        break;
-                }
-                break;
-                
             case CARNETADRESSE:
 
                 myData = (CarnetAdresses) data[row];
@@ -199,7 +199,7 @@ public class MyTableModel extends AbstractTableModel {
                         return Integer.class;
                 }
                 break;
-                
+
             case LISTINGVOLS:
 
                 switch (column) {
@@ -217,7 +217,7 @@ public class MyTableModel extends AbstractTableModel {
                         return String.class;
                 }
                 break;
-                
+
             case CARNETADRESSE:
 
                 switch (column) {
