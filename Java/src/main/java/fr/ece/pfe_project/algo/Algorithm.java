@@ -4,7 +4,6 @@ import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.model.AlgoResult;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.JourFerie;
-import fr.ece.pfe_project.utils.ExcelUtils;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import java.util.ArrayList;
@@ -436,9 +435,11 @@ public class Algorithm {
         System.out.println("#######################################");
         System.out.println("## " + cal.getTime());
 
-        // Changer 365 pour année bis
+        int numOfDays = cal.getActualMaximum(Calendar.DAY_OF_YEAR);
+        System.out.println("NB of Days : " + numOfDays);
+
         // Calcul des années manquantes
-        for (int i = 1; i < 365 + 1; i++) {
+        for (int i = 1; i < numOfDays + 1; i++) {
             cal.set(Calendar.DAY_OF_YEAR, i);
 
             int freq = process1(cal.getTime()).getPrevisionPassager();

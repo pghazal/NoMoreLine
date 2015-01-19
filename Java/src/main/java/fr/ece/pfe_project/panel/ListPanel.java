@@ -53,7 +53,7 @@ import real_time_image_processing.FaceDetectorThread;
  * @author pierreghazal
  */
 public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.FaceDetectorInterface,
-        ToolbarEntityPanel.ToolbarEntityListener, MouseMotionListener, MouseListener, ActionListener {
+        ToolbarEntityPanel.ToolbarEntityListener, ToolbarActionsPanel.ToolbarActionsListener, MouseMotionListener, MouseListener, ActionListener {
 
     public interface CameraStatusListener {
 

@@ -1,15 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.ece.pfe_project.widget;
 
 import fr.ece.pfe_project.model.Camera;
 import java.awt.Color;
-import java.awt.Dimension;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JTable;
 
 /**

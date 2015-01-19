@@ -16,7 +16,7 @@ import real_time_image_processing.FaceDetectorThread;
 public class MainPanel extends javax.swing.JPanel {
 
     public class ToolbarsListener implements ToolbarEntityPanel.ToolbarEntityListener, 
-            ListPanel.CameraStatusListener {
+            ListPanel.CameraStatusListener, ToolbarActionsPanel.ToolbarActionsListener {
 
         @Override
         public void entityHasChange(ToolbarEntityPanel.ENTITY typeEntity) {
@@ -27,6 +27,11 @@ public class MainPanel extends javax.swing.JPanel {
         @Override
         public void changeCameraStatus(boolean cameraStatus) {
             toolbarActions.changeCameraStatus(cameraStatus);
+        }
+        
+        @Override
+        public void actionPerformed(int action) {
+            listPanel.actionPerformed(action);
         }
     }
 
