@@ -24,6 +24,10 @@ public class CarnetAdresses implements ModelInterface{
         
     }
 
+    public CarnetAdresses() {
+        this(null, 0, null, null);
+    }
+
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }

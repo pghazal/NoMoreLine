@@ -1,6 +1,5 @@
 package fr.ece.pfe_project.widget;
 
-import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import java.util.Date;
 import javax.swing.JOptionPane;

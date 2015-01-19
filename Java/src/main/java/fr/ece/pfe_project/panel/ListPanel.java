@@ -12,6 +12,7 @@ import static fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY.LISTING
 import static fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY.NONE;
 import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.CarnetAdresses;
+import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.ListingVols;
 import fr.ece.pfe_project.panel.MainPanel.FaceDetectorListener;
 import fr.ece.pfe_project.panel.MainPanel.ToolbarsListener;
@@ -22,6 +23,8 @@ import fr.ece.pfe_project.utils.ExcelUtils;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.widget.CameraCellComponent;
 import fr.ece.pfe_project.widget.CameraSaisieDialog;
+import fr.ece.pfe_project.widget.CarnetAdressesDialog;
+import fr.ece.pfe_project.widget.ExcelSaisieDialog;
 import fr.ece.pfe_project.widget.ProgressDialog;
 import java.awt.Color;
 import java.awt.Component;
@@ -244,8 +247,29 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
                         break;
                     case CARNETADRESSE:
+                        CarnetAdressesDialog cad = new CarnetAdressesDialog(null, true);
+                        cad.setVisible(true);
+                        
+                        CarnetAdresses carnetToAdd = cad.getCa();
+                        if(carnetToAdd == null){
+                            System.err.println("Excel NULL");
+                        } else{
+                            System.out.println("Carnet d'adresses : " + carnetToAdd.getCompagnieca());
+                            carnetAdresses.add(carnetToAdd);
+                            model.setData(carnetAdresses, true);
+                        }
                         break;
                     case EXCELROW:
+                        ExcelSaisieDialog esd = new ExcelSaisieDialog(null, true);
+                        esd.setVisible(true);
+                        
+                        FrequentationJournaliere excelToAdd = esd.getFj();
+                        if(excelToAdd == null){
+                            System.err.println("Excel NULL");
+                        } else{
+                            System.out.println("Frequentation journaliere de " + excelToAdd.getFrequentation() + " Pour le " + excelToAdd.getDate());
+                            //model.setData(esd, true);
+                        }
                         break;
                     default:
                         break;
@@ -271,8 +295,31 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
                         break;
                     case CARNETADRESSE:
+                        if (itemsTable.getSelectedRowCount() > 0) {
+                            CarnetAdresses selectedCarnet = (CarnetAdresses) model.getDataAtRow(itemsTable.getSelectedRow());
+                            if (selectedCarnet != null) {
+                                carnetAdresses.remove(selectedCarnet);
+                                model.setData(carnetAdresses, true);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    "Aucun élément sélectionné dans la liste",
+                                    "Erreur",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        }
                         break;
                     case EXCELROW:
+                        if (itemsTable.getSelectedRowCount() > 0){
+                            FrequentationJournaliere selectedFj = (FrequentationJournaliere) model.getDataAtRow(itemsTable.getSelectedRow());
+                            if(selectedFj != null){
+                                
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    "Aucun élément sélectionné dans la liste",
+                                    "Erreur",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        }
                         break;
                     default:
                         break;
@@ -304,6 +351,24 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
                         break;
                     case CARNETADRESSE:
+                        if (itemsTable.getSelectedRowCount() > 0) {
+                            CarnetAdresses selectedCarnet = (CarnetAdresses) model.getDataAtRow(itemsTable.getSelectedRow());
+                            if (selectedCarnet != null) {
+                                CarnetAdressesDialog cad = new CarnetAdressesDialog(null, true);
+                                cad.setCa(selectedCarnet);
+                                cad.setVisible(true);
+                                
+                                selectedCarnet = cad.getCa();
+                                
+                                carnetAdresses.set(itemsTable.getSelectedRow(), selectedCarnet);
+                                model.setData(carnetAdresses, true);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    "Aucun élément sélectionné dans la liste",
+                                    "Erreur",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        }
                         break;
                     case EXCELROW:
                         break;
