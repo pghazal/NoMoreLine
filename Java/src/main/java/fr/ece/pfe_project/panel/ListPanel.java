@@ -11,6 +11,7 @@ import fr.ece.pfe_project.panel.MainPanel.ToolbarsListener;
 import static fr.ece.pfe_project.panel.ParametersDialog.msgbox;
 import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
+import fr.ece.pfe_project.utils.ExcelUtils;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.widget.CameraCellComponent;
 import fr.ece.pfe_project.widget.ProgressDialog;
@@ -40,7 +41,6 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.jdatepicker.ComponentManager;
 import org.jsoup.Jsoup;
@@ -152,8 +152,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         }
     }
 
-    private final Camera cameras[];
-    private final CarnetAdresses carnetAdresses[];
+    private final ArrayList<Camera> cameras;
+    private final ArrayList<CarnetAdresses> carnetAdresses;
     private boolean isCameraActive;
 
     MyTableModel model;
@@ -178,10 +178,9 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         addMouseMotionListener(this);
 
         //Initialisation du carnet d'adresses
-        carnetAdresses = new CarnetAdresses[]{
-            new CarnetAdresses("Air France", 3, "AIR FRANCE", "0 970 808 816"),
-            new CarnetAdresses("Brussels Airlines", 2, "AVIAPARTNER", "03 88 64 73 11")
-        };
+        carnetAdresses = new ArrayList<CarnetAdresses>();
+        carnetAdresses.add(new CarnetAdresses("Air France", 3, "AIR FRANCE", "0 970 808 816"));
+        carnetAdresses.add(new CarnetAdresses("Brussels Airlines", 2, "AVIAPARTNER", "03 88 64 73 11"));
 
         //setVisibility false pour rendre invisible les 2 combobox au démarrage
         setExcelButtonVisibility(false);
@@ -197,9 +196,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         //SetcameraButtonVisibility false pour rendre invisible le bouton caméra au démmarage
         setCameraButtonVisibility(false);
 
-        cameras = new Camera[]{
-            new Camera(1)
-        };
+        cameras = new ArrayList<Camera>();
+        cameras.add(new Camera(1));
 
         //cameras[1].setState(Camera.CAMERA_STATE.ALERT); // SET THE 2ND CAMERA AS DECTECTING CROWD
         isCameraActive = false;
@@ -247,7 +245,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 setCameraButtonVisibility(false);
                 setVisibilityCarnetAdresses(false);
                 itemsTable.setRowHeight(16);
-                model.setData(GlobalVariableUtils.getExcelMap().values().toArray(new FrequentationJournaliere[0]), false);
+
+                model.setData((ArrayList) ExcelUtils.sortedListFromMap(GlobalVariableUtils.getExcelMap()), false);
                 System.out.println(isCameraActive);
                 break;
             case LISTINGVOLS:
@@ -260,7 +259,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                         //Fonction à lancer lors du clique bouton: listingVolsrecup
                         if (!testConnexion()) {
 
-                            model.setData((ListingVols[]) listingVolsrecup().toArray(new ListingVols[0]), false);
+                            model.setData(listingVolsRecup(), false);
 
                             setExcelButtonVisibility(false);
                             setCameraButtonVisibility(false);
@@ -360,7 +359,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
                     //Fonction à lancer lors du clique bouton: listingVolsrecup
                     if (!testConnexion()) {
-                        model.setData((ListingVols[]) listingVolsrecup().toArray(new ListingVols[0]), false);
+                        model.setData(listingVolsRecup(), false);
                     } else {
 
                         JOptionPane.showMessageDialog(ListPanel.this, "Pas de connexion internet :\n"
@@ -418,8 +417,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             public void run() {
                 // On souhaite lancer l'activation des cameras
                 if (on) {
-                    for (int i = 0; i < cameras.length; i++) {
-                        Camera cam = cameras[i];
+                    for (int i = 0; i < cameras.size(); i++) {
+                        Camera cam = cameras.get(i);
                         if (cam != null && cam.getFaceDetectorThread() != null
                                 && !cam.getFaceDetectorThread().isActive()) {
                             cam.getFaceDetectorThread().launch(0);
@@ -437,8 +436,8 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                     }
                 } // Extinction du systeme de detection
                 else {
-                    for (int i = 0; i < cameras.length; i++) {
-                        Camera cam = cameras[i];
+                    for (int i = 0; i < cameras.size(); i++) {
+                        Camera cam = cameras.get(i);
 
                         if (cam != null && cam.getFaceDetectorThread() != null
                                 && !cam.getFaceDetectorThread().isActive()) {
@@ -499,7 +498,7 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     }
 
     //Fonction pour récupérer la liste des vols
-    private ArrayList<ListingVols> listingVolsrecup() {
+    private ArrayList<ListingVols> listingVolsRecup() {
         //isRefreshBoutonActive = !isRefreshBoutonActive;
         try {
             //On se connecte au site et on charge le document html

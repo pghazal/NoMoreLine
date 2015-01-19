@@ -7,13 +7,14 @@ import fr.ece.pfe_project.model.CarnetAdresses;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.ModelInterface;
 import fr.ece.pfe_project.model.ListingVols;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
  *
  * @author Pierre Ghazal
  */
-public class MyTableModel extends AbstractTableModel {
+public class MyTableModel<T> extends AbstractTableModel {
 
     private final String[] columnNone = {};
     private final String[] columnCamera = {"Cameras"};
@@ -25,14 +26,14 @@ public class MyTableModel extends AbstractTableModel {
         columnNone, columnCamera, columnExcel, columnListingVols, columnCarnetAdresses
     };
 
-    private ModelInterface[] data;
+    private ArrayList<T> data;
     private ToolbarEntityPanel.ENTITY typeEntity;
 
     public MyTableModel() {
-        this(new ModelInterface[0]);
+        this(new ArrayList<T>());
     }
 
-    public MyTableModel(ModelInterface[] data) {
+    public MyTableModel(ArrayList<T> data) {
         typeEntity = ToolbarEntityPanel.ENTITY.NONE;
         this.data = data;
     }
@@ -64,7 +65,7 @@ public class MyTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return data.length;
+        return data.size();
     }
 
     @Override
@@ -94,7 +95,7 @@ public class MyTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int row, int column) {
-        ModelInterface myData;
+        T myData;
 
         switch (typeEntity) {
             case NONE:
@@ -102,11 +103,11 @@ public class MyTableModel extends AbstractTableModel {
 
             case CAMERA:
 
-                myData = (Camera) data[row];
+                myData = data.get(row);
 
                 switch (column) {
                     case 0:
-                        return (Camera) myData;
+                        return myData;
                     default:
                         System.err.println("Logic Error");
                         break;
@@ -115,7 +116,7 @@ public class MyTableModel extends AbstractTableModel {
 
             case EXCELROW:
 
-                myData = (FrequentationJournaliere) data[row];
+                myData = data.get(row);
 
                 switch (column) {
                     case 0:
@@ -130,7 +131,7 @@ public class MyTableModel extends AbstractTableModel {
 
             case LISTINGVOLS:
 
-                myData = (ListingVols) data[row];
+                myData = data.get(row);
 
                 switch (column) {
                     case 0:
@@ -153,7 +154,7 @@ public class MyTableModel extends AbstractTableModel {
 
             case CARNETADRESSE:
 
-                myData = (CarnetAdresses) data[row];
+                myData = data.get(row);
 
                 switch (column) {
                     case 0:
@@ -239,12 +240,13 @@ public class MyTableModel extends AbstractTableModel {
         return String.class;
     }
 
-    public ModelInterface getDataAtRow(int row) {
-        return data[row];
+    public T getDataAtRow(int row) {
+        return data.get(row);
     }
 
-    public void setData(ModelInterface[] data, boolean fireTableDataChanged) {
-        this.data = data;
+    public void setData(ArrayList<T> data, boolean fireTableDataChanged) {
+        this.data.clear();
+        this.data.addAll(data);
 
         if (fireTableDataChanged) {
             fireTableDataChanged();
