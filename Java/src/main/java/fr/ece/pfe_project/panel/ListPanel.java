@@ -190,9 +190,6 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         //Rendre invisible au démarrage le bouton refresh
         setVisibilityRefresh(false);
 
-        //Rendre invisible au démarrage les boutons pour le carnet d'adresses
-        setVisibilityCarnetAdresses(false);
-
         //SetcameraButtonVisibility false pour rendre invisible le bouton caméra au démmarage
         setCameraButtonVisibility(false);
 
@@ -204,9 +201,6 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         refreshButton.addActionListener(this);
 
         //Ajout des listerner sur les boutons de la page carnet d'adresses
-        ajouterCA.addActionListener(this);
-        modifierCA.addActionListener(this);
-        supprimerCA.addActionListener(this);
         cameraButton.addActionListener(this);
 
         this.itemsTable.setModel(new MyTableModel());
@@ -233,7 +227,6 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
             case CAMERA:
                 setVisibilityRefresh(false);
                 setExcelButtonVisibility(false);
-                setVisibilityCarnetAdresses(false);
                 setCameraButtonVisibility(true);
                 itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
                 model.setData(cameras, false);
@@ -243,7 +236,6 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 setVisibilityRefresh(false);
                 setExcelButtonVisibility(true);
                 setCameraButtonVisibility(false);
-                setVisibilityCarnetAdresses(false);
                 itemsTable.setRowHeight(16);
 
                 model.setData((ArrayList) ExcelUtils.sortedListFromMap(GlobalVariableUtils.getExcelMap()), false);
@@ -263,7 +255,6 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
                             setExcelButtonVisibility(false);
                             setCameraButtonVisibility(false);
-                            setVisibilityCarnetAdresses(false);
                             setVisibilityRefresh(true);
                             itemsTable.setRowHeight(16);
                         } else {
@@ -282,7 +273,6 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 setVisibilityRefresh(false);
                 setExcelButtonVisibility(false);
                 setCameraButtonVisibility(false);
-                setVisibilityCarnetAdresses(true);
                 itemsTable.setRowHeight(16);
                 model.setData(carnetAdresses, false);
                 System.out.println(isCameraActive);
@@ -292,7 +282,6 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
                 setExcelButtonVisibility(false);
                 setVisibilityRefresh(false);
                 setCameraButtonVisibility(false);
-                setVisibilityCarnetAdresses(false);
                 System.out.println(isCameraActive);
                 break;
 
@@ -482,21 +471,6 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         }
     }
 
-    //Fonction pour rendre le bouton refresh visible
-    private void setVisibilityCarnetAdresses(boolean bool) {
-
-        if (bool == false) {
-            ajouterCA.setVisible(false);
-            modifierCA.setVisible(false);
-            supprimerCA.setVisible(false);
-
-        } else {
-            ajouterCA.setVisible(true);
-            modifierCA.setVisible(true);
-            supprimerCA.setVisible(true);
-        }
-    }
-
     //Fonction pour récupérer la liste des vols
     private ArrayList<ListingVols> listingVolsRecup() {
         //isRefreshBoutonActive = !isRefreshBoutonActive;
@@ -571,9 +545,6 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         monthComboBox = new javax.swing.JComboBox();
         yearComboBox = new javax.swing.JComboBox();
         refreshButton = new javax.swing.JButton();
-        supprimerCA = new javax.swing.JButton();
-        modifierCA = new javax.swing.JButton();
-        ajouterCA = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         itemsTable = new javax.swing.JTable();
 
@@ -602,15 +573,6 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
         refreshButton.setPreferredSize(new java.awt.Dimension(35, 35));
         jSpinnerPanel.add(refreshButton);
 
-        supprimerCA.setText("Supprimer");
-        jSpinnerPanel.add(supprimerCA);
-
-        modifierCA.setText("Modifier");
-        jSpinnerPanel.add(modifierCA);
-
-        ajouterCA.setText("Ajouter");
-        jSpinnerPanel.add(ajouterCA);
-
         add(jSpinnerPanel, java.awt.BorderLayout.PAGE_START);
 
         itemsTable.setAutoCreateRowSorter(true);
@@ -627,16 +589,13 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton ajouterCA;
     private javax.swing.JButton cameraButton;
     private javax.swing.JTable itemsTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jSpinnerPanel;
-    private javax.swing.JButton modifierCA;
     private javax.swing.JComboBox monthComboBox;
     private javax.swing.JButton refreshButton;
-    private javax.swing.JButton supprimerCA;
     private javax.swing.JComboBox yearComboBox;
     // End of variables declaration//GEN-END:variables
 

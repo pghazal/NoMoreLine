@@ -5,6 +5,7 @@
  */
 package fr.ece.pfe_project.panel;
 
+import java.awt.event.ActionListener;
 import javax.swing.JLabel;
 import org.jdatepicker.ComponentManager;
 
@@ -22,8 +23,13 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
     public ToolbarActionsPanel() {
         initComponents();
 
-        this.buttonAdd.setVisible(false);
-        this.buttonDelete.setVisible(false);
+        this.buttonAdd.setVisible(true);
+        this.buttonDelete.setVisible(true);
+    }
+    
+        public interface ToolbarActionsListener {
+
+        public void actionsPerform(int action);
     }
 
     @Override
@@ -49,6 +55,7 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jOptionPane1 = new javax.swing.JOptionPane();
         buttonAdd = new javax.swing.JButton();
         buttonDelete = new javax.swing.JButton();
         cameraState = new javax.swing.JLabel();
@@ -86,7 +93,7 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
                     .addComponent(buttonAdd)
                     .addComponent(buttonDelete)
                     .addComponent(cameraState))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -95,6 +102,7 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
     private javax.swing.JButton buttonAdd;
     private javax.swing.JButton buttonDelete;
     private javax.swing.JLabel cameraState;
+    private javax.swing.JOptionPane jOptionPane1;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -105,6 +113,10 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
 
             case CAMERA:
             case EXCELROW:
+                buttonAdd.setEnabled(true);
+                buttonDelete.setEnabled(true);
+                break;
+            case CARNETADRESSE:
                 buttonAdd.setEnabled(true);
                 buttonDelete.setEnabled(true);
                 break;
