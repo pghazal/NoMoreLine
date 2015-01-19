@@ -1,6 +1,9 @@
 package fr.ece.pfe_project.widget;
 
+import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
+import java.util.Date;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -12,12 +15,23 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form ExcelCellComponent
+     *
      * @param parent
      * @param modal
      */
     public ExcelSaisieDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+    }
+
+    public FrequentationJournaliere getFj() {
+        return fj;
+    }
+
+    public void setFj(FrequentationJournaliere fj) {
+        this.fj = fj;
+        this.dateTextField.setText(fj.getDate().toString());
+        this.freqTextField.setText(Integer.toString(fj.getFrequentation()));
     }
 
     /**
@@ -110,7 +124,17 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void validateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateButtonActionPerformed
-        
+        try {
+            Integer freq = Integer.parseInt(this.freqTextField.getText());
+            Date date = new Date(this.dateTextField.getText());
+            fj = new FrequentationJournaliere();
+            fj.setDate(date);
+            fj.setFrequentation(freq);
+            this.dispose();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erreur de saisie", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_validateButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
