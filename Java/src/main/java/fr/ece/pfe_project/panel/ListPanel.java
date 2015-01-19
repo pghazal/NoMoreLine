@@ -64,11 +64,6 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         ToolbarEntityListener, ToolbarActionsListener,
         MouseMotionListener, MouseListener, ActionListener {
 
-    public interface CameraStatusListener {
-
-        public void changeCameraStatus(boolean cameraStatus);
-    }
-
     SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
 
     public class DateEditor extends DefaultCellEditor {

@@ -5,6 +5,7 @@
  */
 package fr.ece.pfe_project.panel;
 
+import fr.ece.pfe_project.interfaces.CameraListener;
 import fr.ece.pfe_project.interfaces.ToolbarActionsListener;
 import fr.ece.pfe_project.interfaces.ToolbarEntityListener;
 import org.jdatepicker.ComponentManager;
@@ -14,7 +15,7 @@ import org.jdatepicker.ComponentManager;
  * @author pierreghazal
  */
 public class ToolbarActionsPanel extends javax.swing.JPanel implements
-        ToolbarEntityListener, ListPanel.CameraStatusListener {
+        ToolbarEntityListener, CameraListener {
 
     private final MainPanel.ToolbarsListener toolbarsListener;
 

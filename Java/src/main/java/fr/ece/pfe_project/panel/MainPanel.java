@@ -5,6 +5,7 @@
  */
 package fr.ece.pfe_project.panel;
 
+import fr.ece.pfe_project.interfaces.CameraListener;
 import fr.ece.pfe_project.interfaces.ToolbarActionsListener;
 import fr.ece.pfe_project.interfaces.ToolbarEntityListener;
 import java.awt.Dimension;
@@ -18,7 +19,7 @@ import real_time_image_processing.FaceDetectorThread;
 public class MainPanel extends javax.swing.JPanel {
 
     public class ToolbarsListener implements ToolbarEntityListener,
-            ToolbarActionsListener, ListPanel.CameraStatusListener {
+            ToolbarActionsListener, CameraListener {
 
         @Override
         public void entityHasChange(ENTITY typeEntity) {
