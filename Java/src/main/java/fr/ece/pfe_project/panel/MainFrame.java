@@ -6,14 +6,12 @@ import fr.ece.pfe_project.model.JourFerie;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import javax.swing.JOptionPane;
 import fr.ece.pfe_project.widget.StartingProgressDialog;
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import org.jdatepicker.ComponentManager;
 
 /**
  *
@@ -21,7 +19,7 @@ import org.jdatepicker.ComponentManager;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-    private final MainPanel mainPanel;
+    private static MainPanel mainPanel;
     private ParametersDialog parametersDialog;
 
     /**
@@ -30,10 +28,6 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         setLocationRelativeTo(null);
-
-        mainPanel = new MainPanel();
-
-        setContentPane(mainPanel);
     }
 
     /**
@@ -56,14 +50,6 @@ public class MainFrame extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -81,7 +67,7 @@ public class MainFrame extends javax.swing.JFrame {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                MainFrame mf = new MainFrame();
+                final MainFrame mf = new MainFrame();
                 Runnable runnable = new Runnable() {
 
                     @Override
@@ -90,6 +76,9 @@ public class MainFrame extends javax.swing.JFrame {
                         ParametersUtils.loadDatabase();
 
                         loadJourFerieDefaut();
+
+                        mainPanel = new MainPanel();
+                        mf.setContentPane(mainPanel);
                     }
                 };
 

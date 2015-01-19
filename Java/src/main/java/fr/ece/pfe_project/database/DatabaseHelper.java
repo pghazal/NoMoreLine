@@ -25,13 +25,12 @@ public class DatabaseHelper {
     public final static String TABLE_FREQUENTATION_JOURNALIERE = "FREQUENTATION_JOURNALIERE";
     public final static String TABLE_FREQUENTATION_ANNUELLE = "FREQUENTATION_ANNUELLE";
 
-    private static Connection connection;
+    private static Connection connection = null;
 
     public DatabaseHelper() {
     }
 
     public static void initialize() {
-
         try {
             connection = getConnection();
             System.out.println("Opened database successfully");
@@ -45,16 +44,15 @@ public class DatabaseHelper {
 
     private static Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
-            Connection c = null;
             try {
+                Connection c = null;
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection("jdbc:sqlite:nomoreline.db");
-            } catch (Exception e) {
-                System.err.println(e.getClass().getName() + ": " + e.getMessage());
-                System.exit(0);
+                
+                return c;
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            return c;
         }
 
         return connection;
@@ -70,7 +68,7 @@ public class DatabaseHelper {
                     + " MOIS INT NOT NULL,"
                     + " ANNEE INT NOT NULL,"
                     + " FREQUENTATION INT NOT NULL)";
-            stmt.executeUpdate(sql);
+            stmt.execute(sql);
             stmt.close();
             c.close();
         } catch (Exception e) {
@@ -89,7 +87,7 @@ public class DatabaseHelper {
             String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_FREQUENTATION_ANNUELLE
                     + " (ANNEE INT NOT NULL,"
                     + " FREQUENTATION INT NOT NULL)";
-            stmt.executeUpdate(sql);
+            stmt.execute(sql);
             stmt.close();
             c.close();
         } catch (Exception e) {
@@ -162,7 +160,7 @@ public class DatabaseHelper {
         if (yearsComplete != null && yearsComplete.size() > 0) {
             int lastYearComplete = Collections.max(yearsComplete);
             int yearUser = cal.get(Calendar.YEAR);
-            
+
             return yearUser - lastYearComplete;
         }
 

@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package fr.ece.pfe_project.widget;
 
 import fr.ece.pfe_project.model.CarnetAdresses;
@@ -22,6 +16,7 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
     public CarnetAdressesDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null);
     }
     
     public CarnetAdresses getCa(){
@@ -30,10 +25,10 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
     
     public void setCa(CarnetAdresses ca){
         this.ca = ca;
-        this.NomCompagnieButton.setText(ca.getCompagnieca());
-        this.NbGuichet.setText(Integer.toString(ca.getNombreGuichet()));
-        this.SocieteAssistance.setText(ca.getSocieteAssistance());
-        this.Telephone.setText(ca.getTelephone());
+        this.nomCompagnieButton.setText(ca.getCompagnieca());
+        this.nbGuichet.setValue(ca.getNombreGuichet());
+        this.societeAssistance.setText(ca.getSocieteAssistance());
+        this.telephone.setText(ca.getTelephone());
     }
 
     /**
@@ -49,12 +44,12 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        NomCompagnieButton = new javax.swing.JTextField();
-        NbGuichet = new javax.swing.JTextField();
-        SocieteAssistance = new javax.swing.JTextField();
-        Telephone = new javax.swing.JTextField();
-        ValidateButton = new javax.swing.JButton();
-        CancelButton = new javax.swing.JButton();
+        nomCompagnieButton = new javax.swing.JTextField();
+        societeAssistance = new javax.swing.JTextField();
+        telephone = new javax.swing.JTextField();
+        validateButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        nbGuichet = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -66,19 +61,21 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
 
         jLabel4.setText("Téléphone : ");
 
-        ValidateButton.setText("OK");
-        ValidateButton.addActionListener(new java.awt.event.ActionListener() {
+        validateButton.setText("OK");
+        validateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ValidateButtonActionPerformed(evt);
+                validateButtonActionPerformed(evt);
             }
         });
 
-        CancelButton.setText("Annuler");
-        CancelButton.addActionListener(new java.awt.event.ActionListener() {
+        cancelButton.setText("Annuler");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CancelButtonActionPerformed(evt);
+                cancelButtonActionPerformed(evt);
             }
         });
+
+        nbGuichet.setModel(new javax.swing.SpinnerNumberModel(1, 0, 50, 1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -87,75 +84,71 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(NomCompagnieButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(NbGuichet, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(Telephone, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SocieteAssistance, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(ValidateButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(CancelButton)))
-                .addContainerGap())
+                        .addComponent(validateButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(nomCompagnieButton)
+                                    .addComponent(societeAssistance)
+                                    .addComponent(telephone)
+                                    .addComponent(nbGuichet, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(NomCompagnieButton, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(NbGuichet, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nomCompagnieButton, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(SocieteAssistance, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(societeAssistance, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Telephone))
-                .addGap(54, 54, 54)
+                    .addComponent(telephone))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ValidateButton)
-                    .addComponent(CancelButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nbGuichet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cancelButton)
+                    .addComponent(validateButton)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // TODO add your handling code here:
-        this.NomCompagnieButton.setText("");
-        this.NbGuichet.setText("");
-        this.SocieteAssistance.setText("");
-        this.Telephone.setText("");
+        this.nomCompagnieButton.setText("");
+        this.nbGuichet.setValue(1);
+        this.societeAssistance.setText("");
+        this.telephone.setText("");
         this.dispose();
-    }//GEN-LAST:event_CancelButtonActionPerformed
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void ValidateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ValidateButtonActionPerformed
-        // TODO add your handling code here:
+    private void validateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateButtonActionPerformed
         try {
             //Integer NbGuichets = Integer.toString(this.NbGuichet.getText());
-            String compagnieCa = this.NomCompagnieButton.getText();
-            String societeAssistance = this.SocieteAssistance.getText();
-            String telephone = this.Telephone.getText();
-            Integer nbGuichets = Integer.parseInt(this.NbGuichet.getText());
+            String compagnieCa = this.nomCompagnieButton.getText();
+            String societeAssistance = this.societeAssistance.getText();
+            String telephone = this.telephone.getText();
+            Integer nbGuichets = (Integer) this.nbGuichet.getValue();
             ca = new CarnetAdresses();
             ca.setCompagnieca(compagnieCa);
             ca.setSocieteAssistance(societeAssistance);
@@ -166,60 +159,18 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Erreur de saisie", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_ValidateButtonActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CarnetAdressesDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CarnetAdressesDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CarnetAdressesDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CarnetAdressesDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                CarnetAdressesDialog dialog = new CarnetAdressesDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+    }//GEN-LAST:event_validateButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton CancelButton;
-    private javax.swing.JTextField NbGuichet;
-    private javax.swing.JTextField NomCompagnieButton;
-    private javax.swing.JTextField SocieteAssistance;
-    private javax.swing.JTextField Telephone;
-    private javax.swing.JButton ValidateButton;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JSpinner nbGuichet;
+    private javax.swing.JTextField nomCompagnieButton;
+    private javax.swing.JTextField societeAssistance;
+    private javax.swing.JTextField telephone;
+    private javax.swing.JButton validateButton;
     // End of variables declaration//GEN-END:variables
 }

@@ -21,6 +21,7 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
     public ExcelSaisieDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     public FrequentationJournaliere getFj() {
