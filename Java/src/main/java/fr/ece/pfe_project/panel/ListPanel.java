@@ -231,6 +231,17 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                     case CAMERA:
                         CameraSaisieDialog csd = new CameraSaisieDialog(null, true);
                         csd.setVisible(true);
+                        
+                        Camera cameraToAdd = csd.getCamera();
+                        if(cameraToAdd == null) {
+                            System.err.println("Camera NULL");
+                            // Ne rien ajouter
+                        } else {
+                            System.out.println("Camera : " + cameraToAdd.getId());
+                            cameras.add(cameraToAdd);
+                            model.setData(cameras, true);
+                        }
+                        
                         break;
                     case CARNETADRESSE:
                         break;

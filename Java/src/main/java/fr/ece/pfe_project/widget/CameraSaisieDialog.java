@@ -5,20 +5,31 @@
  */
 package fr.ece.pfe_project.widget;
 
+import fr.ece.pfe_project.model.Camera;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author pierreghazal
  */
 public class CameraSaisieDialog extends javax.swing.JDialog {
 
+    private Camera camera = null;
+
     /**
      * Creates new form CameraSaisieDialog
+     *
      * @param parent
      * @param modal
      */
     public CameraSaisieDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null);
+    }
+
+    public Camera getCamera() {
+        return camera;
     }
 
     /**
@@ -97,7 +108,14 @@ public class CameraSaisieDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void validateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateButtonActionPerformed
-        
+        try {
+            Long id = Long.parseLong(this.idTextField.getText());
+            camera = new Camera(id);
+            this.dispose();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erreur de saisie", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_validateButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
