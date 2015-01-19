@@ -54,6 +54,7 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
         buttonAdd = new javax.swing.JButton();
         buttonDelete = new javax.swing.JButton();
         cameraState = new javax.swing.JLabel();
+        buttonEdit = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(32767, 50));
         setPreferredSize(new java.awt.Dimension(600, 50));
@@ -77,6 +78,14 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
         cameraState.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/off_led_icon.png"))); // NOI18N
         cameraState.setText("Status Camera");
 
+        buttonEdit.setText("Edit");
+        buttonEdit.setEnabled(false);
+        buttonEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonEditActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -86,7 +95,9 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
                 .addComponent(buttonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonDelete)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 292, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonEdit)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
                 .addComponent(cameraState)
                 .addContainerGap())
         );
@@ -97,7 +108,8 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAdd)
                     .addComponent(buttonDelete)
-                    .addComponent(cameraState))
+                    .addComponent(cameraState)
+                    .addComponent(buttonEdit))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -110,10 +122,15 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
         this.toolbarsListener.performAction(ToolbarActionsListener.ACTION_DELETE);
     }//GEN-LAST:event_buttonDeleteActionPerformed
 
+    private void buttonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditActionPerformed
+        this.toolbarsListener.performAction(ToolbarActionsListener.ACTION_EDIT);
+    }//GEN-LAST:event_buttonEditActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAdd;
     private javax.swing.JButton buttonDelete;
+    private javax.swing.JButton buttonEdit;
     private javax.swing.JLabel cameraState;
     private javax.swing.JOptionPane jOptionPane1;
     // End of variables declaration//GEN-END:variables
@@ -129,12 +146,14 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
             case CARNETADRESSE:
                 buttonAdd.setEnabled(true);
                 buttonDelete.setEnabled(true);
+                buttonEdit.setEnabled(true);
                 break;
             case LISTINGVOLS:
             case NONE:
             default:
                 buttonAdd.setEnabled(false);
                 buttonDelete.setEnabled(false);
+                buttonEdit.setEnabled(false);
                 break;
         }
     }

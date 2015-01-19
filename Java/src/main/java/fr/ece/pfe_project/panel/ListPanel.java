@@ -21,6 +21,7 @@ import fr.ece.pfe_project.tablemodel.MyTableModel;
 import fr.ece.pfe_project.utils.ExcelUtils;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.widget.CameraCellComponent;
+import fr.ece.pfe_project.widget.CameraSaisieDialog;
 import fr.ece.pfe_project.widget.ProgressDialog;
 import java.awt.Color;
 import java.awt.Component;
@@ -222,6 +223,51 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
     @Override
     public void performAction(int action) {
 
+        final ENTITY entity = model.getEntity();
+
+        switch (action) {
+            case ACTION_ADD:
+                switch (entity) {
+                    case CAMERA:
+                        CameraSaisieDialog csd = new CameraSaisieDialog(null, true);
+                        csd.setVisible(true);
+                        break;
+                    case CARNETADRESSE:
+                        break;
+                    case EXCELROW:
+                        break;
+                    default:
+                        break;
+                }
+
+                break;
+            case ACTION_DELETE:
+                switch (entity) {
+                    case CAMERA:
+                        break;
+                    case CARNETADRESSE:
+                        break;
+                    case EXCELROW:
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case ACTION_EDIT:
+                switch (entity) {
+                    case CAMERA:
+                        break;
+                    case CARNETADRESSE:
+                        break;
+                    case EXCELROW:
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

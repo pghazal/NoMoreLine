@@ -33,7 +33,9 @@
               <Component id="buttonAdd" min="-2" pref="84" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="buttonDelete" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="292" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="buttonEdit" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="211" max="32767" attributes="0"/>
               <Component id="cameraState" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -47,6 +49,7 @@
                   <Component id="buttonAdd" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="buttonDelete" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="cameraState" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="buttonEdit" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -79,6 +82,15 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Status Camera"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="buttonEdit">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Edit"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonEditActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

@@ -18,6 +18,7 @@ import java.util.Date;
 /**
  *
  * @author Pierre Ghazal
+ * @param <T>
  */
 public class MyTableModel<T> extends AbstractTableModel {
 
@@ -260,5 +261,9 @@ public class MyTableModel<T> extends AbstractTableModel {
 
     public void setEntity(ENTITY entity) {
         this.typeEntity = entity;
+    }
+    
+    public ENTITY getEntity() {
+        return this.typeEntity;
     }
 }
