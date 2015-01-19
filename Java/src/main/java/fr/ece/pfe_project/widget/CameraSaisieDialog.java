@@ -32,6 +32,11 @@ public class CameraSaisieDialog extends javax.swing.JDialog {
         return camera;
     }
 
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+        this.idTextField.setText(Long.toString(camera.getId()));
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

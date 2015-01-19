@@ -215,8 +215,8 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         itemsTable.setDefaultRenderer(Long.class, new MyDefaultRenderer());
         itemsTable.setDefaultRenderer(Date.class, new DateRenderer());
         itemsTable.setDefaultRenderer(Camera.class, new CameraCellRenderer());
-        itemsTable.setDefaultEditor(Camera.class, new CameraCellEditor());
 
+        itemsTable.setDefaultEditor(Camera.class, new CameraCellEditor());
         itemsTable.setDefaultEditor(Date.class, new DateEditor());
     }
 
@@ -231,9 +231,9 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                     case CAMERA:
                         CameraSaisieDialog csd = new CameraSaisieDialog(null, true);
                         csd.setVisible(true);
-                        
+
                         Camera cameraToAdd = csd.getCamera();
-                        if(cameraToAdd == null) {
+                        if (cameraToAdd == null) {
                             System.err.println("Camera NULL");
                             // Ne rien ajouter
                         } else {
@@ -241,7 +241,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                             cameras.add(cameraToAdd);
                             model.setData(cameras, true);
                         }
-                        
+
                         break;
                     case CARNETADRESSE:
                         break;
@@ -255,6 +255,20 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
             case ACTION_DELETE:
                 switch (entity) {
                     case CAMERA:
+                        // Si il y a une ligne selectionnée dans la Table
+                        if (itemsTable.getSelectedRowCount() > 0) {
+                            Camera selectedCamera = (Camera) model.getDataAtRow(itemsTable.getSelectedRow());
+                            if (selectedCamera != null) {
+                                cameras.remove(selectedCamera);
+                                model.setData(cameras, true);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    "Aucun élément sélectionné dans la liste",
+                                    "Erreur",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        }
+
                         break;
                     case CARNETADRESSE:
                         break;
@@ -267,6 +281,27 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
             case ACTION_EDIT:
                 switch (entity) {
                     case CAMERA:
+
+                        // Si il y a une ligne selectionnée dans la Table
+                        if (itemsTable.getSelectedRowCount() > 0) {
+                            Camera selectedCamera = (Camera) model.getDataAtRow(itemsTable.getSelectedRow());
+                            if (selectedCamera != null) {
+                                CameraSaisieDialog csd = new CameraSaisieDialog(null, true);
+                                csd.setCamera(selectedCamera);
+                                csd.setVisible(true);
+                                
+                                selectedCamera = csd.getCamera();
+                                
+                                cameras.set(itemsTable.getSelectedRow(), selectedCamera);
+                                model.setData(cameras, true);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    "Aucun élément sélectionné dans la liste",
+                                    "Erreur",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        }
+
                         break;
                     case CARNETADRESSE:
                         break;
