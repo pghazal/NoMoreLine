@@ -2,9 +2,16 @@ package fr.ece.pfe_project.panel;
 
 import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.editor.CameraCellEditor;
+import fr.ece.pfe_project.interfaces.ToolbarActionsListener;
+import fr.ece.pfe_project.interfaces.ToolbarEntityListener;
+import fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY;
+import static fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY.CAMERA;
+import static fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY.CARNETADRESSE;
+import static fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY.EXCELROW;
+import static fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY.LISTINGVOLS;
+import static fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY.NONE;
 import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.CarnetAdresses;
-import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.ListingVols;
 import fr.ece.pfe_project.panel.MainPanel.FaceDetectorListener;
 import fr.ece.pfe_project.panel.MainPanel.ToolbarsListener;
@@ -40,6 +47,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.jdatepicker.ComponentManager;
@@ -52,8 +60,9 @@ import real_time_image_processing.FaceDetectorThread;
  *
  * @author pierreghazal
  */
-public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.FaceDetectorInterface,
-        ToolbarEntityPanel.ToolbarEntityListener, ToolbarActionsPanel.ToolbarActionsListener, MouseMotionListener, MouseListener, ActionListener {
+public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetectorInterface,
+        ToolbarEntityListener, ToolbarActionsListener,
+        MouseMotionListener, MouseListener, ActionListener {
 
     public interface CameraStatusListener {
 
@@ -216,7 +225,12 @@ public class ListPanel extends javax.swing.JPanel implements FaceDetectorThread.
     }
 
     @Override
-    public void entityHasChange(ToolbarEntityPanel.ENTITY typeEntity) {
+    public void performAction(int action) {
+
+    }
+
+    @Override
+    public void entityHasChange(ENTITY typeEntity) {
         System.out.println("List entityHasChange : " + typeEntity.toString());
 
         model = (MyTableModel) this.itemsTable.getModel();

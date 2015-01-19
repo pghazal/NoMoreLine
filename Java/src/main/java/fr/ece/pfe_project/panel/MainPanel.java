@@ -5,6 +5,8 @@
  */
 package fr.ece.pfe_project.panel;
 
+import fr.ece.pfe_project.interfaces.ToolbarActionsListener;
+import fr.ece.pfe_project.interfaces.ToolbarEntityListener;
 import java.awt.Dimension;
 import javax.swing.Box;
 import real_time_image_processing.FaceDetectorThread;
@@ -15,11 +17,11 @@ import real_time_image_processing.FaceDetectorThread;
  */
 public class MainPanel extends javax.swing.JPanel {
 
-    public class ToolbarsListener implements ToolbarEntityPanel.ToolbarEntityListener, 
-            ListPanel.CameraStatusListener, ToolbarActionsPanel.ToolbarActionsListener {
+    public class ToolbarsListener implements ToolbarEntityListener,
+            ToolbarActionsListener, ListPanel.CameraStatusListener {
 
         @Override
-        public void entityHasChange(ToolbarEntityPanel.ENTITY typeEntity) {
+        public void entityHasChange(ENTITY typeEntity) {
             listPanel.entityHasChange(typeEntity);
             toolbarActions.entityHasChange(typeEntity);
         }
@@ -28,10 +30,10 @@ public class MainPanel extends javax.swing.JPanel {
         public void changeCameraStatus(boolean cameraStatus) {
             toolbarActions.changeCameraStatus(cameraStatus);
         }
-        
+
         @Override
-        public void actionPerformed(int action) {
-            listPanel.actionPerformed(action);
+        public void performAction(int action) {
+            listPanel.performAction(action);
         }
     }
 
@@ -64,7 +66,7 @@ public class MainPanel extends javax.swing.JPanel {
         statisticPanel = new StatisticPanel();
         listPanel = new ListPanel(faceDetectorListener, toolbarsListener);
         toolbarEntity = new ToolbarEntityPanel(toolbarsListener);
-        toolbarActions = new ToolbarActionsPanel();
+        toolbarActions = new ToolbarActionsPanel(toolbarsListener);
 
         Box hMainBox = Box.createHorizontalBox();
         Box vLeftBox = Box.createVerticalBox();

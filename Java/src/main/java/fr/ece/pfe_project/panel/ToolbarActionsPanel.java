@@ -5,45 +5,39 @@
  */
 package fr.ece.pfe_project.panel;
 
-import java.awt.event.ActionListener;
-import javax.swing.JLabel;
+import fr.ece.pfe_project.interfaces.ToolbarActionsListener;
+import fr.ece.pfe_project.interfaces.ToolbarEntityListener;
 import org.jdatepicker.ComponentManager;
 
 /**
  *
  * @author pierreghazal
  */
-public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEntityPanel.ToolbarEntityListener,
-        ListPanel.CameraStatusListener {
+public class ToolbarActionsPanel extends javax.swing.JPanel implements
+        ToolbarEntityListener, ListPanel.CameraStatusListener {
+
+    private final MainPanel.ToolbarsListener toolbarsListener;
 
     /**
      * Creates new form ToolbarTop
      *
+     * @param toolbarsListener
      */
-    public ToolbarActionsPanel() {
+    public ToolbarActionsPanel(MainPanel.ToolbarsListener toolbarsListener) {
         initComponents();
 
-        this.buttonAdd.setVisible(true);
-        this.buttonDelete.setVisible(true);
-    }
-    
-        public interface ToolbarActionsListener {
-
-        public void actionsPerform(int action);
+        this.toolbarsListener = toolbarsListener;
     }
 
     @Override
     public void changeCameraStatus(boolean cameraStatus) {
         if (cameraStatus == true) {
-            
             cameraState.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getonLedIcon());
             System.out.println("LED ON");
         } else {
             System.out.println("LED OFF");
             cameraState.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getoffLedIcon());
-
         }
-
     }
 
     /**
@@ -65,9 +59,19 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
 
         buttonAdd.setText("+");
         buttonAdd.setEnabled(false);
+        buttonAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAddActionPerformed(evt);
+            }
+        });
 
         buttonDelete.setText("Delete");
         buttonDelete.setEnabled(false);
+        buttonDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonDeleteActionPerformed(evt);
+            }
+        });
 
         cameraState.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/off_led_icon.png"))); // NOI18N
         cameraState.setText("Status Camera");
@@ -97,6 +101,14 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void buttonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddActionPerformed
+        this.toolbarsListener.performAction(ToolbarActionsListener.ACTION_ADD);
+    }//GEN-LAST:event_buttonAddActionPerformed
+
+    private void buttonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteActionPerformed
+        this.toolbarsListener.performAction(ToolbarActionsListener.ACTION_DELETE);
+    }//GEN-LAST:event_buttonDeleteActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAdd;
@@ -106,20 +118,18 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements ToolbarEn
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void entityHasChange(ToolbarEntityPanel.ENTITY typeEntity) {
+    public void entityHasChange(ToolbarEntityListener.ENTITY typeEntity) {
         System.out.println("TBAction entityHasChange : " + typeEntity.toString());
 
         switch (typeEntity) {
 
             case CAMERA:
             case EXCELROW:
-                buttonAdd.setEnabled(true);
-                buttonDelete.setEnabled(true);
-                break;
             case CARNETADRESSE:
                 buttonAdd.setEnabled(true);
                 buttonDelete.setEnabled(true);
                 break;
+            case LISTINGVOLS:
             case NONE:
             default:
                 buttonAdd.setEnabled(false);

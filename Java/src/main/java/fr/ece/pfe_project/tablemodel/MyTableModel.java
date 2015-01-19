@@ -1,11 +1,16 @@
 package fr.ece.pfe_project.tablemodel;
 
+import fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY;
+import static fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY.CAMERA;
+import static fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY.CARNETADRESSE;
+import static fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY.EXCELROW;
+import static fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY.LISTINGVOLS;
+import static fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY.NONE;
 import javax.swing.table.AbstractTableModel;
 import fr.ece.pfe_project.panel.ToolbarEntityPanel;
 import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.CarnetAdresses;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
-import fr.ece.pfe_project.model.ModelInterface;
 import fr.ece.pfe_project.model.ListingVols;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,14 +32,14 @@ public class MyTableModel<T> extends AbstractTableModel {
     };
 
     private ArrayList<T> data;
-    private ToolbarEntityPanel.ENTITY typeEntity;
+    private ENTITY typeEntity;
 
     public MyTableModel() {
         this(new ArrayList<T>());
     }
 
     public MyTableModel(ArrayList<T> data) {
-        typeEntity = ToolbarEntityPanel.ENTITY.NONE;
+        typeEntity = ENTITY.NONE;
         this.data = data;
     }
 
@@ -45,16 +50,16 @@ public class MyTableModel<T> extends AbstractTableModel {
                 break;
 
             case CAMERA:
-                return columnNames[ToolbarEntityPanel.ENTITY.CAMERA.ordinal()].length;
+                return columnNames[ENTITY.CAMERA.ordinal()].length;
 
             case EXCELROW:
-                return columnNames[ToolbarEntityPanel.ENTITY.EXCELROW.ordinal()].length;
+                return columnNames[ENTITY.EXCELROW.ordinal()].length;
 
             case LISTINGVOLS:
-                return columnNames[ToolbarEntityPanel.ENTITY.LISTINGVOLS.ordinal()].length;
+                return columnNames[ENTITY.LISTINGVOLS.ordinal()].length;
 
             case CARNETADRESSE:
-                return columnNames[ToolbarEntityPanel.ENTITY.CARNETADRESSE.ordinal()].length;
+                return columnNames[ENTITY.CARNETADRESSE.ordinal()].length;
 
             default:
                 break;
@@ -75,16 +80,16 @@ public class MyTableModel<T> extends AbstractTableModel {
                 break;
 
             case CAMERA:
-                return columnNames[ToolbarEntityPanel.ENTITY.CAMERA.ordinal()][column];
+                return columnNames[ENTITY.CAMERA.ordinal()][column];
 
             case EXCELROW:
-                return columnNames[ToolbarEntityPanel.ENTITY.EXCELROW.ordinal()][column];
+                return columnNames[ENTITY.EXCELROW.ordinal()][column];
 
             case LISTINGVOLS:
-                return columnNames[ToolbarEntityPanel.ENTITY.LISTINGVOLS.ordinal()][column];
+                return columnNames[ENTITY.LISTINGVOLS.ordinal()][column];
 
             case CARNETADRESSE:
-                return columnNames[ToolbarEntityPanel.ENTITY.CARNETADRESSE.ordinal()][column];
+                return columnNames[ENTITY.CARNETADRESSE.ordinal()][column];
 
             default:
                 break;
@@ -253,7 +258,7 @@ public class MyTableModel<T> extends AbstractTableModel {
         }
     }
 
-    public void setEntity(ToolbarEntityPanel.ENTITY entity) {
+    public void setEntity(ENTITY entity) {
         this.typeEntity = entity;
     }
 }

@@ -5,6 +5,7 @@
  */
 package fr.ece.pfe_project.panel;
 
+import fr.ece.pfe_project.interfaces.ToolbarEntityListener;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,16 +17,6 @@ import fr.ece.pfe_project.panel.MainPanel.ToolbarsListener;
  * @author pierreghazal
  */
 public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionListener {
-
-    public enum ENTITY {
-
-        NONE, CAMERA, EXCELROW, LISTINGVOLS, CARNETADRESSE
-    }
-
-    public interface ToolbarEntityListener {
-
-        public void entityHasChange(ENTITY typeEntity);
-    }
 
     private final ToolbarsListener toolbarsListener;
 
@@ -40,68 +31,68 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
         this.toolbarsListener = listener;
 
         this.cameraButton.addActionListener(this);
-        this.cameraButton.setActionCommand(ENTITY.CAMERA.toString());
+        this.cameraButton.setActionCommand(ToolbarEntityListener.ENTITY.CAMERA.toString());
         this.excelButton.addActionListener(this);
-        this.excelButton.setActionCommand(ENTITY.EXCELROW.toString());
+        this.excelButton.setActionCommand(ToolbarEntityListener.ENTITY.EXCELROW.toString());
         this.listingVolsButton.addActionListener(this);
-        this.listingVolsButton.setActionCommand(ENTITY.LISTINGVOLS.toString());
+        this.listingVolsButton.setActionCommand(ToolbarEntityListener.ENTITY.LISTINGVOLS.toString());
         this.carnetAdressesButton.addActionListener(this);
-        this.carnetAdressesButton.setActionCommand(ENTITY.CARNETADRESSE.toString());
+        this.carnetAdressesButton.setActionCommand(ToolbarEntityListener.ENTITY.CARNETADRESSE.toString());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (ENTITY.CAMERA.toString().equals(e.getActionCommand())) {
+        if (ToolbarEntityListener.ENTITY.CAMERA.toString().equals(e.getActionCommand())) {
 
             if (!cameraButton.isSelected()) {
                 this.cameraButton.setSelected(false);
-                this.toolbarsListener.entityHasChange(ENTITY.NONE);
+                this.toolbarsListener.entityHasChange(ToolbarEntityListener.ENTITY.NONE);
             } else {
                 this.cameraButton.setSelected(true);
                 this.excelButton.setSelected(false);
                 this.listingVolsButton.setSelected(false);
                 this.carnetAdressesButton.setSelected(false);
-                this.toolbarsListener.entityHasChange(ENTITY.CAMERA);
+                this.toolbarsListener.entityHasChange(ToolbarEntityListener.ENTITY.CAMERA);
             }
 
-        } else if (ENTITY.EXCELROW.toString().equals(e.getActionCommand())) {
+        } else if (ToolbarEntityListener.ENTITY.EXCELROW.toString().equals(e.getActionCommand())) {
 
             if (!excelButton.isSelected()) {
                 this.excelButton.setSelected(false);
-                this.toolbarsListener.entityHasChange(ENTITY.NONE);
+                this.toolbarsListener.entityHasChange(ToolbarEntityListener.ENTITY.NONE);
             } else {
                 this.cameraButton.setSelected(false);
                 this.excelButton.setSelected(true);
                 this.carnetAdressesButton.setSelected(false);
                 this.listingVolsButton.setSelected(false);
-                this.toolbarsListener.entityHasChange(ENTITY.EXCELROW);
+                this.toolbarsListener.entityHasChange(ToolbarEntityListener.ENTITY.EXCELROW);
             }
 
-        } else if (ENTITY.LISTINGVOLS.toString().equals(e.getActionCommand())) {
+        } else if (ToolbarEntityListener.ENTITY.LISTINGVOLS.toString().equals(e.getActionCommand())) {
 
             if (!listingVolsButton.isSelected()) {
                 this.listingVolsButton.setSelected(false);
-                this.toolbarsListener.entityHasChange(ENTITY.NONE);
+                this.toolbarsListener.entityHasChange(ToolbarEntityListener.ENTITY.NONE);
             } else {
                 this.cameraButton.setSelected(false);
                 this.excelButton.setSelected(false);
                 this.carnetAdressesButton.setSelected(false);
                 this.listingVolsButton.setSelected(true);
-                this.toolbarsListener.entityHasChange(ENTITY.LISTINGVOLS);
+                this.toolbarsListener.entityHasChange(ToolbarEntityListener.ENTITY.LISTINGVOLS);
             }
 
-        } else if (ENTITY.CARNETADRESSE.toString().equals(e.getActionCommand())) {
+        } else if (ToolbarEntityListener.ENTITY.CARNETADRESSE.toString().equals(e.getActionCommand())) {
 
             if (!carnetAdressesButton.isSelected()) {
                 this.carnetAdressesButton.setSelected(false);
-                this.toolbarsListener.entityHasChange(ENTITY.NONE);
+                this.toolbarsListener.entityHasChange(ToolbarEntityListener.ENTITY.NONE);
             } else {
                 this.cameraButton.setSelected(false);
                 this.excelButton.setSelected(false);
                 this.listingVolsButton.setSelected(false);
                 this.carnetAdressesButton.setSelected(true);
-                this.toolbarsListener.entityHasChange(ENTITY.CARNETADRESSE);
+                this.toolbarsListener.entityHasChange(ToolbarEntityListener.ENTITY.CARNETADRESSE);
             }
 
         }
@@ -109,7 +100,7 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
 
     public void resetToggleButtons() {
 
-        this.toolbarsListener.entityHasChange(ENTITY.NONE);
+        this.toolbarsListener.entityHasChange(ToolbarEntityListener.ENTITY.NONE);
 
         // Unselect every JToggleButton in the Container
         for (Component button : this.getComponents()) {
