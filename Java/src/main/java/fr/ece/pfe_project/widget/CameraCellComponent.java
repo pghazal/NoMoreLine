@@ -28,8 +28,10 @@ public class CameraCellComponent extends javax.swing.JPanel {
         if (isSelected) {
             setBackground(Color.BLUE);
             setForeground(Color.WHITE);
+            this.labelID.setForeground(Color.WHITE);
         } else {
             setForeground(Color.BLACK);
+            this.labelID.setForeground(Color.BLACK);
         }
         
         switch (camera.getState()) {

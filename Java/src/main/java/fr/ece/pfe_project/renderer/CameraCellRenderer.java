@@ -22,8 +22,8 @@ public class CameraCellRenderer implements TableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Camera camera = (Camera) value;
-        panel.updateData(camera, isSelected, table);
         panel.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+        panel.updateData(camera, isSelected, table);
         return panel;
     }
 }
