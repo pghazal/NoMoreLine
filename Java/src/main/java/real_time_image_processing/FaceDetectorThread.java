@@ -8,15 +8,10 @@ import java.io.IOException;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.bytedeco.javacv.*;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.opencv_core.IplImage;
 import static org.bytedeco.javacpp.opencv_core.*;
-import static org.bytedeco.javacpp.opencv_highgui.CV_CAP_PROP_FRAME_HEIGHT;
-import static org.bytedeco.javacpp.opencv_highgui.CV_CAP_PROP_FRAME_WIDTH;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 import static org.bytedeco.javacpp.opencv_objdetect.*;
 
@@ -30,7 +25,7 @@ public class FaceDetectorThread extends Thread {
 
     public interface FaceDetectorInterface {
 
-        public void getCountFaceDetected(int number_of_faces);
+        public void getCountFaceDetected(int number_of_faces, int percentage_of_differences, int id_camera);
     }
 
     public FaceDetectorThread(FaceDetectorListener listener) {
@@ -109,6 +104,7 @@ public class FaceDetectorThread extends Thread {
 //***************************************************************************************************************//
             // IMAGE COMPARISON
             // Image template
+            int percentage_of_differences = 100;
             System.out.println("taking template picture");
             IplImage template = grabber.grab();
             int template_width = template.width();
@@ -176,10 +172,12 @@ public class FaceDetectorThread extends Thread {
             System.out.println(" Number of white pixels: " + number_of_white_pixels);
 
             int total_number_of_pixels = 180000; // number total of pixels X2 -> to check
-            int percentage_of_differences = (100 * number_of_white_pixels) / total_number_of_pixels;
+            percentage_of_differences = (100 * number_of_white_pixels) / total_number_of_pixels;
             System.out.println(" Percentage of differences: " + percentage_of_differences + "%");
 
 //***************************************************************************************************************//
+            // FACE DETECTION
+            
             IplImage grabbedImage = grabber.grab();
             int width = grabbedImage.width();
             int height = grabbedImage.height();
@@ -211,7 +209,7 @@ public class FaceDetectorThread extends Thread {
 
                 System.out.println("Number of faces detected: " + number_of_faces_detected);
 
-                faceDetectorListener.getCountFaceDetected(number_of_faces_detected); // sending number_of_faces_detected
+                faceDetectorListener.getCountFaceDetected(number_of_faces_detected, percentage_of_differences, id_camera ); // sending number_of_faces_detected
 
                 // Let's find some contours! but first some thresholding...
                 cvThreshold(grayImage, grayImage, 64, 255, CV_THRESH_BINARY);
@@ -232,6 +230,13 @@ public class FaceDetectorThread extends Thread {
                     contour = contour.h_next();
                 }
                 
+        int crowd_detection = 0;    
+            if ( percentage_of_differences >= 80 && number_of_faces_detected >= 1)
+        {
+            System.out.println(" **** CROWD DETECTED! **** ");
+            crowd_detection = 1;
+        }
+                
             } // END OF WHILE
 
             grabber.stop();
@@ -239,6 +244,7 @@ public class FaceDetectorThread extends Thread {
             Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        
     } // END OF METHOD
 
     public void stopFaceDetection() {

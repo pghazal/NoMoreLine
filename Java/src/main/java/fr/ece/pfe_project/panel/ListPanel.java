@@ -622,8 +622,10 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
     }
 
     @Override
-    public void getCountFaceDetected(int number_of_faces) {
+    public void getCountFaceDetected(int number_of_faces , int percentage_of_differences, int id_camera) {
         System.out.println("List Panel NB FACES : " + number_of_faces);
+        System.out.println("List Panel PERCENTAGE: " + percentage_of_differences);
+        System.out.println("List Panel ID CAMERA: " + id_camera);
     }
 
     //Fonction pour rendre le bouton refresh visible

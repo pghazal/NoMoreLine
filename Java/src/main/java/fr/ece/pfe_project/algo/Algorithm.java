@@ -4,6 +4,7 @@ import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.model.AlgoResult;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.JourFerie;
+import fr.ece.pfe_project.utils.ExcelUtils;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import java.util.ArrayList;
@@ -203,7 +204,8 @@ public class Algorithm {
 
     public static AlgoResult process2(Date date, AlgoResult algoResult) {
         ArrayList<JourFerie> jours = (ArrayList<JourFerie>) ParametersUtils.get(ParametersUtils.PARAM_JOURS_FERIES);
-
+        
+        
         if (jours != null && jours.size() > 0) {
 
             Calendar cal = Calendar.getInstance();
@@ -451,7 +453,7 @@ public class Algorithm {
 
             System.out.println("Date : " + cal.getTime() + " => " + freq);
         }
-
+        
         cal.setTime(dateSelected);
         cal.set(Calendar.YEAR, yearSelected - (gap - 1));
         cal.set(Calendar.WEEK_OF_YEAR, getWeekOfYear(dateSelected));
@@ -463,6 +465,7 @@ public class Algorithm {
         System.out.println("Frequentation Annuelle " + cal.get(Calendar.YEAR)
                 + " : " + freqAnnuelleGapped);
 
+        
         ArrayList<Integer> yearsComplete = DatabaseHelper.getYearsComplete();
         yearsComplete.add(yearGapped);
         Collections.sort(yearsComplete);

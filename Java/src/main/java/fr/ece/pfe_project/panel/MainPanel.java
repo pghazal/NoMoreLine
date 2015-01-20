@@ -41,8 +41,8 @@ public class MainPanel extends javax.swing.JPanel {
     public class FaceDetectorListener implements FaceDetectorThread.FaceDetectorInterface {
 
         @Override
-        public void getCountFaceDetected(int number_of_faces) {
-            listPanel.getCountFaceDetected(number_of_faces);
+        public void getCountFaceDetected(int number_of_faces, int percentage_of_differences, int id_camera) {
+            listPanel.getCountFaceDetected(number_of_faces ,  percentage_of_differences,  id_camera);
         }
 
     }
