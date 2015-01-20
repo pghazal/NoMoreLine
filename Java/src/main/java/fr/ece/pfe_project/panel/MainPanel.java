@@ -42,7 +42,7 @@ public class MainPanel extends javax.swing.JPanel {
 
         @Override
         public void getCountFaceDetected(int number_of_faces, int percentage_of_differences, int id_camera) {
-            listPanel.getCountFaceDetected(number_of_faces ,  percentage_of_differences,  id_camera);
+            listPanel.getCountFaceDetected(number_of_faces, percentage_of_differences, id_camera);
         }
 
     }

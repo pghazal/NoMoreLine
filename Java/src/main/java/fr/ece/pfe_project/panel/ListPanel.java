@@ -249,12 +249,11 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                     case CARNETADRESSE:
                         CarnetAdressesDialog cad = new CarnetAdressesDialog(null, true);
                         cad.setVisible(true);
-                        
+
                         CarnetAdresses carnetToAdd = cad.getCa();
-                        if(carnetToAdd == null){
+                        if (carnetToAdd == null) {
                             System.err.println("Excel NULL");
-                        }
-                        else{
+                        } else {
                             System.out.println("Carnet d'adresses : " + carnetToAdd.getCompagnieca());
                             carnetAdresses.add(carnetToAdd);
                             model.setData(carnetAdresses, true);
@@ -264,13 +263,13 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                     case EXCELROW:
                         ExcelSaisieDialog esd = new ExcelSaisieDialog(null, true);
                         esd.setVisible(true);
-                        
+
                         FrequentationJournaliere excelToAdd = esd.getFj();
-                        if(excelToAdd == null){
+                        if (excelToAdd == null) {
                             System.err.println("Excel NULL");
-                        } else{
+                        } else {
                             System.out.println("Frequentation journaliere de " + excelToAdd.getFrequentation() + " Pour le " + excelToAdd.getDate());
-                            ((ArrayList<FrequentationJournaliere>)model.getData()).add(excelToAdd);
+                            ((ArrayList<FrequentationJournaliere>) model.getData()).add(excelToAdd);
                             model.fireTableDataChanged();
                         }
                         break;
@@ -312,12 +311,12 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                         }
                         break;
                     case EXCELROW:
-                        if (itemsTable.getSelectedRowCount() > 0){
+                        if (itemsTable.getSelectedRowCount() > 0) {
                             FrequentationJournaliere selectedFj = (FrequentationJournaliere) model.getDataAtRow(itemsTable.getSelectedRow());
-                            if(selectedFj != null){
-                               DatabaseHelper.deleteFrequentationJournaliere(((FrequentationJournaliere)model.getDataAtRow(itemsTable.getSelectedRow())).getDate());
-                               ((ArrayList<FrequentationJournaliere>)model.getData()).remove(selectedFj);
-                               model.fireTableDataChanged();
+                            if (selectedFj != null) {
+                                DatabaseHelper.deleteFrequentationJournaliere(((FrequentationJournaliere) model.getDataAtRow(itemsTable.getSelectedRow())).getDate());
+                                ((ArrayList<FrequentationJournaliere>) model.getData()).remove(selectedFj);
+                                model.fireTableDataChanged();
                             }
                         } else {
                             JOptionPane.showMessageDialog(this,
@@ -341,9 +340,9 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                                 CameraSaisieDialog csd = new CameraSaisieDialog(null, true);
                                 csd.setCamera(selectedCamera);
                                 csd.setVisible(true);
-                                
+
                                 selectedCamera = csd.getCamera();
-                                
+
                                 cameras.set(itemsTable.getSelectedRow(), selectedCamera);
                                 model.setData(cameras, true);
                             }
@@ -362,9 +361,9 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                                 CarnetAdressesDialog cad = new CarnetAdressesDialog(null, true);
                                 cad.setCa(selectedCarnet);
                                 cad.setVisible(true);
-                                
+
                                 selectedCarnet = cad.getCa();
-                                
+
                                 carnetAdresses.set(itemsTable.getSelectedRow(), selectedCarnet);
                                 model.setData(carnetAdresses, true);
                             }
@@ -627,8 +626,10 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
     }
 
     @Override
-    public void getCountFaceDetected(int number_of_faces) {
+    public void getCountFaceDetected(int number_of_faces, int percentage_of_differences, int id_camera) {
         System.out.println("List Panel NB FACES : " + number_of_faces);
+        System.out.println("List Panel PERCENT : " + percentage_of_differences);
+        System.out.println("List Panel ID CAM : " + id_camera);
     }
 
     //Fonction pour rendre le bouton refresh visible
