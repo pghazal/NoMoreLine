@@ -30,6 +30,21 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
         this.societeAssistance.setText(ca.getSocieteAssistance());
         this.telephone.setText(ca.getTelephone());
     }
+    
+    public static boolean verifierInt(String entier) {
+        boolean v = false;
+        try {
+        //on essaie de convertir la chaîne en nombre entier
+        Integer.parseInt(entier);
+        //conversion aboutie, v prend la valeur true
+        v = true;
+        } catch (Exception e) {
+        //conversion échouée, levée d'une exception, v prend false
+        v = false;
+        }
+        //on retourne v
+        return v;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -144,17 +159,28 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
 
     private void validateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateButtonActionPerformed
         try {
-            //Integer NbGuichets = Integer.toString(this.NbGuichet.getText());
             String compagnieCa = this.nomCompagnieButton.getText();
             String societeAssistance = this.societeAssistance.getText();
             String telephone = this.telephone.getText();
-            Integer nbGuichets = (Integer) this.nbGuichet.getValue();
-            ca = new CarnetAdresses();
-            ca.setCompagnieca(compagnieCa);
-            ca.setSocieteAssistance(societeAssistance);
-            ca.setTelephone(telephone);
-            ca.setNombreGuichet(nbGuichets);
-            this.dispose();
+            Integer nbGuichets = (Integer)this.nbGuichet.getValue();
+            //--------//
+            //Blindage//
+            //--------//
+            if(verifierInt(telephone) == false){
+                JOptionPane.showMessageDialog(this, "Le numéro de téléphone ne doit contenir que des caractères numériques", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else if(verifierInt(telephone) == true && String.valueOf(Integer.parseInt(telephone)).length() > 15){
+                JOptionPane.showMessageDialog(this, "Le numéro de téléphone ne peut contenir plus de 15 chiffres", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+            }
+            //--------//
+            else{
+                ca = new CarnetAdresses();
+                ca.setCompagnieca(compagnieCa);
+                ca.setSocieteAssistance(societeAssistance);
+                ca.setTelephone(telephone);
+                ca.setNombreGuichet(nbGuichets);
+                this.dispose();
+            }
         } catch (NumberFormatException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Erreur de saisie", "Erreur", JOptionPane.ERROR_MESSAGE);

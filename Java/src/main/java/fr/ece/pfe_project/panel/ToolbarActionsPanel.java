@@ -75,7 +75,7 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
             }
         });
 
-        cameraState.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/off_led_icon.png"))); // NOI18N
+        cameraState.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/off_led_icon.png"))); // NOI18N
         cameraState.setText("Status Camera");
 
         buttonEdit.setText("Edit");
