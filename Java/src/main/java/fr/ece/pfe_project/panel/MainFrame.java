@@ -3,15 +3,23 @@ package fr.ece.pfe_project.panel;
 import fr.ece.pfe_project.algo.Algorithm;
 import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.model.JourFerie;
+import fr.ece.pfe_project.model.Plan;
+import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import javax.swing.JOptionPane;
 import fr.ece.pfe_project.widget.StartingProgressDialog;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.jdatepicker.ComponentIconDefaults;
 
 /**
  *
@@ -76,6 +84,17 @@ public class MainFrame extends javax.swing.JFrame {
                         ParametersUtils.loadDatabase();
 
                         loadJourFerieDefaut();
+
+                        try {
+                            InputStream stream = ComponentIconDefaults.class.
+                                    getResourceAsStream("/nomoreline/plan/plan.png");
+                            BufferedImage image = ImageIO.read(stream);
+
+                            GlobalVariableUtils.getPlans().add(
+                                    new Plan(image, "Plan 1"));
+                        } catch (IOException ex) {
+                            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        }
 
                         mainPanel = new MainPanel();
                         mf.setContentPane(mainPanel);

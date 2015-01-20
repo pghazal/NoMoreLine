@@ -2,6 +2,7 @@ package fr.ece.pfe_project.utils;
 
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.JourFerie;
+import fr.ece.pfe_project.model.Plan;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ public class GlobalVariableUtils {
     private static HashMap<Date, FrequentationJournaliere> excelMap;
     private static HashMap<Integer, Integer> freqAnnuelleMap;
     private static ArrayList<JourFerie> joursFeries;
+    private static ArrayList<Plan> plans;
 
     public static HashMap<Date, FrequentationJournaliere> getExcelMap() {
         if (excelMap == null) {
@@ -33,10 +35,18 @@ public class GlobalVariableUtils {
     }
 
     public static ArrayList<JourFerie> getJoursFeries() {
-        if(joursFeries == null) {
+        if (joursFeries == null) {
             joursFeries = new ArrayList<JourFerie>();
         }
-        
+
         return joursFeries;
+    }
+
+    public static ArrayList<Plan> getPlans() {
+        if (plans == null) {
+            plans = new ArrayList<Plan>();
+        }
+
+        return plans;
     }
 }

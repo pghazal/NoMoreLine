@@ -16,17 +16,17 @@ import org.jdatepicker.graphics.JPreviousIcon;
  */
 public class ComponentIconDefaults {
 
-    private static final String LOGO = "/org/jdatepicker/icons/logo.png";
-    private static final String CAMERAGREEN = "/org/jdatepicker/icons/greencamera.png";
-    private static final String CAMERARED = "/org/jdatepicker/icons/redcamera.png";
-    private static final String ONLED = "/org/jdatepicker/icons/on_led_icon.png";
-    private static final String OFFLED = "/org/jdatepicker/icons/off_led_icon.png";
-    private static final String CHECK = "/org/jdatepicker/icons/check-icon.png";
-    private static final String CAMERA = "/org/jdatepicker/icons/video.png";
-    private static final String LISTINGVOL = "/org/jdatepicker/icons/plane.png";
-    private static final String CARNETADRESSE = "/org/jdatepicker/icons/directory.png";
-    private static final String PROJET = "/org/jdatepicker/icons/project.png";
-    private static final String EXCEL = "/org/jdatepicker/icons/excel.png";
+    private static final String LOGO = "/nomoreline/img/logo.png";
+    private static final String CAMERAGREEN = "/nomoreline/img/greencamera.png";
+    private static final String CAMERARED = "/nomoreline/img/redcamera.png";
+    private static final String ONLED = "/nomoreline/img/on_led_icon.png";
+    private static final String OFFLED = "/nomoreline/img/off_led_icon.png";
+    private static final String CHECK = "/nomoreline/img/check-icon.png";
+    private static final String CAMERA = "/nomoreline/img/video.png";
+    private static final String LISTINGVOL = "/nomoreline/img/plane.png";
+    private static final String CARNETADRESSE = "/nomoreline/img/directory.png";
+    private static final String PROJET = "/nomoreline/img/project.png";
+    private static final String EXCEL = "/nomoreline/img/excel.png";
 
     private Icon logoIcon;
     private Icon nextMonthIcon;

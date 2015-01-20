@@ -78,7 +78,7 @@
     <Component class="javax.swing.JLabel" name="cameraState">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/org/jdatepicker/icons/off_led_icon.png"/>
+          <Image iconType="3" name="/nomoreline/img/off_led_icon.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Status Camera"/>
       </Properties>
