@@ -26,17 +26,14 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="cameraButton" alignment="0" min="-2" pref="79" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="cameraButton" alignment="0" max="32767" attributes="0"/>
                   <Component id="excelButton" alignment="0" min="-2" pref="79" max="-2" attributes="0"/>
-                  <Component id="listingVolsButton" alignment="0" min="-2" pref="79" max="-2" attributes="0"/>
+                  <Component id="listingVolsButton" alignment="0" max="32767" attributes="0"/>
+                  <Component id="carnetAdressesButton" alignment="0" max="32767" attributes="0"/>
+                  <Component id="planButton" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="carnetAdressesButton" min="-2" pref="79" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -51,7 +48,9 @@
               <Component id="listingVolsButton" min="-2" pref="70" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="carnetAdressesButton" min="-2" pref="70" max="-2" attributes="0"/>
-              <EmptySpace pref="293" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="planButton" min="-2" pref="74" max="-2" attributes="0"/>
+              <EmptySpace pref="213" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -60,14 +59,14 @@
     <Component class="javax.swing.JToggleButton" name="cameraButton">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/org/jdatepicker/icons/video.png"/>
+          <Image iconType="3" name="/nomoreline/img/video.png"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JToggleButton" name="excelButton">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/org/jdatepicker/icons/excel.png"/>
+          <Image iconType="3" name="/nomoreline/img/excel.png"/>
         </Property>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[104, 29]"/>
@@ -83,14 +82,31 @@
     <Component class="javax.swing.JToggleButton" name="listingVolsButton">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/org/jdatepicker/icons/plane.png"/>
+          <Image iconType="3" name="/nomoreline/img/plane.png"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JToggleButton" name="carnetAdressesButton">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/org/jdatepicker/icons/directory.png"/>
+          <Image iconType="3" name="/nomoreline/img/directory.png"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JToggleButton" name="planButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Plan"/>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[64, 72]"/>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[64, 72]"/>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[64, 72]"/>
+        </Property>
+        <Property name="size" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[64, 72]"/>
         </Property>
       </Properties>
     </Component>
