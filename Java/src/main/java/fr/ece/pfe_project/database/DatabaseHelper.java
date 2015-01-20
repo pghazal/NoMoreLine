@@ -5,6 +5,7 @@ import fr.ece.pfe_project.model.FrequentationAnnuelle;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -48,7 +49,7 @@ public class DatabaseHelper {
                 Connection c = null;
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection("jdbc:sqlite:nomoreline.db");
-                
+
                 return c;
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
@@ -562,22 +563,21 @@ public class DatabaseHelper {
 
         try {
             Connection c = getConnection();
-            c.setAutoCommit(false);
 
-            Statement stmt = null;
+            PreparedStatement stmt = null;
 
             int jour = Algorithm.getDayOfMonth(date);
             int mois = Algorithm.getMonth(date);
             int annee = Algorithm.getYear(date);
 
-            stmt = c.createStatement();
             String sql = "DELETE FROM " + TABLE_FREQUENTATION_JOURNALIERE
                     + " WHERE JOUR=" + jour + " AND MOIS=" + mois + " AND ANNEE=" + annee + ";";
-            stmt.executeUpdate(sql);
+            stmt = c.prepareStatement(sql);
+
+            stmt.executeUpdate();
             stmt.close();
 
             c.commit();
-            c.setAutoCommit(true);
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());

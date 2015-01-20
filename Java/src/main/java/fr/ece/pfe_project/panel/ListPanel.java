@@ -736,6 +736,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         cameraButton = new javax.swing.JButton();
         monthComboBox = new javax.swing.JComboBox();
         yearComboBox = new javax.swing.JComboBox();
+        parameterButton = new javax.swing.JButton();
         refreshButton = new javax.swing.JButton();
         cardPanel = new javax.swing.JPanel();
         scrollPaneTable = new javax.swing.JScrollPane();
@@ -758,6 +759,14 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
         yearComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jSpinnerPanel.add(yearComboBox);
+
+        parameterButton.setText("Paramétrer");
+        parameterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                parameterButtonActionPerformed(evt);
+            }
+        });
+        jSpinnerPanel.add(parameterButton);
 
         refreshButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/refresh.png"))); // NOI18N
         refreshButton.setBorderPainted(false);
@@ -786,6 +795,10 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         add(cardPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void parameterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parameterButtonActionPerformed
+        
+    }//GEN-LAST:event_parameterButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cameraButton;
@@ -794,6 +807,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jSpinnerPanel;
     private javax.swing.JComboBox monthComboBox;
+    private javax.swing.JButton parameterButton;
     private javax.swing.JButton refreshButton;
     private javax.swing.JScrollPane scrollPanePlans;
     private javax.swing.JScrollPane scrollPaneTable;

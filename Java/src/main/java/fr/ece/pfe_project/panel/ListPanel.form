@@ -69,6 +69,14 @@
             </Property>
           </Properties>
         </Component>
+        <Component class="javax.swing.JButton" name="parameterButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Param&#xe9;trer"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="parameterButtonActionPerformed"/>
+          </Events>
+        </Component>
         <Component class="javax.swing.JButton" name="refreshButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
