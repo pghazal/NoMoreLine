@@ -240,6 +240,8 @@ public class ExcelUtils {
                     System.out.println("Adding to DB...");
                     DatabaseHelper.addFrequentationJournaliere(entry.getKey(), entry.getValue().getFrequentation());
                 }
+
+                GlobalVariableUtils.getExcelMap().clear();
                 GlobalVariableUtils.getExcelMap().
                         putAll(DatabaseHelper.getAllFrequentationJournaliere());
 
@@ -248,6 +250,8 @@ public class ExcelUtils {
                     int sum = DatabaseHelper.aggregateFrequentationOfYear(l.get(i));
                     DatabaseHelper.addFrequentationAnnuelle(l.get(i), sum);
                 }
+               
+                GlobalVariableUtils.getFrequentationAnnuelleMap().clear();
                 GlobalVariableUtils.getFrequentationAnnuelleMap().
                         putAll(DatabaseHelper.getAllFrequentationAnnuelle());
 
