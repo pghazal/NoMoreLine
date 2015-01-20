@@ -271,12 +271,8 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                         CarnetAdresses carnetToAdd = cad.getCa();
                         if (carnetToAdd == null) {
                             System.err.println("Excel NULL");
-<<<<<<< HEAD
-                        } else {
-=======
                         }
                         else{
->>>>>>> FETCH_HEAD
                             System.out.println("Carnet d'adresses : " + carnetToAdd.getCompagnieca());
                             carnetAdresses.add(carnetToAdd);
                             model.setData(carnetAdresses, true);
