@@ -2,6 +2,7 @@ package fr.ece.pfe_project.widget;
 
 import fr.ece.pfe_project.model.CarnetAdresses;
 import javax.swing.JOptionPane;
+import fr.ece.pfe_project.database.DatabaseHelper;
 
 /**
  *
@@ -34,13 +35,17 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
     public static boolean verifierInt(String entier) {
         boolean v = false;
         try {
-        //on essaie de convertir la chaîne en nombre entier
-        Integer.parseInt(entier);
-        //conversion aboutie, v prend la valeur true
-        v = true;
-        } catch (Exception e) {
-        //conversion échouée, levée d'une exception, v prend false
-        v = false;
+            //split du numero
+            String[] num = entier.split(" ");
+            for(int i=0; i<num.length;i++){
+                //on essaie de convertir la chaîne en nombre entier
+            Integer.parseInt(num[i]);
+            }
+            //conversion aboutie, v prend la valeur true
+            v = true;
+            } catch (Exception e) {
+            //conversion échouée, levée d'une exception, v prend false
+            v = false;
         }
         //on retourne v
         return v;
@@ -163,22 +168,21 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
             String societeAssistance = this.societeAssistance.getText();
             String telephone = this.telephone.getText();
             Integer nbGuichets = (Integer)this.nbGuichet.getValue();
-            //--------//
-            //Blindage//
-            //--------//
+            //Vérification du téléphone
             if(verifierInt(telephone) == false){
                 JOptionPane.showMessageDialog(this, "Le numéro de téléphone ne doit contenir que des caractères numériques", "Erreur", JOptionPane.INFORMATION_MESSAGE);
             }
-            else if(verifierInt(telephone) == true && String.valueOf(Integer.parseInt(telephone)).length() > 15){
-                JOptionPane.showMessageDialog(this, "Le numéro de téléphone ne peut contenir plus de 15 chiffres", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+            else if(verifierInt(telephone) == true && telephone.length() > 25){
+                JOptionPane.showMessageDialog(this, "Le numéro de téléphone est incorrecte", "Erreur", JOptionPane.INFORMATION_MESSAGE);
             }
-            //--------//
             else{
                 ca = new CarnetAdresses();
                 ca.setCompagnieca(compagnieCa);
                 ca.setSocieteAssistance(societeAssistance);
                 ca.setTelephone(telephone);
                 ca.setNombreGuichet(nbGuichets);
+                //Enregistrement dans la bdd
+                
                 this.dispose();
             }
         } catch (NumberFormatException e) {

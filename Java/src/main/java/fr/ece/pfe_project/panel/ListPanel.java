@@ -270,7 +270,8 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                             System.err.println("Excel NULL");
                         } else{
                             System.out.println("Frequentation journaliere de " + excelToAdd.getFrequentation() + " Pour le " + excelToAdd.getDate());
-                            //model.setData(esd, true);
+                            ((ArrayList<FrequentationJournaliere>)model.getData()).add(excelToAdd);
+                            model.fireTableDataChanged();
                         }
                         break;
                     default:
@@ -314,7 +315,9 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                         if (itemsTable.getSelectedRowCount() > 0){
                             FrequentationJournaliere selectedFj = (FrequentationJournaliere) model.getDataAtRow(itemsTable.getSelectedRow());
                             if(selectedFj != null){
-                                
+                               DatabaseHelper.deleteFrequentationJournaliere(((FrequentationJournaliere)model.getDataAtRow(itemsTable.getSelectedRow())).getDate());
+                               ((ArrayList<FrequentationJournaliere>)model.getData()).remove(selectedFj);
+                               model.fireTableDataChanged();
                             }
                         } else {
                             JOptionPane.showMessageDialog(this,

@@ -32,6 +32,10 @@ public class MyTableModel<T> extends AbstractTableModel {
         columnNone, columnCamera, columnExcel, columnListingVols, columnCarnetAdresses
     };
 
+    public ArrayList<T> getData() {
+        return data;
+    }
+
     private ArrayList<T> data;
     private ENTITY typeEntity;
 

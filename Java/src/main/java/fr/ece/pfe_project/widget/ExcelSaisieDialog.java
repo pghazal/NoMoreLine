@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
+import fr.ece.pfe_project.database.DatabaseHelper;
+import java.util.Calendar;
 
 /**
  *
@@ -59,6 +61,24 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
         }
         //on retourne v
         return v;
+    }
+    
+    public Integer verifierDate(String date){
+        Integer bool = 0;
+        String[] dater = date.split("/");
+        if(Integer.parseInt(dater[1]) > 12 || Integer.parseInt(dater[1]) < 1){
+            bool = 1;
+        }
+        if(Integer.parseInt(dater[0]) > 31 || Integer.parseInt(dater[0]) < 1){
+            bool = 2;
+        }
+        if(dater[2].length() > 4){
+            bool = 3;
+        }
+        if(dater[2].length() < 4){
+            bool = 4;
+        }
+        return bool;
     }
 
     /**
@@ -161,12 +181,33 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
             /*else*/ if(isValidDate(this.dateTextField.getText()) == false){
                 JOptionPane.showMessageDialog(this, "Veuillez entrer une date correcte", "Erreur", JOptionPane.INFORMATION_MESSAGE);
             }
+            else if(verifierDate(this.dateTextField.getText()) == 1){
+                JOptionPane.showMessageDialog(this, "Le mois doit correspondre à un chiffre entre 1 et 12", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else if(verifierDate(this.dateTextField.getText()) == 2){
+                JOptionPane.showMessageDialog(this, "Le jour doit correspondre à un nombre entre 1 et 31", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else if(verifierDate(this.dateTextField.getText()) == 3){
+                JOptionPane.showMessageDialog(this, "L'année ne peut être un nombre à 4 chiffres", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else if(verifierDate(this.dateTextField.getText()) == 4){
+                JOptionPane.showMessageDialog(this, "Etes vous sur de l'année choisie?" , "Erreur", JOptionPane.INFORMATION_MESSAGE);
+            }
             else{
-                Date date = new Date(this.dateTextField.getText());
+                String[] dat = (this.dateTextField.getText()).split("/");
+                Integer[] datInt ={0,0,0}; 
+                for(int i=0; i<3; i++){
+                    datInt[i] = Integer.parseInt(dat[i]);
+                }
+                Calendar cal = Calendar.getInstance();
+                cal.set(datInt[2], datInt[1], datInt[0]);
+                Date date = cal.getTime();
                 Integer freq = (Integer)this.freqTextField.getValue();
                 fj = new FrequentationJournaliere();
                 fj.setDate(date);
                 fj.setFrequentation(freq);
+                //Enregistrement dans la bdd
+                //DatabaseHelper.addFrequentationJournaliere(date, freq);
                 this.dispose();
             }
         } catch (NumberFormatException e) {
