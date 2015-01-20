@@ -33,7 +33,7 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
     public void setFj(FrequentationJournaliere fj) {
         this.fj = fj;
         this.dateTextField.setText(fj.getDate().toString());
-        this.freqTextField.setText(Integer.toString(fj.getFrequentation()));
+        this.freqTextField.setValue(fj.getFrequentation());
     }
     
     public boolean isValidDate(String dateString) {
@@ -75,7 +75,7 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
         dateTextField = new javax.swing.JFormattedTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        freqTextField = new javax.swing.JFormattedTextField();
+        freqTextField = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Ajouter fréquentation journalière");
@@ -102,6 +102,8 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
 
         jLabel2.setText("Fréquentation :");
 
+        freqTextField.setModel(new javax.swing.SpinnerNumberModel(0, 0, 100000, 1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -114,14 +116,12 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(dateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(freqTextField)))
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(freqTextField)
+                    .addComponent(dateTextField))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -146,24 +146,24 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         this.dateTextField.setText("");
-        this.freqTextField.setText("");
+        this.freqTextField.setValue(1);
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void validateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateButtonActionPerformed
         try {
-            if(verifierInt(this.freqTextField.getText()) == false){
-                JOptionPane.showMessageDialog(this, "La fréquence doit correspondre à un nombre", "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            else if(Integer.parseInt(this.freqTextField.getText()) < 0){
-                JOptionPane.showMessageDialog(this, "La fréquence ne peut être négative", "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            else if(isValidDate(this.dateTextField.getText()) == false){
+//            if(verifierInt(this.freqTextField.getText()) == false){
+//                JOptionPane.showMessageDialog(this, "La fréquence doit correspondre à un nombre", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+//            }
+//            else if(Integer.parseInt(this.freqTextField.getText()) < 0){
+//                JOptionPane.showMessageDialog(this, "La fréquence ne peut être négative", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+//            }
+            /*else*/ if(isValidDate(this.dateTextField.getText()) == false){
                 JOptionPane.showMessageDialog(this, "Veuillez entrer une date correcte", "Erreur", JOptionPane.INFORMATION_MESSAGE);
             }
             else{
                 Date date = new Date(this.dateTextField.getText());
-                Integer freq = Integer.parseInt(this.freqTextField.getText());
+                Integer freq = (Integer)this.freqTextField.getValue();
                 fj = new FrequentationJournaliere();
                 fj.setDate(date);
                 fj.setFrequentation(freq);
@@ -178,7 +178,7 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JFormattedTextField dateTextField;
-    private javax.swing.JFormattedTextField freqTextField;
+    private javax.swing.JSpinner freqTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JButton validateButton;
