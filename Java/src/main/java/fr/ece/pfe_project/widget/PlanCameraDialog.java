@@ -1,16 +1,108 @@
 package fr.ece.pfe_project.widget;
 
+import fr.ece.pfe_project.database.DatabaseHelper;
+import fr.ece.pfe_project.model.Camera;
+import fr.ece.pfe_project.tablemodel.CameraPlanTableModel;
+import java.awt.Color;
+import java.awt.Component;
+import java.util.ArrayList;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+
 /**
  *
  * @author pierreghazal
  */
 public class PlanCameraDialog extends javax.swing.JDialog {
+    
+    private CameraPlanTableModel model;
 
     public PlanCameraDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
+        
+        ArrayList<Camera> list = new ArrayList<Camera>();
+        
+        for(int i = 1; i < 4; i++)
+            list.add(new Camera(i));
+        
+        model = new CameraPlanTableModel(list);
+
+        this.tableCameraPlan.getColumnModel().getColumn(1).setCellEditor(new PositionEditor());
+        this.tableCameraPlan.setDefaultRenderer(String.class, new CameraRenderer());
+        
+        this.tableCameraPlan.setModel(model);
+        model.fireTableDataChanged();
     }
+
+    public class PositionEditor extends DefaultCellEditor {
+
+        private JComboBox comboBox;
+
+        public PositionEditor() {
+            super(new JComboBox());
+
+            this.comboBox = (JComboBox) super.getComponent();
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+
+            for (String pos : DatabaseHelper.getListePositionsCamera()) {
+                comboBox.addItem(pos);
+            }
+
+            return this.comboBox;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return (String) this.comboBox.getSelectedItem();
+        }
+    }
+
+    public class CameraRenderer extends DefaultTableCellRenderer {
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int col) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
+            this.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+
+            if (isSelected) {
+                this.setBackground(Color.BLUE);
+                this.setForeground(Color.WHITE);
+            } else {
+                this.setForeground(Color.BLACK);
+            }
+
+            return this;
+        }
+    }
+
+//    public class PositionRenderer extends DefaultTableCellRenderer {
+//
+//        @Override
+//        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+//            // final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+//            final JComboBox<String> c = new JComboBox<>(DatabaseHelper.getListePositionsCamera().toArray(new String[0]));
+//
+//            c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+//
+//            if (isSelected) {
+//                c.setBackground(Color.BLUE);
+//                c.setForeground(Color.WHITE);
+//            } else {
+//                c.setForeground(Color.BLACK);
+//            }
+//
+//            return c;
+//        }
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -100,10 +192,9 @@ public class PlanCameraDialog extends javax.swing.JDialog {
 
     private void validateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateButtonActionPerformed
         // TODO : Ajouter/Update en base 
-        
+
         dispose();
     }//GEN-LAST:event_validateButtonActionPerformed
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

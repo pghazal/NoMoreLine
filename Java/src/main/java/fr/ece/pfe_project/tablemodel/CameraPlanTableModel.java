@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableModel;
 public class CameraPlanTableModel extends DefaultTableModel {
 
     private final ArrayList<Camera> cameras;
-
+    
     public CameraPlanTableModel() {
         this(new ArrayList<Camera>());
     }
@@ -36,7 +36,7 @@ public class CameraPlanTableModel extends DefaultTableModel {
             case 0:
                 return String.class;
             case 1:
-                
+                return String.class;
             default:
                 return String.class;
         }
@@ -50,7 +50,7 @@ public class CameraPlanTableModel extends DefaultTableModel {
             case 0:
                 return "Caméra #" + c.getId();
             case 1:
-                break;
+                return c.getPosition();
         }
 
         return "null";
