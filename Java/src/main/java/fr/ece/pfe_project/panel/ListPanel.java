@@ -21,6 +21,7 @@ import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
 import fr.ece.pfe_project.utils.ExcelUtils;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
+import fr.ece.pfe_project.utils.ParametersUtils;
 import fr.ece.pfe_project.widget.CameraCellComponent;
 import fr.ece.pfe_project.widget.CameraSaisieDialog;
 import fr.ece.pfe_project.widget.CarnetAdressesDialog;
@@ -669,6 +670,13 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         System.out.println("List Panel NB FACES : " + number_of_faces);
         System.out.println("List Panel PERCENT : " + percentage_of_differences);
         System.out.println("List Panel ID CAM : " + id_camera);
+        
+        Integer seuilCamera = (Integer) ParametersUtils.get(ParametersUtils.PARAM_SUEIL_CAMERA);
+        
+        if ( number_of_faces >= seuilCamera && percentage_of_differences > 10)
+        {
+            JOptionPane.showMessageDialog(null, "Caméra " +id_camera+ ": Détection de formation file d'attente" , " WARNING ", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     //Fonction pour rendre le bouton refresh visible
