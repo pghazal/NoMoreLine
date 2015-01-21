@@ -334,7 +334,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                         if (itemsTable.getSelectedRowCount() > 0) {
                             FrequentationJournaliere selectedFj = (FrequentationJournaliere) model.getDataAtRow(itemsTable.getSelectedRow());
                             if (selectedFj != null) {
-                                DatabaseHelper.deleteFrequentationJournaliere(((FrequentationJournaliere) model.getDataAtRow(itemsTable.getSelectedRow())).getDate());
+                                DatabaseHelper.deleteFrequentationJournaliere(selectedFj.getDate());
                                 ((ArrayList<FrequentationJournaliere>) model.getData()).remove(selectedFj);
                                 model.fireTableDataChanged();
                             }
@@ -799,7 +799,10 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
         cardPanel.setLayout(new java.awt.CardLayout());
 
+<<<<<<< HEAD
         itemsTable.setAutoCreateRowSorter(true);
+=======
+>>>>>>> FETCH_HEAD
         itemsTable.setModel(new MyTableModel());
         itemsTable.setFillsViewportHeight(true);
         itemsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);

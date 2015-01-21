@@ -247,7 +247,7 @@ public class ParametersDialog extends javax.swing.JDialog {
             }
         });
 
-        loadJourFerie.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/france_icon.png"))); // NOI18N
+        loadJourFerie.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/france_icon.png"))); // NOI18N
         loadJourFerie.setText("  Jours Fériés");
         loadJourFerie.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -414,7 +414,7 @@ public class ParametersDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(buttonReset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

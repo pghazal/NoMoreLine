@@ -7,7 +7,6 @@ import static fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY.EXCELRO
 import static fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY.LISTINGVOLS;
 import static fr.ece.pfe_project.interfaces.ToolbarEntityListener.ENTITY.NONE;
 import javax.swing.table.AbstractTableModel;
-import fr.ece.pfe_project.panel.ToolbarEntityPanel;
 import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.CarnetAdresses;
 import fr.ece.pfe_project.model.FrequentationJournaliere;

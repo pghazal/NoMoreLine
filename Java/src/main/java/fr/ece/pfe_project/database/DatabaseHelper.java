@@ -563,7 +563,7 @@ public class DatabaseHelper {
 
         try {
             Connection c = getConnection();
-
+            c.setAutoCommit(false);
             PreparedStatement stmt = null;
 
             int jour = Algorithm.getDayOfMonth(date);
@@ -572,19 +572,23 @@ public class DatabaseHelper {
 
             String sql = "DELETE FROM " + TABLE_FREQUENTATION_JOURNALIERE
                     + " WHERE JOUR=" + jour + " AND MOIS=" + mois + " AND ANNEE=" + annee + ";";
+            System.out.println(sql);
+            
             stmt = c.prepareStatement(sql);
 
             stmt.executeUpdate();
             stmt.close();
 
             c.commit();
+            c.setAutoCommit(true);
             c.close();
+            
+            System.out.println("Operation done successfully");
+            
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-
-        System.out.println("Operation done successfully");
     }
 
     public static void deleteFrequentationAnnuelle(Integer year) {
