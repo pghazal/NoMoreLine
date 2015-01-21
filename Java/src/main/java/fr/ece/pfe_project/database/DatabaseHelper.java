@@ -1,6 +1,7 @@
 package fr.ece.pfe_project.database;
 
 import fr.ece.pfe_project.algo.Algorithm;
+import fr.ece.pfe_project.model.Camera;
 import fr.ece.pfe_project.model.FrequentationAnnuelle;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import java.sql.Connection;
@@ -25,6 +26,7 @@ public class DatabaseHelper {
 
     public final static String TABLE_FREQUENTATION_JOURNALIERE = "FREQUENTATION_JOURNALIERE";
     public final static String TABLE_FREQUENTATION_ANNUELLE = "FREQUENTATION_ANNUELLE";
+    public final static String TABLE_CAMERA = "TABLE_CAMERA";
 
     private static Connection connection = null;
 
@@ -38,6 +40,7 @@ public class DatabaseHelper {
 
             createTableFrequentationJournaliere();
             createTableFrequentationAnnuelle();
+            createTableCamera();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -97,6 +100,101 @@ public class DatabaseHelper {
         }
 
         System.out.println("Table " + TABLE_FREQUENTATION_ANNUELLE + " created successfully");
+    }
+
+    private static void createTableCamera() {
+        try {
+            Connection c = getConnection();
+
+            Statement stmt = c.createStatement();
+            String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_CAMERA
+                    + " (ID INT NOT NULL,"
+                    + " POSITION VARCHAR)";
+            stmt.execute(sql);
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+
+        System.out.println("Table " + TABLE_CAMERA + " created successfully");
+    }
+    
+    public static ArrayList<String> getListePositionsCamera() {
+        ArrayList<String> positions = new ArrayList<String>();
+    }
+
+    public static void addCamera(Camera camera) {
+        try {
+            Connection c = getConnection();
+            c.setAutoCommit(false);
+
+            String sql;
+            if (!cameraExists(camera)) {
+
+                sql = "INSERT INTO " + TABLE_CAMERA + " (ID, POSITION)"
+                        + " VALUES (" + camera.getId() + "," + camera.getPosition() + ")";
+
+                Statement stmt = c.createStatement();
+                stmt.executeUpdate(sql);
+
+                stmt.close();
+
+                System.out.println("Add Camera success");
+            }
+
+            c.commit();
+            c.setAutoCommit(true);
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+    }
+
+    private static boolean cameraExists(Camera camera) {
+        Camera cam = getCamera(camera);
+
+        if (cam.getPosition() == null) {
+            System.err.println(cam.getId() + " DOES NOT EXIST");
+
+            return false;
+        }
+
+        System.err.println(cam.getId() + " DOES EXIST");
+
+        return true;
+    }
+
+    private static Camera getCamera(Camera camera) {
+        try {
+            Connection c = getConnection();
+
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_CAMERA
+                    + " WHERE ID=" + camera.getId() + " LIMIT 1;");
+            
+            Camera cam = new Camera();
+
+            while (rs.next()) {
+
+                cam.setId(rs.getInt("ID"));
+                cam.setPosition(rs.getString("POSITION"));
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+
+            return cam;
+
+        } catch (SQLException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+
+        return null;
     }
 
     public static void addFrequentationJournaliere(Date date, Integer freq) {
@@ -573,7 +671,7 @@ public class DatabaseHelper {
             String sql = "DELETE FROM " + TABLE_FREQUENTATION_JOURNALIERE
                     + " WHERE JOUR=" + jour + " AND MOIS=" + mois + " AND ANNEE=" + annee + ";";
             System.out.println(sql);
-            
+
             stmt = c.prepareStatement(sql);
 
             stmt.executeUpdate();
@@ -582,9 +680,9 @@ public class DatabaseHelper {
             c.commit();
             c.setAutoCommit(true);
             c.close();
-            
+
             System.out.println("Operation done successfully");
-            
+
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);

@@ -9,6 +9,7 @@ public class PlanCameraDialog extends javax.swing.JDialog {
     public PlanCameraDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**

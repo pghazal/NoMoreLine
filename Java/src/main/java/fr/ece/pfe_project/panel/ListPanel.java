@@ -25,6 +25,7 @@ import fr.ece.pfe_project.widget.CameraCellComponent;
 import fr.ece.pfe_project.widget.CameraSaisieDialog;
 import fr.ece.pfe_project.widget.CarnetAdressesDialog;
 import fr.ece.pfe_project.widget.ExcelSaisieDialog;
+import fr.ece.pfe_project.widget.PlanCameraDialog;
 import fr.ece.pfe_project.widget.PlanPanel;
 import fr.ece.pfe_project.widget.ProgressDialog;
 import java.awt.CardLayout;
@@ -488,6 +489,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                 setVisibilityRefresh(false);
                 setPlanButtonVisibility(false);
                 setCameraButtonVisibility(false);
+                cl.show(cardPanel, "table");
                 break;
 
             default:
@@ -814,7 +816,8 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
     }// </editor-fold>//GEN-END:initComponents
 
     private void parameterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parameterButtonActionPerformed
-        
+        PlanCameraDialog pcd = new PlanCameraDialog(null, true);
+        pcd.setVisible(true);
     }//GEN-LAST:event_parameterButtonActionPerformed
 
 

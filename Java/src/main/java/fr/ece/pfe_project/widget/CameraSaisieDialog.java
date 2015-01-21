@@ -114,7 +114,7 @@ public class CameraSaisieDialog extends javax.swing.JDialog {
 
     private void validateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateButtonActionPerformed
         try {
-            Long id = Long.parseLong(this.idTextField.getText());
+            Integer id = Integer.parseInt(this.idTextField.getText());
             camera = new Camera(id);
             this.dispose();
         } catch (NumberFormatException e) {

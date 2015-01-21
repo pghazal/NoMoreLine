@@ -15,14 +15,19 @@ public class Camera implements ModelInterface {
 
     private FaceDetectorThread faceDetectorThread;
 
-    private long id;
-    private int number;
+    private int id;
     private CAMERA_STATE state;
+    private String position = null;
 
-    public Camera(long id) {
+    public Camera() {
+        
+    }
+    
+    public Camera(int id) {
         this.id = id;
         this.state = CAMERA_STATE.NONE;
         this.faceDetectorThread = null;
+        this.position = null;
     }
 
     public FaceDetectorThread getFaceDetectorThread() {
@@ -33,20 +38,12 @@ public class Camera implements ModelInterface {
         this.faceDetectorThread = faceDetectorThread;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public int getNumber() {
-        return number;
-    }
-
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
     }
 
     public CAMERA_STATE getState() {
@@ -55,5 +52,13 @@ public class Camera implements ModelInterface {
 
     public void setState(CAMERA_STATE state) {
         this.state = state;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 }
