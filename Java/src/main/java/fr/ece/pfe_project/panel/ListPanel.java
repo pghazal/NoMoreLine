@@ -799,10 +799,6 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
         cardPanel.setLayout(new java.awt.CardLayout());
 
-<<<<<<< HEAD
-        itemsTable.setAutoCreateRowSorter(true);
-=======
->>>>>>> FETCH_HEAD
         itemsTable.setModel(new MyTableModel());
         itemsTable.setFillsViewportHeight(true);
         itemsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
