@@ -332,7 +332,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                         if (itemsTable.getSelectedRowCount() > 0) {
                             FrequentationJournaliere selectedFj = (FrequentationJournaliere) model.getDataAtRow(itemsTable.getSelectedRow());
                             if (selectedFj != null) {
-                                DatabaseHelper.deleteFrequentationJournaliere(((FrequentationJournaliere) model.getDataAtRow(itemsTable.getSelectedRow())).getDate());
+                                DatabaseHelper.deleteFrequentationJournaliere(selectedFj.getDate());
                                 ((ArrayList<FrequentationJournaliere>) model.getData()).remove(selectedFj);
                                 model.fireTableDataChanged();
                             }
@@ -744,12 +744,10 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         monthComboBox = new javax.swing.JComboBox();
         yearComboBox = new javax.swing.JComboBox();
         refreshButton = new javax.swing.JButton();
-        itemsTable = new javax.swing.JTable();
         cardPanel = new javax.swing.JPanel();
         scrollPaneTable = new javax.swing.JScrollPane();
+        itemsTable = new javax.swing.JTable();
         scrollPanePlans = new javax.swing.JScrollPane();
-        
-        cardPanel.setLayout(new java.awt.CardLayout());
 
         setLayout(new java.awt.BorderLayout());
 
@@ -778,7 +776,8 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
         add(jSpinnerPanel, java.awt.BorderLayout.PAGE_START);
 
-        itemsTable.setAutoCreateRowSorter(true);
+        cardPanel.setLayout(new java.awt.CardLayout());
+
         itemsTable.setModel(new MyTableModel());
         itemsTable.setFillsViewportHeight(true);
         itemsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -796,15 +795,15 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cameraButton;
+    private javax.swing.JPanel cardPanel;
     private javax.swing.JTable itemsTable;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel cardPanel;
     private javax.swing.JPanel jSpinnerPanel;
     private javax.swing.JComboBox monthComboBox;
     private javax.swing.JButton refreshButton;
-    private javax.swing.JComboBox yearComboBox;
     private javax.swing.JScrollPane scrollPanePlans;
     private javax.swing.JScrollPane scrollPaneTable;
+    private javax.swing.JComboBox yearComboBox;
     // End of variables declaration//GEN-END:variables
 
     @Override

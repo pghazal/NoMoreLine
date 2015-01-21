@@ -199,15 +199,16 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
                 for(int i=0; i<3; i++){
                     datInt[i] = Integer.parseInt(dat[i]);
                 }
+                //datInt[1]-=1;
                 Calendar cal = Calendar.getInstance();
-                cal.set(datInt[2], datInt[1], datInt[0]);
+                cal.set(datInt[2], datInt[1]-1, datInt[0]);
                 Date date = cal.getTime();
                 Integer freq = (Integer)this.freqTextField.getValue();
                 fj = new FrequentationJournaliere();
                 fj.setDate(date);
                 fj.setFrequentation(freq);
                 //Enregistrement dans la bdd
-                //DatabaseHelper.addFrequentationJournaliere(date, freq);
+                DatabaseHelper.addFrequentationJournaliere(date, freq);
                 this.dispose();
             }
         } catch (NumberFormatException e) {
