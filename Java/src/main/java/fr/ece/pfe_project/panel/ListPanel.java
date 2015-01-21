@@ -168,6 +168,8 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
     FaceDetectorListener faceDetectorListener;
     ToolbarsListener toolbarsListener;
+    
+    private PlanPanel planPanel;
 
     /**
      * Creates new form DrawingPanel
@@ -177,6 +179,15 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
      */
     public ListPanel(FaceDetectorListener faceListener, ToolbarsListener toolbarsListener) {
         initComponents();
+        
+        planPanel = new PlanPanel();
+        planPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                planPanelComponentResized(evt);
+            }
+        });
+        this.scrollPanePlans.setViewportView(planPanel);
 
         this.faceDetectorListener = faceListener;
         this.toolbarsListener = toolbarsListener;
@@ -221,6 +232,10 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
         itemsTable.setDefaultEditor(Camera.class, new CameraCellEditor());
         itemsTable.setDefaultEditor(Date.class, new DateEditor());
+    }
+    
+    private void planPanelComponentResized(ComponentEvent evt) {
+        planPanel.repaint();
     }
 
     @Override
@@ -391,6 +406,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
         model = (MyTableModel) this.itemsTable.getModel();
         model.setEntity(typeEntity);
+        final CardLayout cl = (CardLayout) (cardPanel.getLayout());
 
         switch (typeEntity) {
 
@@ -400,17 +416,18 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                 setCameraButtonVisibility(true);
                 itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
                 model.setData(cameras, false);
-                System.out.println(isCameraActive);
+                cl.show(cardPanel, "table");
                 break;
+                
             case EXCELROW:
                 setVisibilityRefresh(false);
                 setExcelButtonVisibility(true);
                 setCameraButtonVisibility(false);
                 itemsTable.setRowHeight(16);
-
                 model.setData((ArrayList) ExcelUtils.sortedListFromMap(GlobalVariableUtils.getExcelMap()), false);
-                System.out.println(isCameraActive);
+                cl.show(cardPanel, "table");
                 break;
+                
             case LISTINGVOLS:
 
                 Runnable r = new Runnable() {
@@ -427,6 +444,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                             setCameraButtonVisibility(false);
                             setVisibilityRefresh(true);
                             itemsTable.setRowHeight(16);
+                            cl.show(cardPanel, "table");
                         } else {
 
                             JOptionPane.showMessageDialog(ListPanel.this, "Pas de connexion internet :\n"
@@ -437,22 +455,28 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
                 ProgressDialog progressDialog = new ProgressDialog(new JFrame(), r, "Récupération des données en cours...");
                 progressDialog.setVisible(true);
-
                 break;
+                
             case CARNETADRESSE:
                 setVisibilityRefresh(false);
                 setExcelButtonVisibility(false);
                 setCameraButtonVisibility(false);
                 itemsTable.setRowHeight(16);
                 model.setData(carnetAdresses, false);
-                System.out.println(isCameraActive);
-
+                cl.show(cardPanel, "table");
                 break;
+                
+                case PLAN:
+                setVisibilityRefresh(false);
+                setExcelButtonVisibility(false);
+                setCameraButtonVisibility(false);
+                cl.show(cardPanel, "plans");
+                break;
+                
             case NONE:
                 setExcelButtonVisibility(false);
                 setVisibilityRefresh(false);
                 setCameraButtonVisibility(false);
-                System.out.println(isCameraActive);
                 break;
 
             default:
@@ -717,8 +741,12 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         monthComboBox = new javax.swing.JComboBox();
         yearComboBox = new javax.swing.JComboBox();
         refreshButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
         itemsTable = new javax.swing.JTable();
+        cardPanel = new javax.swing.JPanel();
+        scrollPaneTable = new javax.swing.JScrollPane();
+        scrollPanePlans = new javax.swing.JScrollPane();
+        
+        cardPanel.setLayout(new java.awt.CardLayout());
 
         setLayout(new java.awt.BorderLayout());
 
@@ -727,7 +755,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         jLabel1.setText("Sélectionner date :");
         jSpinnerPanel.add(jLabel1);
 
-        cameraButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/greencamera.png"))); // NOI18N
+        cameraButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/greencamera.png"))); // NOI18N
         cameraButton.setPreferredSize(new java.awt.Dimension(35, 35));
         jSpinnerPanel.add(cameraButton);
 
@@ -737,7 +765,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         yearComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jSpinnerPanel.add(yearComboBox);
 
-        refreshButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdatepicker/icons/refresh.png"))); // NOI18N
+        refreshButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/refresh.png"))); // NOI18N
         refreshButton.setBorderPainted(false);
         refreshButton.setContentAreaFilled(false);
         refreshButton.setMaximumSize(new java.awt.Dimension(35, 35));
@@ -754,9 +782,12 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         itemsTable.setShowHorizontalLines(false);
         itemsTable.setShowVerticalLines(false);
         itemsTable.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(itemsTable);
+        scrollPaneTable.setViewportView(itemsTable);
 
-        add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        cardPanel.add(scrollPaneTable, "table");
+        cardPanel.add(scrollPanePlans, "plans");
+
+        add(cardPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 
@@ -764,11 +795,13 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
     private javax.swing.JButton cameraButton;
     private javax.swing.JTable itemsTable;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel cardPanel;
     private javax.swing.JPanel jSpinnerPanel;
     private javax.swing.JComboBox monthComboBox;
     private javax.swing.JButton refreshButton;
     private javax.swing.JComboBox yearComboBox;
+    private javax.swing.JScrollPane scrollPanePlans;
+    private javax.swing.JScrollPane scrollPaneTable;
     // End of variables declaration//GEN-END:variables
 
     @Override
