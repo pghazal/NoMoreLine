@@ -123,6 +123,32 @@ public class DatabaseHelper {
     
     public static ArrayList<String> getListePositionsCamera() {
         ArrayList<String> positions = new ArrayList<String>();
+        
+        try {
+            Connection c = getConnection();
+
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_CAMERA);
+            
+            positions.add(" - ");
+            
+            while (rs.next()) {
+
+                positions.add(rs.getString("POSITION"));
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+
+            return positions;
+
+        } catch (SQLException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+
+        return null;
     }
 
     public static void addCamera(Camera camera) {
