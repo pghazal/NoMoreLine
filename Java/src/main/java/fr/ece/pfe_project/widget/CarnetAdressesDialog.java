@@ -3,6 +3,7 @@ package fr.ece.pfe_project.widget;
 import fr.ece.pfe_project.model.CarnetAdresses;
 import javax.swing.JOptionPane;
 import fr.ece.pfe_project.database.DatabaseHelper;
+import fr.ece.pfe_project.panel.ListPanel;
 
 /**
  *
@@ -50,6 +51,7 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
         //on retourne v
         return v;
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -168,6 +170,8 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
             String societeAssistance = this.societeAssistance.getText();
             String telephone = this.telephone.getText();
             Integer nbGuichets = (Integer)this.nbGuichet.getValue();
+            //Ajouter une id unique en vérifiant dans le tableau
+            
             //Vérification du téléphone
             if(verifierInt(telephone) == false){
                 JOptionPane.showMessageDialog(this, "Le numéro de téléphone ne doit contenir que des caractères numériques", "Erreur", JOptionPane.INFORMATION_MESSAGE);

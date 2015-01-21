@@ -166,7 +166,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
     }
 
     private final ArrayList<Camera> cameras;
-    private final ArrayList<CarnetAdresses> carnetAdresses;
+    private final ArrayList<CarnetAdresses> carnetAdressesA;
     private boolean isCameraActive;
 
     MyTableModel model;
@@ -202,9 +202,9 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         addMouseMotionListener(this);
 
         //Initialisation du carnet d'adresses
-        carnetAdresses = new ArrayList<CarnetAdresses>();
-        carnetAdresses.add(new CarnetAdresses("Air France", 3, "AIR FRANCE", "0 970 808 816"));
-        carnetAdresses.add(new CarnetAdresses("Brussels Airlines", 2, "AVIAPARTNER", "03 88 64 73 11"));
+        carnetAdressesA = new ArrayList<CarnetAdresses>();
+        carnetAdressesA.add(new CarnetAdresses("Air France", 3, "AIR FRANCE", "0 970 808 816", 1));
+        carnetAdressesA.add(new CarnetAdresses("Brussels Airlines", 2, "AVIAPARTNER", "03 88 64 73 11", 2));
 
         //setVisibility false pour rendre invisible les 2 combobox au démarrage
         setExcelButtonVisibility(false);
@@ -277,8 +277,8 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                             System.err.println("Excel NULL");
                         } else {
                             System.out.println("Carnet d'adresses : " + carnetToAdd.getCompagnieca());
-                            carnetAdresses.add(carnetToAdd);
-                            model.setData(carnetAdresses, true);
+                            carnetAdressesA.add(carnetToAdd);
+                            model.setData(carnetAdressesA, true);
 
                         }
                         break;
@@ -322,8 +322,8 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                         if (itemsTable.getSelectedRowCount() > 0) {
                             CarnetAdresses selectedCarnet = (CarnetAdresses) model.getDataAtRow(itemsTable.getSelectedRow());
                             if (selectedCarnet != null) {
-                                carnetAdresses.remove(selectedCarnet);
-                                model.setData(carnetAdresses, true);
+                                carnetAdressesA.remove(selectedCarnet);
+                                model.setData(carnetAdressesA, true);
                             }
                         } else {
                             JOptionPane.showMessageDialog(this,
@@ -386,8 +386,8 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
                                 selectedCarnet = cad.getCa();
 
-                                carnetAdresses.set(itemsTable.getSelectedRow(), selectedCarnet);
-                                model.setData(carnetAdresses, true);
+                                carnetAdressesA.set(itemsTable.getSelectedRow(), selectedCarnet);
+                                model.setData(carnetAdressesA, true);
                             }
                         } else {
                             JOptionPane.showMessageDialog(this,
@@ -473,7 +473,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                 setCameraButtonVisibility(false);
                 setPlanButtonVisibility(false);
                 itemsTable.setRowHeight(16);
-                model.setData(carnetAdresses, false);
+                model.setData(carnetAdressesA, false);
                 cl.show(cardPanel, "table");
                 break;
 
