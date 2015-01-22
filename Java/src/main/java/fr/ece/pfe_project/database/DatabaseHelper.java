@@ -647,6 +647,35 @@ public class DatabaseHelper {
         }
         System.out.println("Update Journalier success");
     }
+    
+    public static void updateCarnetAdresses(CarnetAdresses carnet) {
+        try {
+            Connection c = getConnection();
+            c.setAutoCommit(false);
+
+            String sql;
+            if (carnetAdresseExists(carnet)) {
+
+                sql = "UPDATE TABLE_CARNET_ADRESSES SET COMPAGNIE=" + carnet.getCompagnieca() + " AND GUICHET="
+                        + carnet.getNombreGuichet() + " AND ASSISTANCE=" + carnet.getSocieteAssistance()
+                        + " AND TELEPHONE=" + carnet.getTelephone()
+                        + " WHERE ID=" + carnet.getId();
+
+                Statement stmt = c.createStatement();
+                stmt.executeUpdate(sql);
+
+                stmt.close();
+            }
+
+            c.commit();
+            c.setAutoCommit(true);
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Update Journalier success");
+    }
 
     public static int aggregateFrequentationOfYear(int year) {
         try {
@@ -808,6 +837,39 @@ public class DatabaseHelper {
             c.close();
 
             return map;
+
+        } catch (SQLException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+
+        return null;
+    }
+    
+     public static ArrayList<CarnetAdresses> getAllCarnetAdresses() {
+        try {
+            ArrayList<CarnetAdresses> carnet = new ArrayList<CarnetAdresses>();
+
+            Connection c = getConnection();
+
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_CARNET_ADRESSES + " ORDER BY ID;");
+
+            while (rs.next()) {
+                String compagnie = rs.getString("COMPAGNIE");
+                String assistance = rs.getString("ASSISTANCE");
+                String telephone = rs.getString("TELEPHONE");
+                int guichet = rs.getInt("GUICHET");
+                Integer id = rs.getInt("ID");
+                
+                carnet.add(new CarnetAdresses(compagnie, guichet, assistance, telephone, id));
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+
+            return carnet;
 
         } catch (SQLException e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
