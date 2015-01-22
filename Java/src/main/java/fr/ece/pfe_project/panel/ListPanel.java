@@ -203,8 +203,8 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
         //Initialisation du carnet d'adresses
         carnetAdressesA = new ArrayList<CarnetAdresses>();
-        carnetAdressesA.add(new CarnetAdresses("Air France", 3, "AIR FRANCE", "0 970 808 816", 1));
-        carnetAdressesA.add(new CarnetAdresses("Brussels Airlines", 2, "AVIAPARTNER", "03 88 64 73 11", 2));
+        //carnetAdressesA.add(new CarnetAdresses("Air France", 3, "AIR FRANCE", "0 970 808 816", 1));
+        //carnetAdressesA.add(new CarnetAdresses("Brussels Airlines", 2, "AVIAPARTNER", "03 88 64 73 11", 2));
 
         //setVisibility false pour rendre invisible les 2 combobox au démarrage
         setExcelButtonVisibility(false);
@@ -389,7 +389,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                                 cad.setVisible(true);
 
                                 selectedCarnet = cad.getCa();
-
+                                DatabaseHelper.updateCarnetAdresses(selectedCarnet);
                                 carnetAdressesA.set(itemsTable.getSelectedRow(), selectedCarnet);
                                 model.setData(carnetAdressesA, true);
                                 model.fireTableDataChanged();
@@ -402,6 +402,24 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                         }
                         break;
                     case EXCELROW:
+                        if (itemsTable.getSelectedRowCount() > 0){
+                            FrequentationJournaliere selectedFreq = (FrequentationJournaliere) model.getDataAtRow(itemsTable.getSelectedRow());
+                            if(selectedFreq != null){
+                                ExcelSaisieDialog esd = new ExcelSaisieDialog(null, true);
+                                esd.setFj(selectedFreq);
+                                esd.setVisible(true);
+                                selectedFreq = esd.getFj();
+                                DatabaseHelper.updateFrequentationJournaliere(selectedFreq.getDate(), selectedFreq.getFrequentation());
+                                ((ArrayList<FrequentationJournaliere>) model.getData()).remove(selectedFreq);
+                                ((ArrayList<FrequentationJournaliere>) model.getData()).add(selectedFreq);
+                                model.fireTableDataChanged();
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    "Aucun élément sélectionné dans la liste",
+                                    "Erreur",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        }
                         break;
                     default:
                         break;

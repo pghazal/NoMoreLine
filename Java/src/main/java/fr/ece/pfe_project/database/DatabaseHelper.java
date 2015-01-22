@@ -647,6 +647,35 @@ public class DatabaseHelper {
         }
         System.out.println("Update Journalier success");
     }
+    
+    public static void updateCarnetAdresses(CarnetAdresses carnet) {
+        try {
+            Connection c = getConnection();
+            c.setAutoCommit(false);
+
+            String sql;
+            if (carnetAdresseExists(carnet)) {
+
+                sql = "UPDATE TABLE_CARNET_ADRESSES SET COMPAGNIE=" + carnet.getCompagnieca() + " AND GUICHET="
+                        + carnet.getNombreGuichet() + " AND ASSISTANCE=" + carnet.getSocieteAssistance()
+                        + " AND TELEPHONE=" + carnet.getTelephone()
+                        + " WHERE ID=" + carnet.getId();
+
+                Statement stmt = c.createStatement();
+                stmt.executeUpdate(sql);
+
+                stmt.close();
+            }
+
+            c.commit();
+            c.setAutoCommit(true);
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Update Journalier success");
+    }
 
     public static int aggregateFrequentationOfYear(int year) {
         try {
