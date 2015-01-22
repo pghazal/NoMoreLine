@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.ece.pfe_project.widget;
+package fr.ece.pfe_project.panel;
 
 import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
@@ -66,7 +66,6 @@ public class PlanPanel extends javax.swing.JPanel {
             int x = i * COLUMN_WIDTH;
             g2d.drawLine(x, 0, x, getSize().height);
             g2d.drawString(alphabet.get(i - 1), x - COLUMN_WIDTH / 2, 15);
-            positions.add(alphabet.get(i - 1));
         }
 
         // Lignes
@@ -74,13 +73,14 @@ public class PlanPanel extends javax.swing.JPanel {
             int y = i * ROW_HEIGHT;
             g2d.drawLine(0, y, getSize().width, y);
             g2d.drawString(numbers.get(i - 1), 10, y - ROW_HEIGHT / 2);
-            positions.set(i - 1, positions.get(i - 1) + alphabet.get(i - 1));
         }
-        
-        for(String pos : positions) {
-            System.out.println("POS : " + pos);
+
+        for (int i = 0; i < COLUMN; i++) {
+            for (int j = 0; j < ROW; j++) {
+                positions.add(alphabet.get(i) + numbers.get(j));
+            }
         }
-        
+
         DatabaseHelper.setPositionsPlan(positions);
     }
 

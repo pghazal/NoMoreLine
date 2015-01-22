@@ -36,7 +36,7 @@ public class CameraPlanTableModel extends DefaultTableModel {
             case 0:
                 return String.class;
             default:
-                return Object.class;
+                return String.class;
         }
     }
 
@@ -47,8 +47,10 @@ public class CameraPlanTableModel extends DefaultTableModel {
 
             case 0:
                 break;
+            case 1:
+                cameras.get(row).setPosition((String) aValue);
+                break;
             default:
-                super.setValueAt(aValue, row, column);
                 break;
         }
 
@@ -72,7 +74,11 @@ public class CameraPlanTableModel extends DefaultTableModel {
             case 0:
                 return "Caméra #" + c.getId();
             case 1:
-                return c.getPosition();
+                if (c.getPosition() == null) {
+                    return " - ";
+                } else {
+                    return c.getPosition();
+                }
         }
 
         return null;

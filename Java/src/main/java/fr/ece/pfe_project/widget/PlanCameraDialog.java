@@ -19,28 +19,26 @@ public class PlanCameraDialog extends javax.swing.JDialog {
 
     public class PositionEditor extends DefaultCellEditor {
 
-        private final JComboBox comboBox;
+        private JComboBox comboBox;
 
         public PositionEditor() {
             super(new JComboBox());
 
             this.comboBox = (JComboBox) super.getComponent();
+            for (String pos : DatabaseHelper.getListePositionsCamera()) {
+                comboBox.addItem(pos);
+            }
         }
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-
-            for (String pos : DatabaseHelper.getListePositionsCamera()) {
-                comboBox.addItem(pos);
-            }
-
-            return this.comboBox;
+            return super.getTableCellEditorComponent(table, value, isSelected, row, column);
         }
 
-        @Override
-        public Object getCellEditorValue() {
-            return (String) this.comboBox.getSelectedItem();
-        }
+//        @Override
+//        public Object getCellEditorValue() {
+//            return this.comboBox.getSelectedItem().toString();
+//        }
     }
 
     public class PositionRenderer extends DefaultTableCellRenderer {
@@ -48,6 +46,7 @@ public class PlanCameraDialog extends javax.swing.JDialog {
         private JComboBox comboBox;
 
         public PositionRenderer() {
+            super();
             comboBox = new JComboBox();
             for (String pos : DatabaseHelper.getListePositionsCamera()) {
                 comboBox.addItem(pos);
@@ -56,16 +55,21 @@ public class PlanCameraDialog extends javax.swing.JDialog {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            this.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
 
             if (isSelected) {
-                this.setBackground(Color.BLUE);
-                this.setForeground(Color.WHITE);
+                c.setBackground(Color.BLUE);
+                c.setForeground(Color.WHITE);
             } else {
-                this.setForeground(Color.BLACK);
+                c.setForeground(Color.BLACK);
             }
 
-            return this.comboBox;
+            comboBox.setSelectedItem(value);
+//            comboBox.setSelectedItem(comboBox.getEditor().getItem().toString());
+
+            return comboBox;
         }
     }
 
@@ -75,16 +79,18 @@ public class PlanCameraDialog extends javax.swing.JDialog {
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int col) {
 
-            this.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
+            c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
 
             if (isSelected) {
-                this.setBackground(Color.BLUE);
-                this.setForeground(Color.WHITE);
+                c.setBackground(Color.BLUE);
+                c.setForeground(Color.WHITE);
             } else {
-                this.setForeground(Color.BLACK);
+                c.setForeground(Color.BLACK);
             }
 
-            return this;
+            return c;
         }
     }
 
@@ -105,9 +111,9 @@ public class PlanCameraDialog extends javax.swing.JDialog {
 
         this.tableCameraPlan.setModel(model);
 
+        this.tableCameraPlan.getColumnModel().getColumn(0).setCellRenderer(new StringRenderer());
         this.tableCameraPlan.getColumnModel().getColumn(1).setCellEditor(new PositionEditor());
         this.tableCameraPlan.getColumnModel().getColumn(1).setCellRenderer(new PositionRenderer());
-        this.tableCameraPlan.setDefaultRenderer(String.class, new StringRenderer());
     }
 
     /**
@@ -125,6 +131,7 @@ public class PlanCameraDialog extends javax.swing.JDialog {
         tableCameraPlan = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(300, 200));
 
         annulerButton.setText("Annuler");
         annulerButton.setSize(new java.awt.Dimension(93, 29));
@@ -147,12 +154,14 @@ public class PlanCameraDialog extends javax.swing.JDialog {
 
         tableCameraPlan.setModel(new CameraPlanTableModel());
         tableCameraPlan.setFillsViewportHeight(true);
+        tableCameraPlan.setFocusable(false);
         tableCameraPlan.setRequestFocusEnabled(false);
-        tableCameraPlan.setRowHeight(20);
-        tableCameraPlan.setRowMargin(3);
+        tableCameraPlan.setRowHeight(25);
         tableCameraPlan.setRowSelectionAllowed(false);
         tableCameraPlan.setShowHorizontalLines(false);
         tableCameraPlan.setShowVerticalLines(false);
+        tableCameraPlan.getTableHeader().setResizingAllowed(false);
+        tableCameraPlan.getTableHeader().setReorderingAllowed(false);
         tableCameraPlan.setUpdateSelectionOnSort(false);
         jScrollPane1.setViewportView(tableCameraPlan);
 

@@ -183,7 +183,7 @@ public class DatabaseHelper {
             stmt.close();
             c.close();
 
-            return camPositions;
+            return result;
 
         } catch (SQLException e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());

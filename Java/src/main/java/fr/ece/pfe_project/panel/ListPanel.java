@@ -27,7 +27,6 @@ import fr.ece.pfe_project.widget.CameraSaisieDialog;
 import fr.ece.pfe_project.widget.CarnetAdressesDialog;
 import fr.ece.pfe_project.widget.ExcelSaisieDialog;
 import fr.ece.pfe_project.widget.PlanCameraDialog;
-import fr.ece.pfe_project.widget.PlanPanel;
 import fr.ece.pfe_project.widget.ProgressDialog;
 import java.awt.CardLayout;
 import java.awt.Color;
