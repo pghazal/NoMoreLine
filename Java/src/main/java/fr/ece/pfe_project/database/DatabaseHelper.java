@@ -171,14 +171,14 @@ public class DatabaseHelper {
                 camPositions.add(rs.getString("POSITION"));
             }
 
-            ArrayList<String> result = new ArrayList<String>();
-
+            ArrayList<String> result = new ArrayList<String>(positionsPlan);
+            
             for (String pos : camPositions) {
-                if (positionsPlan.contains(pos)) {
-
-                }
+                result.remove(pos);
             }
 
+            result.add(0, " - ");
+            
             rs.close();
             stmt.close();
             c.close();
