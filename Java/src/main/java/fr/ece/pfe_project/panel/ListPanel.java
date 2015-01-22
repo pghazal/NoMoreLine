@@ -455,7 +455,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                 setCameraButtonVisibility(false);
                 setPlanButtonVisibility(false);
                 itemsTable.setRowHeight(16);
-                model.setData((ArrayList) ExcelUtils.sortedListFromMap(GlobalVariableUtils.getExcelMap()), false);
+                model.setData((ArrayList) ExcelUtils.sortedListFromMap(DatabaseHelper.getAllFrequentationJournaliere()), false);
                 cl.show(cardPanel, "table");
                 break;
 
@@ -496,7 +496,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                 setPlanButtonVisibility(false);
                 itemsTable.setRowHeight(16);
                 //model.setData(carnetAdressesA, false);
-                model.setData((ArrayList) GlobalVariableUtils.getCarnetA(), false);
+                model.setData((ArrayList) DatabaseHelper.getAllCarnetAdresses(), true);
                 cl.show(cardPanel, "table");
                 break;
 
