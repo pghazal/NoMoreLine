@@ -192,6 +192,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
             }
         });
         this.scrollPanePlans.setViewportView(planPanel);
+        planPanel.repaint();
 
         this.faceDetectorListener = faceListener;
         this.toolbarsListener = toolbarsListener;

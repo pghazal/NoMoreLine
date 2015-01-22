@@ -32,12 +32,7 @@ public class CameraPlanTableModel extends DefaultTableModel {
 
     @Override
     public Class<?> getColumnClass(int column) {
-        switch (column) {
-            case 0:
-                return String.class;
-            default:
-                return String.class;
-        }
+        return String.class;
     }
 
     @Override
@@ -59,11 +54,7 @@ public class CameraPlanTableModel extends DefaultTableModel {
 
     @Override
     public boolean isCellEditable(int row, int column) {
-        if (column == 1) {
-            return true;
-        }
-
-        return false;
+        return column == 1;
     }
 
     @Override

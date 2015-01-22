@@ -20,6 +20,7 @@ public class PlanCameraDialog extends javax.swing.JDialog {
     public class PositionEditor extends DefaultCellEditor {
 
         private JComboBox comboBox;
+        private int selectedRow;
 
         public PositionEditor() {
             super(new JComboBox());
@@ -32,13 +33,23 @@ public class PlanCameraDialog extends javax.swing.JDialog {
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            selectedRow = row;
             return super.getTableCellEditorComponent(table, value, isSelected, row, column);
         }
 
-//        @Override
-//        public Object getCellEditorValue() {
-//            return this.comboBox.getSelectedItem().toString();
-//        }
+        @Override
+        public Object getCellEditorValue() {
+            String pos = this.comboBox.getSelectedItem().toString();
+            System.out.println("getCellEditorValue : " + pos);
+            
+            Camera c = model.getDatas().get(selectedRow);
+            c.setPosition(pos);
+
+            // Update DB
+            // Update other combobox
+            
+            return pos;
+        }
     }
 
     public class PositionRenderer extends DefaultTableCellRenderer {
@@ -67,7 +78,6 @@ public class PlanCameraDialog extends javax.swing.JDialog {
             }
 
             comboBox.setSelectedItem(value);
-//            comboBox.setSelectedItem(comboBox.getEditor().getItem().toString());
 
             return comboBox;
         }

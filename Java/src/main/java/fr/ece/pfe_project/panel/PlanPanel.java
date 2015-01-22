@@ -27,12 +27,11 @@ public class PlanPanel extends javax.swing.JPanel {
             = Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N");
 
     private final List<String> numbers
-            = Arrays.asList("1", "2", "3s");
+            = Arrays.asList("1", "2", "3");
 
     private static final int COLUMN = 8;
     private static final int ROW = 2;
-
-    private JLabel imageLabel;
+    
     private Integer indexPanel = 0;
 
     /**
@@ -40,7 +39,6 @@ public class PlanPanel extends javax.swing.JPanel {
      */
     public PlanPanel() {
         initComponents();
-        imageLabel = new JLabel();
     }
 
     @Override
@@ -81,7 +79,7 @@ public class PlanPanel extends javax.swing.JPanel {
             }
         }
 
-        DatabaseHelper.setPositionsPlan(positions);
+        DatabaseHelper.setAllPositionsPlan(positions);
     }
 
     /**

@@ -15,7 +15,7 @@ public class Camera implements ModelInterface {
 
     private FaceDetectorThread faceDetectorThread;
 
-    private int id;
+    private Integer id = null;
     private CAMERA_STATE state;
     private String position = null;
 
@@ -38,11 +38,11 @@ public class Camera implements ModelInterface {
         this.faceDetectorThread = faceDetectorThread;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

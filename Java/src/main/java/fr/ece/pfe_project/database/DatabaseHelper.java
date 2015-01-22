@@ -32,14 +32,14 @@ public class DatabaseHelper {
 
     private static Connection connection = null;
 
-    private static ArrayList<String> positionsPlan;
+    private static ArrayList<String> allPositionsPlan;
 
-    public static ArrayList<String> getPositionsPlan() {
-        return positionsPlan;
+    public static ArrayList<String> getAllPositionsPlan() {
+        return allPositionsPlan;
     }
 
-    public static void setPositionsPlan(ArrayList<String> positionsPlan) {
-        DatabaseHelper.positionsPlan = positionsPlan;
+    public static void setAllPositionsPlan(ArrayList<String> positionsPlan) {
+        DatabaseHelper.allPositionsPlan = positionsPlan;
     }
 
     public DatabaseHelper() {
@@ -171,14 +171,14 @@ public class DatabaseHelper {
                 camPositions.add(rs.getString("POSITION"));
             }
 
-            ArrayList<String> result = new ArrayList<String>(positionsPlan);
-            
+            ArrayList<String> result = new ArrayList<String>(allPositionsPlan);
+
             for (String pos : camPositions) {
                 result.remove(pos);
             }
 
             result.add(0, " - ");
-            
+
             rs.close();
             stmt.close();
             c.close();
@@ -226,7 +226,7 @@ public class DatabaseHelper {
     public static boolean cameraExists(Camera camera) {
         Camera cam = getCamera(camera);
 
-        if (cam.getPosition() == null) {
+        if (cam.getId() == null) {
             System.err.println(cam.getId() + " DOES NOT EXIST");
 
             return false;
@@ -277,13 +277,13 @@ public class DatabaseHelper {
 
                 sql = "INSERT INTO " + TABLE_CARNET_ADRESSES + "(COMPAGNIE, GUICHET, ASSISTANCE, TELEPHONE)"
                         + " VALUES(?,?,?,?)";
-                
+
                 PreparedStatement stmt = c.prepareStatement(sql);
                 stmt.setString(1, carnet.getCompagnieca().trim().toUpperCase());
                 stmt.setInt(2, carnet.getNombreGuichet());
                 stmt.setString(3, carnet.getSocieteAssistance().trim().toUpperCase());
                 stmt.setString(4, carnet.getTelephone());
-                
+
                 stmt.executeUpdate();
 
                 stmt.close();
@@ -317,7 +317,7 @@ public class DatabaseHelper {
     public static CarnetAdresses getCarnetAdresses(CarnetAdresses carn) {
         try {
             Connection c = getConnection();
-            
+
             System.err.println("YOLO");
 
             String sql = "SELECT * FROM " + TABLE_CARNET_ADRESSES
@@ -326,9 +326,9 @@ public class DatabaseHelper {
                     + " AND ASSISTANCE=\"" + carn.getSocieteAssistance().toUpperCase()
                     + "\" AND TELEPHONE=\"" + carn.getTelephone()
                     + "\" LIMIT 1;";
-            
+
             System.out.println(sql);
-            
+
             PreparedStatement stmt = c.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
@@ -342,7 +342,7 @@ public class DatabaseHelper {
                 carnet.setSocieteAssistance(rs.getString("ASSISTANCE"));
                 carnet.setTelephone(rs.getString("TELEPHONE"));
             }
-            
+
             rs.close();
             stmt.close();
             c.close();
@@ -647,7 +647,34 @@ public class DatabaseHelper {
         }
         System.out.println("Update Journalier success");
     }
-    
+
+    public static void updateCamera(Camera camera) {
+        try {
+            Connection c = getConnection();
+            c.setAutoCommit(false);
+
+            String sql;
+            if (cameraExists(camera)) {
+
+                sql = "UPDATE " + TABLE_CAMERA + " SET POSITION=" + camera.getPosition()
+                        + " WHERE ID=" + camera.getId();
+
+                PreparedStatement stmt = c.prepareStatement(sql);
+                stmt.executeUpdate();
+
+                stmt.close();
+            }
+
+            c.commit();
+            c.setAutoCommit(true);
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Update Camera success");
+    }
+
     public static void updateCarnetAdresses(CarnetAdresses carnet) {
         try {
             Connection c = getConnection();
@@ -674,7 +701,7 @@ public class DatabaseHelper {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Update Journalier success");
+        System.out.println("Update Carnet success");
     }
 
     public static int aggregateFrequentationOfYear(int year) {
@@ -845,8 +872,8 @@ public class DatabaseHelper {
 
         return null;
     }
-    
-     public static ArrayList<CarnetAdresses> getAllCarnetAdresses() {
+
+    public static ArrayList<CarnetAdresses> getAllCarnetAdresses() {
         try {
             ArrayList<CarnetAdresses> carnet = new ArrayList<CarnetAdresses>();
 
@@ -861,7 +888,7 @@ public class DatabaseHelper {
                 String telephone = rs.getString("TELEPHONE");
                 int guichet = rs.getInt("GUICHET");
                 Integer id = rs.getInt("ID");
-                
+
                 carnet.add(new CarnetAdresses(compagnie, guichet, assistance, telephone, id));
             }
 
