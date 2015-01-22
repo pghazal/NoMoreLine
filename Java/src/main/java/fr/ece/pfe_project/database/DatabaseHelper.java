@@ -157,7 +157,7 @@ public class DatabaseHelper {
     }
 
     public static ArrayList<String> getListePositionsCamera() {
-        ArrayList<String> positions = new ArrayList<String>();
+        ArrayList<String> camPositions = new ArrayList<String>();
 
         try {
             Connection c = getConnection();
@@ -165,18 +165,25 @@ public class DatabaseHelper {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_CAMERA);
 
-            positions.add(" - ");
-
+            //camPositions.add(" - ");
             while (rs.next()) {
 
-                positions.add(rs.getString("POSITION"));
+                camPositions.add(rs.getString("POSITION"));
+            }
+
+            ArrayList<String> result = new ArrayList<String>();
+
+            for (String pos : camPositions) {
+                if (positionsPlan.contains(pos)) {
+
+                }
             }
 
             rs.close();
             stmt.close();
             c.close();
 
-            return positions;
+            return camPositions;
 
         } catch (SQLException e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -214,7 +221,7 @@ public class DatabaseHelper {
         }
     }
 
-    private static boolean cameraExists(Camera camera) {
+    public static boolean cameraExists(Camera camera) {
         Camera cam = getCamera(camera);
 
         if (cam.getPosition() == null) {
@@ -228,7 +235,7 @@ public class DatabaseHelper {
         return true;
     }
 
-    private static Camera getCamera(Camera camera) {
+    public static Camera getCamera(Camera camera) {
         try {
             Connection c = getConnection();
 
