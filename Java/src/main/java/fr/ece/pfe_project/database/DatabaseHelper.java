@@ -140,7 +140,7 @@ public class DatabaseHelper {
 
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_CARNET_ADRESSES
-                    + " (ID INT PRIMARY KEY AUTOINCREMENT,"
+                    + " (ID INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + " COMPAGNIE VARCHAR NOT NULL,"
                     + " GUICHET INT NOT NULL,"
                     + " ASSISTANCE VARCHAR NOT NULL,"
@@ -201,11 +201,13 @@ public class DatabaseHelper {
             String sql;
             if (!cameraExists(camera)) {
 
-                sql = "INSERT INTO " + TABLE_CAMERA + " (ID, POSITION)"
-                        + " VALUES (" + camera.getId() + "," + camera.getPosition() + ")";
+                sql = "INSERT INTO " + TABLE_CAMERA + "(ID, POSITION)"
+                        + " VALUES(?,?)";
 
-                Statement stmt = c.createStatement();
-                stmt.executeUpdate(sql);
+                PreparedStatement stmt = c.prepareStatement(sql);
+                stmt.setInt(1, camera.getId());
+                stmt.setString(2, camera.getPosition());
+                stmt.executeUpdate();
 
                 stmt.close();
 
@@ -273,17 +275,17 @@ public class DatabaseHelper {
             String sql;
             if (!carnetAdresseExists(carnet)) {
 
-                sql = "INSERT INTO " + TABLE_CARNET_ADRESSES + " (COMPAGNIE, GUICHET, ASSISTANCE, TELEPHONE)"
-                        + " VALUES (" + carnet.getCompagnieca().toUpperCase() + "," + carnet.getNombreGuichet()
-                        + "," + carnet.getSocieteAssistance().toUpperCase() + "," + carnet.getTelephone() + ")";
-
+                sql = "INSERT INTO " + TABLE_CARNET_ADRESSES + "(COMPAGNIE, GUICHET, ASSISTANCE, TELEPHONE)"
+                        + " VALUES(?,?,?,?)";
+                
                 PreparedStatement stmt = c.prepareStatement(sql);
-                stmt.executeUpdate(sql);
+                stmt.setString(1, carnet.getCompagnieca().trim().toUpperCase());
+                stmt.setInt(2, carnet.getNombreGuichet());
+                stmt.setString(3, carnet.getSocieteAssistance().trim().toUpperCase());
+                stmt.setString(4, carnet.getTelephone());
+                
+                stmt.executeUpdate();
 
-//                ResultSet generatedKeys = stmt.getGeneratedKeys();
-//                if (generatedKeys.next()) {
-//                    user.setId(generatedKeys.getLong(1));
-//                }
                 stmt.close();
 
                 System.out.println("Add Carnet success");
@@ -315,12 +317,20 @@ public class DatabaseHelper {
     public static CarnetAdresses getCarnetAdresses(CarnetAdresses carn) {
         try {
             Connection c = getConnection();
+            
+            System.err.println("YOLO");
 
-            Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_CARNET_ADRESSES
-                    + " WHERE COMPAGNIE=" + carn.getCompagnieca().toUpperCase() + " AND GUICHET=" + carn.getNombreGuichet()
-                    + " AND ASSISTANCE=" + carn.getSocieteAssistance().toUpperCase() + " AND TELEPHONE=" + carn.getTelephone()
-                    + " LIMIT 1;");
+            String sql = "SELECT * FROM " + TABLE_CARNET_ADRESSES
+                    + " WHERE COMPAGNIE=\"" + carn.getCompagnieca().toUpperCase()
+                    + "\" AND GUICHET=" + carn.getNombreGuichet()
+                    + " AND ASSISTANCE=\"" + carn.getSocieteAssistance().toUpperCase()
+                    + "\" AND TELEPHONE=\"" + carn.getTelephone()
+                    + "\" LIMIT 1;";
+            
+            System.out.println(sql);
+            
+            PreparedStatement stmt = c.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
 
             CarnetAdresses carnet = new CarnetAdresses();
 
@@ -332,7 +342,7 @@ public class DatabaseHelper {
                 carnet.setSocieteAssistance(rs.getString("ASSISTANCE"));
                 carnet.setTelephone(rs.getString("TELEPHONE"));
             }
-
+            
             rs.close();
             stmt.close();
             c.close();
@@ -908,7 +918,7 @@ public class DatabaseHelper {
 
         System.out.println("Operation done successfully");
     }
-    
+
     public static void deleteCarnetAdresse(CarnetAdresses carnet) {
 
         try {
