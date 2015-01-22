@@ -683,13 +683,17 @@ public class DatabaseHelper {
             String sql;
             if (carnetAdresseExists(carnet)) {
 
-                sql = "UPDATE TABLE_CARNET_ADRESSES SET COMPAGNIE=" + carnet.getCompagnieca() + " AND GUICHET="
-                        + carnet.getNombreGuichet() + " AND ASSISTANCE=" + carnet.getSocieteAssistance()
-                        + " AND TELEPHONE=" + carnet.getTelephone()
+                sql = "UPDATE TABLE_CARNET_ADRESSES SET COMPAGNIE=? AND GUICHET=?"
+                        + " AND ASSISTANCE=? AND TELEPHONE=?"
                         + " WHERE ID=" + carnet.getId();
 
-                Statement stmt = c.createStatement();
-                stmt.executeUpdate(sql);
+                PreparedStatement stmt = c.prepareStatement(sql);
+                stmt.setString(1, carnet.getCompagnieca().trim().toUpperCase());
+                stmt.setInt(2, carnet.getNombreGuichet());
+                stmt.setString(3, carnet.getSocieteAssistance().trim().toUpperCase());
+                stmt.setString(4, carnet.getTelephone());
+                
+                stmt.executeUpdate();
 
                 stmt.close();
             }
