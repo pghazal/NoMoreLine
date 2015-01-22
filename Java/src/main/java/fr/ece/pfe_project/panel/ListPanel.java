@@ -278,8 +278,9 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                         } else {
                             System.out.println("Carnet d'adresses : " + carnetToAdd.getCompagnieca());
                             carnetAdressesA.add(carnetToAdd);
-                            model.setData(carnetAdressesA, true);
-
+                            //model.setData(carnetAdressesA, true);
+                            ((ArrayList<CarnetAdresses>) model.getData()).add(carnetToAdd);
+                            model.fireTableDataChanged();
                         }
                         break;
                     case EXCELROW:
@@ -324,7 +325,9 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                             if (selectedCarnet != null) {
                                 DatabaseHelper.deleteCarnetAdresse(selectedCarnet);
                                 carnetAdressesA.remove(selectedCarnet);
-                                model.setData(carnetAdressesA, true);
+                                ((ArrayList<CarnetAdresses>) model.getData()).remove(selectedCarnet);
+                                model.fireTableDataChanged();
+                                //model.setData(carnetAdressesA, true);
                             }
                         } else {
                             JOptionPane.showMessageDialog(this,
@@ -389,6 +392,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
                                 carnetAdressesA.set(itemsTable.getSelectedRow(), selectedCarnet);
                                 model.setData(carnetAdressesA, true);
+                                model.fireTableDataChanged();
                             }
                         } else {
                             JOptionPane.showMessageDialog(this,
@@ -474,7 +478,8 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                 setCameraButtonVisibility(false);
                 setPlanButtonVisibility(false);
                 itemsTable.setRowHeight(16);
-                model.setData(carnetAdressesA, false);
+                //model.setData(carnetAdressesA, false);
+                model.setData((ArrayList) GlobalVariableUtils.getCarnetA(), false);
                 cl.show(cardPanel, "table");
                 break;
 

@@ -105,5 +105,7 @@ public class ParametersUtils {
 
         GlobalVariableUtils.getExcelMap().
                 putAll(DatabaseHelper.getAllFrequentationJournaliere());
+        
+        GlobalVariableUtils.getCarnetA().addAll(DatabaseHelper.getAllCarnetAdresses());
     }
 }

@@ -20,6 +20,7 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
+        
     }
     
     public CarnetAdresses getCa(){
@@ -69,10 +70,10 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         nomCompagnieButton = new javax.swing.JTextField();
         societeAssistance = new javax.swing.JTextField();
-        telephone = new javax.swing.JTextField();
         validateButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         nbGuichet = new javax.swing.JSpinner();
+        telephone = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -100,6 +101,17 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
 
         nbGuichet.setModel(new javax.swing.SpinnerNumberModel(1, 0, 50, 1));
 
+        try {
+            telephone.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##########")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        telephone.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                telephoneActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -124,8 +136,8 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(nomCompagnieButton)
                                     .addComponent(societeAssistance)
-                                    .addComponent(telephone)
-                                    .addComponent(nbGuichet, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))))
+                                    .addComponent(nbGuichet, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                                    .addComponent(telephone))))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -140,8 +152,8 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(societeAssistance, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
                     .addComponent(telephone))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -177,7 +189,8 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
             if(verifierInt(telephone) == false){
                 JOptionPane.showMessageDialog(this, "Le numéro de téléphone ne doit contenir que des caractères numériques", "Erreur", JOptionPane.INFORMATION_MESSAGE);
             }
-            else if(verifierInt(telephone) == true && telephone.length() > 25){
+            else if(verifierInt(telephone) == true && telephone.length() != 10){
+                System.out.println("Taille : " + telephone.length());
                 JOptionPane.showMessageDialog(this, "Le numéro de téléphone est incorrecte", "Erreur", JOptionPane.INFORMATION_MESSAGE);
             }
             else{
@@ -191,6 +204,7 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
                     DatabaseHelper.addCarnetAdresses(ca);
                 }
                 else{
+                    ca = null;
                     JOptionPane.showMessageDialog(this, "L'élément que vous voulez enregistrer existe déjà en base de donnée", "Erreur", JOptionPane.INFORMATION_MESSAGE);
                 }
                 this.dispose();
@@ -201,6 +215,10 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_validateButtonActionPerformed
 
+    private void telephoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_telephoneActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_telephoneActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel jLabel1;
@@ -210,7 +228,7 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
     private javax.swing.JSpinner nbGuichet;
     private javax.swing.JTextField nomCompagnieButton;
     private javax.swing.JTextField societeAssistance;
-    private javax.swing.JTextField telephone;
+    private javax.swing.JFormattedTextField telephone;
     private javax.swing.JButton validateButton;
     // End of variables declaration//GEN-END:variables
 }

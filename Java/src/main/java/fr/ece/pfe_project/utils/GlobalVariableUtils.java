@@ -1,5 +1,6 @@
 package fr.ece.pfe_project.utils;
 
+import fr.ece.pfe_project.model.CarnetAdresses;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import fr.ece.pfe_project.model.JourFerie;
 import fr.ece.pfe_project.model.Plan;
@@ -17,6 +18,14 @@ public class GlobalVariableUtils {
     private static HashMap<Integer, Integer> freqAnnuelleMap;
     private static ArrayList<JourFerie> joursFeries;
     private static ArrayList<Plan> plans;
+    private static ArrayList<CarnetAdresses> carnetA;
+
+    public static ArrayList<CarnetAdresses> getCarnetA() {
+        if (carnetA == null) {
+            carnetA = new ArrayList<CarnetAdresses>();
+        }
+        return carnetA;
+    }
 
     public static HashMap<Date, FrequentationJournaliere> getExcelMap() {
         if (excelMap == null) {
