@@ -15,26 +15,26 @@ public class CarnetAdresses implements ModelInterface{
     private int nombreGuichet;
     private String societeAssistance;
     private String telephone;
-    private long keyca;
+    private Integer id = null;
 
-    public CarnetAdresses(String test1, Integer test2, String test3, String test4, long test5){
+    public CarnetAdresses(String test1, Integer test2, String test3, String test4, Integer test5){
         this.compagnieca = test1;
         this.nombreGuichet = test2;
         this.societeAssistance = test3;
         this.telephone = test4;
-        this.keyca = test5;
+        this.id = test5;
     }
 
     public CarnetAdresses() {
-        this(null, 0, null, null, 0);
+        this(null, 0, null, null, null);
     }
     
-    public void setKeyca(long keyca) {
-        this.keyca = keyca;
+    public void setId(Integer keyca) {
+        this.id = keyca;
     }
 
-    public long getKeyca() {
-        return keyca;
+    public Integer getId() {
+        return id;
     }
 
     public void setTelephone(String telephone) {

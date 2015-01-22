@@ -2,6 +2,7 @@ package fr.ece.pfe_project.database;
 
 import fr.ece.pfe_project.algo.Algorithm;
 import fr.ece.pfe_project.model.Camera;
+import fr.ece.pfe_project.model.CarnetAdresses;
 import fr.ece.pfe_project.model.FrequentationAnnuelle;
 import fr.ece.pfe_project.model.FrequentationJournaliere;
 import java.sql.Connection;
@@ -27,6 +28,7 @@ public class DatabaseHelper {
     public final static String TABLE_FREQUENTATION_JOURNALIERE = "FREQUENTATION_JOURNALIERE";
     public final static String TABLE_FREQUENTATION_ANNUELLE = "FREQUENTATION_ANNUELLE";
     public final static String TABLE_CAMERA = "TABLE_CAMERA";
+    public final static String TABLE_CARNET_ADRESSES = "TABLE_CARNET_ADRESSES";
 
     private static Connection connection = null;
 
@@ -41,6 +43,7 @@ public class DatabaseHelper {
             createTableFrequentationJournaliere();
             createTableFrequentationAnnuelle();
             createTableCamera();
+            createTableCarnetAdresses();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -120,18 +123,40 @@ public class DatabaseHelper {
 
         System.out.println("Table " + TABLE_CAMERA + " created successfully");
     }
-    
+
+    private static void createTableCarnetAdresses() {
+        try {
+            Connection c = getConnection();
+
+            Statement stmt = c.createStatement();
+            String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_CARNET_ADRESSES
+                    + " (ID INT NOT NULL,"
+                    + " COMPAGNIE VARCHAR NOT NULL,"
+                    + " GUICHET INT NOT NULL,"
+                    + " ASSISTANCE VARCHAR NOT NULL,"
+                    + " TELEPHONE VARCHAR NOT NULL)";
+            stmt.execute(sql);
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+
+        System.out.println("Table " + TABLE_CARNET_ADRESSES + " created successfully");
+    }
+
     public static ArrayList<String> getListePositionsCamera() {
         ArrayList<String> positions = new ArrayList<String>();
-        
+
         try {
             Connection c = getConnection();
 
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_CAMERA);
-            
+
             positions.add(" - ");
-            
+
             while (rs.next()) {
 
                 positions.add(rs.getString("POSITION"));
@@ -200,7 +225,7 @@ public class DatabaseHelper {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_CAMERA
                     + " WHERE ID=" + camera.getId() + " LIMIT 1;");
-            
+
             Camera cam = new Camera();
 
             while (rs.next()) {
@@ -214,6 +239,83 @@ public class DatabaseHelper {
             c.close();
 
             return cam;
+
+        } catch (SQLException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+
+        return null;
+    }
+
+    public static void addCarnetAdresses(CarnetAdresses carnet) {
+        try {
+            Connection c = getConnection();
+            c.setAutoCommit(false);
+
+            String sql;
+            if (!carnetAdresseExists(carnet)) {
+
+                sql = "INSERT INTO " + TABLE_CARNET_ADRESSES + " (ID, COMPAGNIE, GUICHET, ASSISTANCE, TELEPHONE)"
+                        + " VALUES (" + carnet.getId() + "," + carnet.getCompagnieca() + "," + carnet.getNombreGuichet()
+                        + "," + carnet.getSocieteAssistance() + "," + carnet.getTelephone() + ")";
+
+                Statement stmt = c.createStatement();
+                stmt.executeUpdate(sql);
+
+                stmt.close();
+
+                System.out.println("Add Carnet success");
+            }
+
+            c.commit();
+            c.setAutoCommit(true);
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+    }
+
+    private static boolean carnetAdresseExists(CarnetAdresses carnet) {
+        CarnetAdresses cam = getCarnetAdresses(carnet);
+
+        if (cam.getId() == null) {
+            System.err.println(cam.getCompagnieca() + " DOES NOT EXIST");
+
+            return false;
+        }
+
+        System.err.println(cam.getCompagnieca() + " DOES EXIST");
+
+        return true;
+    }
+
+    private static CarnetAdresses getCarnetAdresses(CarnetAdresses carn) {
+        try {
+            Connection c = getConnection();
+
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_CARNET_ADRESSES
+                    + " WHERE ID=" + carn.getId()
+                    + " LIMIT 1;");
+
+            CarnetAdresses carnet = new CarnetAdresses();
+
+            while (rs.next()) {
+
+                carnet.setCompagnieca(rs.getString("COMPAGNIE"));
+                carnet.setId(rs.getInt("ID"));
+                carnet.setNombreGuichet(rs.getInt("GUICHET"));
+                carnet.setSocieteAssistance(rs.getString("ASSISTANCE"));
+                carnet.setTelephone(rs.getString("TELEPHONE"));
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+
+            return carnet;
 
         } catch (SQLException e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
