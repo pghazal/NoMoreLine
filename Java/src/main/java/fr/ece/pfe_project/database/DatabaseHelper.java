@@ -32,6 +32,16 @@ public class DatabaseHelper {
 
     private static Connection connection = null;
 
+    private static ArrayList<String> positionsPlan;
+
+    public static ArrayList<String> getPositionsPlan() {
+        return positionsPlan;
+    }
+
+    public static void setPositionsPlan(ArrayList<String> positionsPlan) {
+        DatabaseHelper.positionsPlan = positionsPlan;
+    }
+
     public DatabaseHelper() {
     }
 
@@ -130,7 +140,7 @@ public class DatabaseHelper {
 
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_CARNET_ADRESSES
-                    + " (ID INT NOT NULL,"
+                    + " (ID INT PRIMARY KEY AUTOINCREMENT,"
                     + " COMPAGNIE VARCHAR NOT NULL,"
                     + " GUICHET INT NOT NULL,"
                     + " ASSISTANCE VARCHAR NOT NULL,"
@@ -256,13 +266,17 @@ public class DatabaseHelper {
             String sql;
             if (!carnetAdresseExists(carnet)) {
 
-                sql = "INSERT INTO " + TABLE_CARNET_ADRESSES + " (ID, COMPAGNIE, GUICHET, ASSISTANCE, TELEPHONE)"
-                        + " VALUES (" + carnet.getId() + "," + carnet.getCompagnieca() + "," + carnet.getNombreGuichet()
-                        + "," + carnet.getSocieteAssistance() + "," + carnet.getTelephone() + ")";
+                sql = "INSERT INTO " + TABLE_CARNET_ADRESSES + " (COMPAGNIE, GUICHET, ASSISTANCE, TELEPHONE)"
+                        + " VALUES (" + carnet.getCompagnieca().toUpperCase() + "," + carnet.getNombreGuichet()
+                        + "," + carnet.getSocieteAssistance().toUpperCase() + "," + carnet.getTelephone() + ")";
 
-                Statement stmt = c.createStatement();
+                PreparedStatement stmt = c.prepareStatement(sql);
                 stmt.executeUpdate(sql);
 
+//                ResultSet generatedKeys = stmt.getGeneratedKeys();
+//                if (generatedKeys.next()) {
+//                    user.setId(generatedKeys.getLong(1));
+//                }
                 stmt.close();
 
                 System.out.println("Add Carnet success");
@@ -277,7 +291,7 @@ public class DatabaseHelper {
         }
     }
 
-    private static boolean carnetAdresseExists(CarnetAdresses carnet) {
+    public static boolean carnetAdresseExists(CarnetAdresses carnet) {
         CarnetAdresses cam = getCarnetAdresses(carnet);
 
         if (cam.getId() == null) {
@@ -291,13 +305,14 @@ public class DatabaseHelper {
         return true;
     }
 
-    private static CarnetAdresses getCarnetAdresses(CarnetAdresses carn) {
+    public static CarnetAdresses getCarnetAdresses(CarnetAdresses carn) {
         try {
             Connection c = getConnection();
 
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_CARNET_ADRESSES
-                    + " WHERE ID=" + carn.getId()
+                    + " WHERE COMPAGNIE=" + carn.getCompagnieca().toUpperCase() + " AND GUICHET=" + carn.getNombreGuichet()
+                    + " AND ASSISTANCE=" + carn.getSocieteAssistance().toUpperCase() + " AND TELEPHONE=" + carn.getTelephone()
                     + " LIMIT 1;");
 
             CarnetAdresses carnet = new CarnetAdresses();

@@ -5,12 +5,14 @@
  */
 package fr.ece.pfe_project.widget;
 
+import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JLabel;
@@ -57,11 +59,14 @@ public class PlanPanel extends javax.swing.JPanel {
         int COLUMN_WIDTH = getSize().width / COLUMN;
         int ROW_HEIGHT = getSize().height / ROW;
 
+        ArrayList<String> positions = new ArrayList<String>();
+
         // Colonnes
         for (int i = 1; i < COLUMN + 1; i++) {
             int x = i * COLUMN_WIDTH;
             g2d.drawLine(x, 0, x, getSize().height);
             g2d.drawString(alphabet.get(i - 1), x - COLUMN_WIDTH / 2, 15);
+            positions.add(alphabet.get(i - 1));
         }
 
         // Lignes
@@ -69,7 +74,14 @@ public class PlanPanel extends javax.swing.JPanel {
             int y = i * ROW_HEIGHT;
             g2d.drawLine(0, y, getSize().width, y);
             g2d.drawString(numbers.get(i - 1), 10, y - ROW_HEIGHT / 2);
+            positions.set(i - 1, positions.get(i - 1) + alphabet.get(i - 1));
         }
+        
+        for(String pos : positions) {
+            System.out.println("POS : " + pos);
+        }
+        
+        DatabaseHelper.setPositionsPlan(positions);
     }
 
     /**
