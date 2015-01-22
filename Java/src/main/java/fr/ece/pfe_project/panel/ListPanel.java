@@ -322,6 +322,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                         if (itemsTable.getSelectedRowCount() > 0) {
                             CarnetAdresses selectedCarnet = (CarnetAdresses) model.getDataAtRow(itemsTable.getSelectedRow());
                             if (selectedCarnet != null) {
+                                DatabaseHelper.deleteCarnetAdresse(selectedCarnet);
                                 carnetAdressesA.remove(selectedCarnet);
                                 model.setData(carnetAdressesA, true);
                             }

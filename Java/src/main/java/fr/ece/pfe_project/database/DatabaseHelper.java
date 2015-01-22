@@ -908,4 +908,32 @@ public class DatabaseHelper {
 
         System.out.println("Operation done successfully");
     }
+    
+    public static void deleteCarnetAdresse(CarnetAdresses carnet) {
+
+        try {
+            Connection c = getConnection();
+            c.setAutoCommit(false);
+            PreparedStatement stmt = null;
+
+            String sql = "DELETE FROM " + TABLE_CARNET_ADRESSES
+                    + " WHERE ID=" + carnet.getId();
+            System.out.println(sql);
+
+            stmt = c.prepareStatement(sql);
+
+            stmt.executeUpdate();
+            stmt.close();
+
+            c.commit();
+            c.setAutoCommit(true);
+            c.close();
+
+            System.out.println("Operation done successfully");
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+    }
 }

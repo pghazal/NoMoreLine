@@ -3,6 +3,7 @@ package fr.ece.pfe_project.widget;
 import fr.ece.pfe_project.model.CarnetAdresses;
 import javax.swing.JOptionPane;
 import fr.ece.pfe_project.database.DatabaseHelper;
+import static fr.ece.pfe_project.database.DatabaseHelper.carnetAdresseExists;
 import fr.ece.pfe_project.panel.ListPanel;
 
 /**
@@ -170,7 +171,7 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
             String societeAssistance = this.societeAssistance.getText();
             String telephone = this.telephone.getText();
             Integer nbGuichets = (Integer)this.nbGuichet.getValue();
-            //Ajouter une id unique en vérifiant dans le tableau
+            //Vérification dans la base pour attribuer un id unique
             
             //Vérification du téléphone
             if(verifierInt(telephone) == false){
@@ -186,7 +187,12 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
                 ca.setTelephone(telephone);
                 ca.setNombreGuichet(nbGuichets);
                 //Enregistrement dans la bdd
-                
+                if(carnetAdresseExists(ca) == false){
+                    DatabaseHelper.addCarnetAdresses(ca);
+                }
+                else{
+                    JOptionPane.showMessageDialog(this, "L'élément que vous voulez enregistrer existe déjà en base de donnée", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+                }
                 this.dispose();
             }
         } catch (NumberFormatException e) {
