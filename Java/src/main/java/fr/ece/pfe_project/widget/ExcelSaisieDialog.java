@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
-import fr.ece.pfe_project.database.DatabaseHelper;
 import java.util.Calendar;
 
 /**
@@ -13,6 +12,8 @@ import java.util.Calendar;
  * @author pierreghazal
  */
 public class ExcelSaisieDialog extends javax.swing.JDialog {
+
+    private SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
 
     private FrequentationJournaliere fj;
 
@@ -34,48 +35,47 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
 
     public void setFj(FrequentationJournaliere fj) {
         this.fj = fj;
-        this.dateTextField.setText(fj.getDate().toString());
+        this.dateTextField.setText(f.format(fj.getDate()));
         this.freqTextField.setValue(fj.getFrequentation());
     }
-    
+
     public boolean isValidDate(String dateString) {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         try {
-            df.parse(dateString);
+            f.parse(dateString);
             return true;
         } catch (ParseException e) {
             return false;
         }
     }
-    
+
     public static boolean verifierInt(String entier) {
         boolean v = false;
         try {
-        //on essaie de convertir la chaîne en nombre entier
-        Integer.parseInt(entier);
-        //conversion aboutie, v prend la valeur true
-        v = true;
+            //on essaie de convertir la chaîne en nombre entier
+            Integer.parseInt(entier);
+            //conversion aboutie, v prend la valeur true
+            v = true;
         } catch (Exception e) {
-        //conversion échouée, levée d'une exception, v prend false
-        v = false;
+            //conversion échouée, levée d'une exception, v prend false
+            v = false;
         }
         //on retourne v
         return v;
     }
-    
-    public Integer verifierDate(String date){
+
+    public Integer verifierDate(String date) {
         Integer bool = 0;
         String[] dater = date.split("/");
-        if(Integer.parseInt(dater[1]) > 12 || Integer.parseInt(dater[1]) < 1){
+        if (Integer.parseInt(dater[1]) > 12 || Integer.parseInt(dater[1]) < 1) {
             bool = 1;
         }
-        if(Integer.parseInt(dater[0]) > 31 || Integer.parseInt(dater[0]) < 1){
+        if (Integer.parseInt(dater[0]) > 31 || Integer.parseInt(dater[0]) < 1) {
             bool = 2;
         }
-        if(dater[2].length() > 4){
+        if (dater[2].length() > 4) {
             bool = 3;
         }
-        if(dater[2].length() < 4){
+        if (dater[2].length() < 4) {
             bool = 4;
         }
         return bool;
@@ -100,6 +100,9 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Ajouter fréquentation journalière");
         setAlwaysOnTop(true);
+        setMaximumSize(new java.awt.Dimension(262, 130));
+        setMinimumSize(new java.awt.Dimension(262, 130));
+        setPreferredSize(new java.awt.Dimension(262, 130));
 
         cancelButton.setText("Annuler");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -118,7 +121,9 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel1.setText("Date : (dd/mm/yyyy)");
+        dateTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
+
+        jLabel1.setText("Date (jj/mm/aaaa) :");
 
         jLabel2.setText("Fréquentation :");
 
@@ -128,20 +133,22 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 69, Short.MAX_VALUE)
-                .addComponent(validateButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cancelButton))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(freqTextField)
-                    .addComponent(dateTextField))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(validateButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(freqTextField)
+                            .addComponent(dateTextField))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -178,37 +185,31 @@ public class ExcelSaisieDialog extends javax.swing.JDialog {
 //            else if(Integer.parseInt(this.freqTextField.getText()) < 0){
 //                JOptionPane.showMessageDialog(this, "La fréquence ne peut être négative", "Erreur", JOptionPane.INFORMATION_MESSAGE);
 //            }
-            /*else*/ if(isValidDate(this.dateTextField.getText()) == false){
+            /*else*/ if (isValidDate(this.dateTextField.getText()) == false) {
                 JOptionPane.showMessageDialog(this, "Veuillez entrer une date correcte", "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            else if(verifierDate(this.dateTextField.getText()) == 1){
+            } else if (verifierDate(this.dateTextField.getText()) == 1) {
                 JOptionPane.showMessageDialog(this, "Le mois doit correspondre à un chiffre entre 1 et 12", "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            else if(verifierDate(this.dateTextField.getText()) == 2){
+            } else if (verifierDate(this.dateTextField.getText()) == 2) {
                 JOptionPane.showMessageDialog(this, "Le jour doit correspondre à un nombre entre 1 et 31", "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            else if(verifierDate(this.dateTextField.getText()) == 3){
+            } else if (verifierDate(this.dateTextField.getText()) == 3) {
                 JOptionPane.showMessageDialog(this, "L'année ne peut être un nombre à 4 chiffres", "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            else if(verifierDate(this.dateTextField.getText()) == 4){
-                JOptionPane.showMessageDialog(this, "Etes vous sur de l'année choisie?" , "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            else{
+            } else if (verifierDate(this.dateTextField.getText()) == 4) {
+                JOptionPane.showMessageDialog(this, "Etes vous sur de l'année choisie?", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+            } else {
                 String[] dat = (this.dateTextField.getText()).split("/");
-                Integer[] datInt ={0,0,0}; 
-                for(int i=0; i<3; i++){
+                Integer[] datInt = {0, 0, 0};
+                for (int i = 0; i < 3; i++) {
                     datInt[i] = Integer.parseInt(dat[i]);
                 }
                 //datInt[1]-=1;
                 Calendar cal = Calendar.getInstance();
-                cal.set(datInt[2], datInt[1]-1, datInt[0]);
+                cal.set(datInt[2], datInt[1] - 1, datInt[0]);
                 Date date = cal.getTime();
-                Integer freq = (Integer)this.freqTextField.getValue();
+                Integer freq = (Integer) this.freqTextField.getValue();
                 fj = new FrequentationJournaliere();
                 fj.setDate(date);
                 fj.setFrequentation(freq);
-                //Enregistrement dans la bdd
-                DatabaseHelper.addFrequentationJournaliere(date, freq);
+
                 this.dispose();
             }
         } catch (NumberFormatException e) {

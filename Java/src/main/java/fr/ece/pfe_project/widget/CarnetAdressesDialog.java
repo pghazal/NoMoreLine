@@ -2,9 +2,6 @@ package fr.ece.pfe_project.widget;
 
 import fr.ece.pfe_project.model.CarnetAdresses;
 import javax.swing.JOptionPane;
-import fr.ece.pfe_project.database.DatabaseHelper;
-import static fr.ece.pfe_project.database.DatabaseHelper.carnetAdresseExists;
-import fr.ece.pfe_project.panel.ListPanel;
 
 /**
  *
@@ -20,7 +17,6 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
-        
     }
     
     public CarnetAdresses getCa(){
@@ -106,11 +102,6 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        telephone.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                telephoneActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -153,7 +144,7 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
                     .addComponent(societeAssistance, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(telephone))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -180,33 +171,26 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
     private void validateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateButtonActionPerformed
         try {
             String compagnieCa = this.nomCompagnieButton.getText();
-            String societeAssistance = this.societeAssistance.getText();
-            String telephone = this.telephone.getText();
+            String strSocieteAssistance = this.societeAssistance.getText();
+            String strTelephone = this.telephone.getText();
             Integer nbGuichets = (Integer)this.nbGuichet.getValue();
             //Vérification dans la base pour attribuer un id unique
             
             //Vérification du téléphone
-            if(verifierInt(telephone) == false){
+            if(verifierInt(strTelephone) == false){
                 JOptionPane.showMessageDialog(this, "Le numéro de téléphone ne doit contenir que des caractères numériques", "Erreur", JOptionPane.INFORMATION_MESSAGE);
             }
-            else if(verifierInt(telephone) == true && telephone.length() != 10){
-                System.out.println("Taille : " + telephone.length());
+            else if(verifierInt(strTelephone) == true && strTelephone.length() != 10){
+                System.out.println("Taille : " + strTelephone.length());
                 JOptionPane.showMessageDialog(this, "Le numéro de téléphone est incorrecte", "Erreur", JOptionPane.INFORMATION_MESSAGE);
             }
             else{
                 ca = new CarnetAdresses();
                 ca.setCompagnieca(compagnieCa);
-                ca.setSocieteAssistance(societeAssistance);
-                ca.setTelephone(telephone);
+                ca.setSocieteAssistance(strSocieteAssistance);
+                ca.setTelephone(strTelephone);
                 ca.setNombreGuichet(nbGuichets);
-                //Enregistrement dans la bdd
-                if(carnetAdresseExists(ca) == false){
-                    DatabaseHelper.addCarnetAdresses(ca);
-                }
-                else{
-                    ca = null;
-                    JOptionPane.showMessageDialog(this, "L'élément que vous voulez enregistrer existe déjà en base de donnée", "Erreur", JOptionPane.INFORMATION_MESSAGE);
-                }
+                
                 this.dispose();
             }
         } catch (NumberFormatException e) {
@@ -214,10 +198,6 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Erreur de saisie", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_validateButtonActionPerformed
-
-    private void telephoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_telephoneActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_telephoneActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;

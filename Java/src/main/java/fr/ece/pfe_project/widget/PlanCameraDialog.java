@@ -34,6 +34,13 @@ public class PlanCameraDialog extends javax.swing.JDialog {
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             selectedRow = row;
+
+            if (model.getDatas().get(row).getPosition() == null) {
+                comboBox.setSelectedItem(" - ");
+            } else {
+                comboBox.setSelectedItem(model.getDatas().get(row).getPosition());
+            }
+
             return super.getTableCellEditorComponent(table, value, isSelected, row, column);
         }
 
@@ -41,13 +48,14 @@ public class PlanCameraDialog extends javax.swing.JDialog {
         public Object getCellEditorValue() {
             String pos = this.comboBox.getSelectedItem().toString();
             System.out.println("getCellEditorValue : " + pos);
-            
+
             Camera c = model.getDatas().get(selectedRow);
             c.setPosition(pos);
 
             // Update DB
+            DatabaseHelper.updateCamera(c.getId(), c);
             // Update other combobox
-            
+
             return pos;
         }
     }
@@ -111,11 +119,7 @@ public class PlanCameraDialog extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(null);
 
-        ArrayList<Camera> list = new ArrayList<Camera>();
-
-        for (int i = 1; i < 4; i++) {
-            list.add(new Camera(i));
-        }
+        ArrayList<Camera> list = DatabaseHelper.getAllCamera();
 
         model = new CameraPlanTableModel(list);
 
