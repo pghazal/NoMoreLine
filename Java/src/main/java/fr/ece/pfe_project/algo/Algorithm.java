@@ -236,16 +236,26 @@ public class Algorithm {
                         }
 
                     } // Si le lendemain est ferie
-                    else if (isFerie(cal.getTime(), jours)) {
+                    if (isFerie(cal.getTime(), jours)) {
                         algoResult.setPrevisionPassager(process1(cal.getTime())
                                 .getPrevisionPassager());
                     }
+                    
+                    // Si le J-4 est férié (le jeudi précédent
+                    cal.add(Calendar.DAY_OF_MONTH, -5);
+                    
+                    if (isFerie(cal.getTime(), jours)) {
+                            int prevision = process1(date)
+                                .getPrevisionPassager();
+
+                            algoResult.setPrevisionPassager(prevision + ((prevision * 25) / 100));
+                            }
 
                     break;
                 case Calendar.TUESDAY:
                     isFerie = isFerie(date, jours);
 
-                    cal.add(Calendar.DAY_OF_MONTH, -1);
+                    cal.add(Calendar.DAY_OF_MONTH, +4);
 
                     if (isFerie) {
                         // Si la veille est ferie
