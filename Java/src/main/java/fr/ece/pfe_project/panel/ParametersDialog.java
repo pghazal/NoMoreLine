@@ -14,6 +14,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JDialog;
@@ -148,6 +150,14 @@ public class ParametersDialog extends javax.swing.JDialog {
 
         ArrayList<JourFerie> jours = (ArrayList<JourFerie>) ParametersUtils.get(ParametersUtils.PARAM_JOURS_FERIES);
         if (jours != null && jours.size() > 0) {
+            Collections.sort(jours, new Comparator<JourFerie>() {
+
+                @Override
+                public int compare(JourFerie o1, JourFerie o2) {
+                    return o1.getDate().compareTo(o2.getDate());
+                }
+            });
+
             ((JourFerieTableModel) this.tableFeries.getModel()).setData(jours, true);
         }
     }
