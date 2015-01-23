@@ -516,7 +516,18 @@ public class ParametersDialog extends javax.swing.JDialog {
 
         JourFerieTableModel model = (JourFerieTableModel) this.tableFeries.getModel();
         model.setData(null, true);
-        ParametersUtils.set(ParametersUtils.PARAM_JOURS_FERIES, (ArrayList<JourFerie>) model.getDatas());
+
+        ArrayList<JourFerie> jours = (ArrayList<JourFerie>) model.getDatas();
+
+        Collections.sort(jours, new Comparator<JourFerie>() {
+
+            @Override
+            public int compare(JourFerie o1, JourFerie o2) {
+                return o1.getDate().compareTo(o2.getDate());
+            }
+        });
+
+        ParametersUtils.set(ParametersUtils.PARAM_JOURS_FERIES, jours);
 
         // Afficher pop-up ?
         this.spinnerSeuilJour.setValue(DEFAULT_SEUIL_JOUR);
@@ -585,6 +596,14 @@ public class ParametersDialog extends javax.swing.JDialog {
         if (tableFeries.isEditing()) {
             tableFeries.getCellEditor().stopCellEditing();
         }
+
+        Collections.sort(jours, new Comparator<JourFerie>() {
+
+            @Override
+            public int compare(JourFerie o1, JourFerie o2) {
+                return o1.getDate().compareTo(o2.getDate());
+            }
+        });
 
         model.setData(jours, true);
     }//GEN-LAST:event_loadJourFerieActionPerformed
