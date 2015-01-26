@@ -27,10 +27,10 @@ public class ComponentIconDefaults {
     private static final String CARNETADRESSE = "/nomoreline/img/directory.png";
     private static final String PROJET = "/nomoreline/img/project.png";
     private static final String EXCEL = "/nomoreline/img/excel.png";
-
     private static final String ADD = "/nomoreline/img/add-icon.png";
     private static final String DELETE = "/nomoreline/img/trash-icon.png";
     private static final String EDIT = "/nomoreline/img/edit-icon.png";
+    private static final String PARAMETRE = "/nomoreline/img/parameter-icon.png";
 
     private Icon logoIcon;
     private Icon nextMonthIcon;
@@ -48,10 +48,10 @@ public class ComponentIconDefaults {
     private Icon carnetIcon;
     private Icon projetIcon;
     private Icon excelIcon;
-
     private Icon addIcon;
     private Icon deleteIcon;
     private Icon editIcon;
+    private Icon parameterIcon;
 
     public ComponentIconDefaults() {
         try {
@@ -72,6 +72,7 @@ public class ComponentIconDefaults {
             addIcon = loadIcon(ADD);
             deleteIcon = loadIcon(DELETE);
             editIcon = loadIcon(EDIT);
+            parameterIcon = loadIcon(PARAMETRE);
 
             nextMonthIcon = new JNextIcon(4, 7, false);
             nextYearIcon = new JNextIcon(8, 7, true);
@@ -89,10 +90,14 @@ public class ComponentIconDefaults {
         return new ImageIcon(image);
     }
 
+    public Icon getParameterIcon() {
+        return parameterIcon;
+    }
+
     public Icon getAddIcon() {
         return addIcon;
     }
-    
+
     public Icon getDeleteIcon() {
         return deleteIcon;
     }

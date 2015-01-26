@@ -13,6 +13,7 @@ import javax.swing.table.TableCellRenderer;
  */
 public class CameraCellRenderer implements TableCellRenderer {
 
+    final static Color ORANGE_CUSTOM = new Color(235, 206, 157);
     CameraCellComponent panel;
 
     public CameraCellRenderer() {
@@ -22,7 +23,7 @@ public class CameraCellRenderer implements TableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Camera camera = (Camera) value;
-        panel.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+        panel.setBackground(row % 2 == 0 ? ORANGE_CUSTOM : Color.WHITE);
         panel.updateData(camera, isSelected, table);
         return panel;
     }

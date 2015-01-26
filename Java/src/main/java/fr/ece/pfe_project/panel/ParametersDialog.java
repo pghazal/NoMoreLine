@@ -3,10 +3,12 @@ package fr.ece.pfe_project.panel;
 import fr.ece.pfe_project.algo.Algorithm;
 import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.model.JourFerie;
+import static fr.ece.pfe_project.panel.ListPanel.ORANGE_CUSTOM;
 import fr.ece.pfe_project.tablemodel.JourFerieTableModel;
 import fr.ece.pfe_project.utils.ExcelUtils;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import fr.ece.pfe_project.widget.ProgressDialog;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.io.File;
@@ -44,14 +46,16 @@ public class ParametersDialog extends javax.swing.JDialog {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int col) {
-            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+            final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
+            c.setBackground(row % 2 == 0 ? ORANGE_CUSTOM : Color.WHITE);
 
             if (value instanceof Date) {
                 String strDate = f.format((Date) value);
                 this.setText(strDate);
             }
 
-            return this;
+            return c;
         }
     }
 
@@ -101,6 +105,25 @@ public class ParametersDialog extends javax.swing.JDialog {
         }
     }
 
+    public class MyDefaultRenderer extends DefaultTableCellRenderer {
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            c.setBackground(row % 2 == 0 ? ORANGE_CUSTOM : Color.WHITE);
+
+            if (isSelected) {
+                c.setBackground(Color.BLUE);
+                c.setForeground(Color.WHITE);
+            } else {
+                c.setForeground(Color.BLACK);
+            }
+
+            return c;
+        }
+    }
+
     /**
      * Creates new form ParametersDialog
      *
@@ -111,11 +134,12 @@ public class ParametersDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        MyDefaultRenderer rightRenderer = new MyDefaultRenderer();
         rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         this.tableFeries.getColumnModel().getColumn(0).setCellRenderer(rightRenderer);
         this.tableFeries.getColumnModel().getColumn(0).setMaxWidth(50);
         this.tableFeries.getColumnModel().getColumn(0).setMinWidth(20);
+        this.tableFeries.getColumnModel().getColumn(1).setCellRenderer(new MyDefaultRenderer());
         this.tableFeries.getColumnModel().getColumn(2).
                 setCellRenderer(new DateRenderer());
         this.tableFeries.getColumnModel().getColumn(2).

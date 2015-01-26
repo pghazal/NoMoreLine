@@ -68,7 +68,8 @@ import real_time_image_processing.FaceDetectorThread;
 public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetectorInterface,
         ToolbarEntityListener, ToolbarActionsListener, ActionListener {
 
-    SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
+    final static SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
+    final static Color ORANGE_CUSTOM = new Color(235, 206, 157);
 
     public class DateEditor extends DefaultCellEditor {
 
@@ -128,7 +129,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                 this.setText(strDate);
             }
 
-            this.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+            this.setBackground(row % 2 == 0 ? ORANGE_CUSTOM : Color.WHITE);
 
             if (isSelected) {
                 this.setBackground(Color.BLUE);
@@ -147,7 +148,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-            c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+            c.setBackground(row % 2 == 0 ? ORANGE_CUSTOM : Color.WHITE);
 
             if (isSelected) {
                 c.setBackground(Color.BLUE);
@@ -178,7 +179,11 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
      */
     public ListPanel(FaceDetectorListener faceListener, ToolbarsListener toolbarsListener) {
         initComponents();
-
+        
+        parameterButton.setText("");
+        parameterButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getParameterIcon());
+        parameterButton.setToolTipText("Paramétrer");
+        
         planPanel = new PlanPanel();
         planPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
