@@ -24,7 +24,7 @@ public class CameraCellComponent extends javax.swing.JPanel {
         this.camera = cam;
 
         this.labelID.setText("Camera # " + this.camera.getId());
-        if (camera.getPosition() == null) {
+        if (camera.getPosition() == null || camera.getPosition().equals(" - ")) {
             this.labelPosition.setText("Position : Non renseignée");
         } else {
             this.labelPosition.setText("Position : " + this.camera.getPosition());
@@ -33,9 +33,11 @@ public class CameraCellComponent extends javax.swing.JPanel {
         if (isSelected) {
             setBackground(Color.BLUE);
             setForeground(Color.WHITE);
+            this.labelPosition.setForeground(Color.WHITE);
             this.labelID.setForeground(Color.WHITE);
         } else {
             setForeground(Color.BLACK);
+            this.labelPosition.setForeground(Color.BLACK);
             this.labelID.setForeground(Color.BLACK);
         }
 

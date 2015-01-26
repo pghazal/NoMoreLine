@@ -165,7 +165,6 @@ public class DatabaseHelper {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_CAMERA);
 
-            //camPositions.add(" - ");
             while (rs.next()) {
 
                 camPositions.add(rs.getString("POSITION"));
@@ -183,7 +182,8 @@ public class DatabaseHelper {
             stmt.close();
             c.close();
 
-            return result;
+            allPositionsPlan.add(0, " - ");
+            return allPositionsPlan;
 
         } catch (SQLException e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
