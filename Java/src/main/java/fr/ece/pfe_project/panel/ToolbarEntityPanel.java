@@ -137,17 +137,22 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
         setPreferredSize(new java.awt.Dimension(90, 600));
 
         cameraButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/video.png"))); // NOI18N
+        cameraButton.setToolTipText("Système de détection par caméra");
 
         excelButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/excel.png"))); // NOI18N
+        excelButton.setToolTipText("Fréquentations journalières");
         excelButton.setMaximumSize(new java.awt.Dimension(104, 29));
         excelButton.setMinimumSize(new java.awt.Dimension(104, 29));
         excelButton.setPreferredSize(new java.awt.Dimension(104, 29));
 
         listingVolsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/plane.png"))); // NOI18N
+        listingVolsButton.setToolTipText("Liste des vols");
 
         carnetAdressesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/directory.png"))); // NOI18N
+        carnetAdressesButton.setToolTipText("Carnet d'adresses");
 
-        planButton.setText("Plan");
+        planButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/map.png"))); // NOI18N
+        planButton.setToolTipText("Plan de l'aéroport");
         planButton.setMaximumSize(new java.awt.Dimension(64, 72));
         planButton.setMinimumSize(new java.awt.Dimension(64, 72));
         planButton.setPreferredSize(new java.awt.Dimension(64, 72));

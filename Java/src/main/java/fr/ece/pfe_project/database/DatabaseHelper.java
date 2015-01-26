@@ -165,7 +165,6 @@ public class DatabaseHelper {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_CAMERA);
 
-            //camPositions.add(" - ");
             while (rs.next()) {
 
                 camPositions.add(rs.getString("POSITION"));
@@ -183,7 +182,8 @@ public class DatabaseHelper {
             stmt.close();
             c.close();
 
-            return result;
+            allPositionsPlan.add(0, " - ");
+            return allPositionsPlan;
 
         } catch (SQLException e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -199,20 +199,20 @@ public class DatabaseHelper {
             c.setAutoCommit(false);
 
             String sql;
-            if (!cameraExists(camera)) {
+            //if (!cameraExists(camera)) {
 
-                sql = "INSERT INTO " + TABLE_CAMERA + "(ID, POSITION)"
-                        + " VALUES(?,?)";
+            sql = "INSERT INTO " + TABLE_CAMERA + "(ID, POSITION)"
+                    + " VALUES(?,?)";
 
-                PreparedStatement stmt = c.prepareStatement(sql);
-                stmt.setInt(1, camera.getId());
-                stmt.setString(2, camera.getPosition());
-                stmt.executeUpdate();
+            PreparedStatement stmt = c.prepareStatement(sql);
+            stmt.setInt(1, camera.getId());
+            stmt.setString(2, camera.getPosition());
+            stmt.executeUpdate();
 
-                stmt.close();
+            stmt.close();
 
-                System.out.println("Add Camera success");
-            }
+            System.out.println("Add Camera success");
+            //}
 
             c.commit();
             c.setAutoCommit(true);
@@ -241,9 +241,13 @@ public class DatabaseHelper {
         try {
             Connection c = getConnection();
 
-            Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_CAMERA
-                    + " WHERE ID=" + camera.getId() + " LIMIT 1;");
+            String sql = "SELECT * FROM " + TABLE_CAMERA
+                    + " WHERE ID=" + camera.getId() + " LIMIT 1;";
+
+            System.out.println(sql);
+
+            PreparedStatement stmt = c.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
 
             Camera cam = new Camera();
 
@@ -273,23 +277,23 @@ public class DatabaseHelper {
             c.setAutoCommit(false);
 
             String sql;
-            if (!carnetAdresseExists(carnet)) {
+            //if (!carnetAdresseExists(carnet)) {
 
-                sql = "INSERT INTO " + TABLE_CARNET_ADRESSES + "(COMPAGNIE, GUICHET, ASSISTANCE, TELEPHONE)"
-                        + " VALUES(?,?,?,?)";
+            sql = "INSERT INTO " + TABLE_CARNET_ADRESSES + "(COMPAGNIE, GUICHET, ASSISTANCE, TELEPHONE)"
+                    + " VALUES(?,?,?,?)";
 
-                PreparedStatement stmt = c.prepareStatement(sql);
-                stmt.setString(1, carnet.getCompagnieca().trim().toUpperCase());
-                stmt.setInt(2, carnet.getNombreGuichet());
-                stmt.setString(3, carnet.getSocieteAssistance().trim().toUpperCase());
-                stmt.setString(4, carnet.getTelephone());
+            PreparedStatement stmt = c.prepareStatement(sql);
+            stmt.setString(1, carnet.getCompagnieca().trim().toUpperCase());
+            stmt.setInt(2, carnet.getNombreGuichet());
+            stmt.setString(3, carnet.getSocieteAssistance().trim().toUpperCase());
+            stmt.setString(4, carnet.getTelephone());
 
-                stmt.executeUpdate();
+            stmt.executeUpdate();
 
-                stmt.close();
+            stmt.close();
 
-                System.out.println("Add Carnet success");
-            }
+            System.out.println("Add Carnet success");
+            //}
 
             c.commit();
             c.setAutoCommit(true);
@@ -317,8 +321,6 @@ public class DatabaseHelper {
     public static CarnetAdresses getCarnetAdresses(CarnetAdresses carn) {
         try {
             Connection c = getConnection();
-
-            System.err.println("YOLO");
 
             String sql = "SELECT * FROM " + TABLE_CARNET_ADRESSES
                     + " WHERE COMPAGNIE=\"" + carn.getCompagnieca().toUpperCase()
@@ -363,22 +365,22 @@ public class DatabaseHelper {
             c.setAutoCommit(false);
 
             String sql;
-            if (!frequentationJournaliereExists(date)) {
+            //if (!frequentationJournaliereExists(date)) {
 
-                int jour = Algorithm.getDayOfMonth(date);
-                int mois = Algorithm.getMonth(date);
-                int annee = Algorithm.getYear(date);
+            int jour = Algorithm.getDayOfMonth(date);
+            int mois = Algorithm.getMonth(date);
+            int annee = Algorithm.getYear(date);
 
-                sql = "INSERT INTO " + TABLE_FREQUENTATION_JOURNALIERE + " (JOUR, MOIS, ANNEE, FREQUENTATION)"
-                        + " VALUES (" + jour + "," + mois + "," + annee + "," + freq + ")";
+            sql = "INSERT INTO " + TABLE_FREQUENTATION_JOURNALIERE + " (JOUR, MOIS, ANNEE, FREQUENTATION)"
+                    + " VALUES (" + jour + "," + mois + "," + annee + "," + freq + ")";
 
-                Statement stmt = c.createStatement();
-                stmt.executeUpdate(sql);
+            Statement stmt = c.createStatement();
+            stmt.executeUpdate(sql);
 
-                stmt.close();
+            stmt.close();
 
-                System.out.println("Add Journalier success");
-            }
+            System.out.println("Add Journalier success");
+            //}
 
             c.commit();
             c.setAutoCommit(true);
@@ -617,26 +619,31 @@ public class DatabaseHelper {
         return null;
     }
 
-    public static void updateFrequentationJournaliere(Date date, Integer freq) {
+    public static void updateFrequentationJournaliere(Date oldDate, Date date, Integer freq) {
         try {
             Connection c = getConnection();
             c.setAutoCommit(false);
 
             String sql;
-            if (frequentationJournaliereExists(date)) {
+            //if (frequentationJournaliereExists(date)) {
 
-                int jour = Algorithm.getDayOfMonth(date);
-                int mois = Algorithm.getMonth(date);
-                int annee = Algorithm.getYear(date);
+            sql = "UPDATE FREQUENTATION_JOURNALIERE SET FREQUENTATION=?,JOUR=?,MOIS=?,ANNEE=?"
+                    + " WHERE JOUR=? AND MOIS=? AND ANNEE=?";
 
-                sql = "UPDATE FREQUENTATION_JOURNALIERE SET FREQUENTATION=" + freq
-                        + " WHERE JOUR=" + jour + " AND MOIS=" + mois + " AND ANNEE=" + annee;
+            PreparedStatement stmt = c.prepareStatement(sql);
 
-                Statement stmt = c.createStatement();
-                stmt.executeUpdate(sql);
+            stmt.setInt(1, freq);
+            stmt.setInt(2, Algorithm.getDayOfMonth(date));
+            stmt.setInt(3, Algorithm.getMonth(date));
+            stmt.setInt(4, Algorithm.getYear(date));
+            stmt.setInt(5, Algorithm.getDayOfMonth(oldDate));
+            stmt.setInt(6, Algorithm.getMonth(oldDate));
+            stmt.setInt(7, Algorithm.getYear(oldDate));
+            
+            stmt.executeUpdate();
 
-                stmt.close();
-            }
+            stmt.close();
+            //}
 
             c.commit();
             c.setAutoCommit(true);
@@ -648,22 +655,23 @@ public class DatabaseHelper {
         System.out.println("Update Journalier success");
     }
 
-    public static void updateCamera(Camera camera) {
+    public static void updateCamera(Integer oldId, Camera camera) {
         try {
             Connection c = getConnection();
             c.setAutoCommit(false);
 
             String sql;
-            if (cameraExists(camera)) {
+            //if (cameraExists(camera)) {
 
-                sql = "UPDATE " + TABLE_CAMERA + " SET POSITION=" + camera.getPosition()
-                        + " WHERE ID=" + camera.getId();
+            sql = "UPDATE " + TABLE_CAMERA + " SET POSITION=? WHERE ID=?";
 
-                PreparedStatement stmt = c.prepareStatement(sql);
-                stmt.executeUpdate();
+            PreparedStatement stmt = c.prepareStatement(sql);
+            stmt.setString(1, camera.getPosition());
+            stmt.setInt(2, oldId);
+            stmt.executeUpdate();
 
-                stmt.close();
-            }
+            stmt.close();
+            //}
 
             c.commit();
             c.setAutoCommit(true);
@@ -675,28 +683,31 @@ public class DatabaseHelper {
         System.out.println("Update Camera success");
     }
 
-    public static void updateCarnetAdresses(CarnetAdresses carnet) {
+    public static void updateCarnetAdresses(Integer oldId, CarnetAdresses carnet) {
         try {
             Connection c = getConnection();
             c.setAutoCommit(false);
 
             String sql;
-            if (carnetAdresseExists(carnet)) {
+            //if (carnetAdresseExists(carnet)) {
 
-                sql = "UPDATE TABLE_CARNET_ADRESSES SET COMPAGNIE=? AND GUICHET=?"
-                        + " AND ASSISTANCE=? AND TELEPHONE=?"
-                        + " WHERE ID=" + carnet.getId();
+            sql = "UPDATE " + TABLE_CARNET_ADRESSES + " SET COMPAGNIE=?, GUICHET=?"
+                    + ", ASSISTANCE=?, TELEPHONE=?"
+                    + " WHERE ID=?";
 
-                PreparedStatement stmt = c.prepareStatement(sql);
-                stmt.setString(1, carnet.getCompagnieca().trim().toUpperCase());
-                stmt.setInt(2, carnet.getNombreGuichet());
-                stmt.setString(3, carnet.getSocieteAssistance().trim().toUpperCase());
-                stmt.setString(4, carnet.getTelephone());
-                
-                stmt.executeUpdate();
+            PreparedStatement stmt = c.prepareStatement(sql);
+            stmt.setString(1, carnet.getCompagnieca().trim().toUpperCase());
+            stmt.setInt(2, carnet.getNombreGuichet());
+            stmt.setString(3, carnet.getSocieteAssistance().trim().toUpperCase());
+            stmt.setString(4, carnet.getTelephone());
+            stmt.setInt(5, oldId);
 
-                stmt.close();
-            }
+            stmt.executeUpdate();
+
+            stmt.close();
+
+            System.out.println("Update Carnet success");
+            //}
 
             c.commit();
             c.setAutoCommit(true);
@@ -705,7 +716,6 @@ public class DatabaseHelper {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Update Carnet success");
     }
 
     public static int aggregateFrequentationOfYear(int year) {
@@ -877,6 +887,39 @@ public class DatabaseHelper {
         return null;
     }
 
+    public static ArrayList<Camera> getAllCamera() {
+        try {
+            ArrayList<Camera> cameras = new ArrayList<Camera>();
+
+            Connection c = getConnection();
+
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_CAMERA + " ORDER BY ID;");
+
+            while (rs.next()) {
+                String position = rs.getString("POSITION");
+                Integer id = rs.getInt("ID");
+
+                Camera cam = new Camera(id);
+                cam.setPosition(position);
+
+                cameras.add(cam);
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+
+            return cameras;
+
+        } catch (SQLException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+
+        return null;
+    }
+
     public static ArrayList<CarnetAdresses> getAllCarnetAdresses() {
         try {
             ArrayList<CarnetAdresses> carnet = new ArrayList<CarnetAdresses>();
@@ -1010,6 +1053,34 @@ public class DatabaseHelper {
         }
 
         System.out.println("Operation done successfully");
+    }
+
+    public static void deleteCamera(Camera camera) {
+
+        try {
+            Connection c = getConnection();
+            c.setAutoCommit(false);
+            PreparedStatement stmt = null;
+
+            String sql = "DELETE FROM " + TABLE_CAMERA
+                    + " WHERE ID=" + camera.getId();
+            System.out.println(sql);
+
+            stmt = c.prepareStatement(sql);
+
+            stmt.executeUpdate();
+            stmt.close();
+
+            c.commit();
+            c.setAutoCommit(true);
+            c.close();
+
+            System.out.println("Operation done successfully");
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
     }
 
     public static void deleteCarnetAdresse(CarnetAdresses carnet) {

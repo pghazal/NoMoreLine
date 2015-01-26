@@ -121,7 +121,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         cal.set(Calendar.MILLISECOND, 0);
 
-        cal.set(cal.get(Calendar.YEAR), 7, 14, 0, 0, 0);
+        cal.set(cal.get(Calendar.YEAR), 4, 1, 0, 0, 0);
+        jours.add(new JourFerie("Fête du Travail", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 0, 1, 0, 0, 0);
+        jours.add(new JourFerie("Jour de l'an", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 6, 14, 0, 0, 0);
         jours.add(new JourFerie("Fête Nationale", cal.getTime()));
         cal.set(cal.get(Calendar.YEAR), 10, 11, 0, 0, 0);
         jours.add(new JourFerie("Armistice", cal.getTime()));

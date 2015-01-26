@@ -24,7 +24,7 @@ public class CameraCellComponent extends javax.swing.JPanel {
         this.camera = cam;
 
         this.labelID.setText("Camera # " + this.camera.getId());
-        if (camera.getPosition() == null) {
+        if (camera.getPosition() == null || camera.getPosition().equals(" - ")) {
             this.labelPosition.setText("Position : Non renseignée");
         } else {
             this.labelPosition.setText("Position : " + this.camera.getPosition());
@@ -33,9 +33,11 @@ public class CameraCellComponent extends javax.swing.JPanel {
         if (isSelected) {
             setBackground(Color.BLUE);
             setForeground(Color.WHITE);
+            this.labelPosition.setForeground(Color.WHITE);
             this.labelID.setForeground(Color.WHITE);
         } else {
             setForeground(Color.BLACK);
+            this.labelPosition.setForeground(Color.BLACK);
             this.labelID.setForeground(Color.BLACK);
         }
 
@@ -93,28 +95,23 @@ public class CameraCellComponent extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(labelID)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 329, Short.MAX_VALUE)
-                        .addComponent(panelCameraState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(labelPosition)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(labelID)
+                    .addComponent(labelPosition))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 226, Short.MAX_VALUE)
+                .addComponent(panelCameraState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelCameraState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(labelID))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(panelCameraState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(labelPosition)
-                .addContainerGap())
+                        .addComponent(labelID)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(labelPosition)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

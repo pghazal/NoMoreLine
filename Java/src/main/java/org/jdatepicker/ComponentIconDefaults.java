@@ -16,7 +16,7 @@ import org.jdatepicker.graphics.JPreviousIcon;
  */
 public class ComponentIconDefaults {
 
-    private static final String LOGO = "/nomoreline/img/logo.png";
+    private static final String LOGO = "/nomoreline/img/logo2.png";
     private static final String CAMERAGREEN = "/nomoreline/img/greencamera.png";
     private static final String CAMERARED = "/nomoreline/img/redcamera.png";
     private static final String ONLED = "/nomoreline/img/on_led_icon.png";
@@ -27,6 +27,10 @@ public class ComponentIconDefaults {
     private static final String CARNETADRESSE = "/nomoreline/img/directory.png";
     private static final String PROJET = "/nomoreline/img/project.png";
     private static final String EXCEL = "/nomoreline/img/excel.png";
+
+    private static final String ADD = "/nomoreline/img/add-icon.png";
+    private static final String DELETE = "/nomoreline/img/trash-icon.png";
+    private static final String EDIT = "/nomoreline/img/edit-icon.png";
 
     private Icon logoIcon;
     private Icon nextMonthIcon;
@@ -45,6 +49,10 @@ public class ComponentIconDefaults {
     private Icon projetIcon;
     private Icon excelIcon;
 
+    private Icon addIcon;
+    private Icon deleteIcon;
+    private Icon editIcon;
+
     public ComponentIconDefaults() {
         try {
             //TODO consider making all the icons vector images which will scale
@@ -54,13 +62,17 @@ public class ComponentIconDefaults {
             onLedIcon = loadIcon(ONLED);
             offLedIcon = loadIcon(OFFLED);
             checkIcon = loadIcon(CHECK);
-            
+
             cameraIcon = loadIcon(CAMERA);
             listingVolIcon = loadIcon(LISTINGVOL);
             carnetIcon = loadIcon(CARNETADRESSE);
             projetIcon = loadIcon(PROJET);
             excelIcon = loadIcon(EXCEL);
-            
+
+            addIcon = loadIcon(ADD);
+            deleteIcon = loadIcon(DELETE);
+            editIcon = loadIcon(EDIT);
+
             nextMonthIcon = new JNextIcon(4, 7, false);
             nextYearIcon = new JNextIcon(8, 7, true);
             previousMonthIcon = new JPreviousIcon(4, 7, false);
@@ -75,6 +87,18 @@ public class ComponentIconDefaults {
         InputStream stream = ComponentIconDefaults.class.getResourceAsStream(path);
         BufferedImage image = ImageIO.read(stream);
         return new ImageIcon(image);
+    }
+
+    public Icon getAddIcon() {
+        return addIcon;
+    }
+    
+    public Icon getDeleteIcon() {
+        return deleteIcon;
+    }
+
+    public Icon getEditIcon() {
+        return editIcon;
     }
 
     public Icon getLogoIcon() {

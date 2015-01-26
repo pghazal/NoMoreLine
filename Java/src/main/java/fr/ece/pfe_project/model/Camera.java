@@ -20,7 +20,6 @@ public class Camera implements ModelInterface {
     private String position = null;
 
     public Camera() {
-        
     }
     
     public Camera(int id) {

@@ -14,6 +14,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JDialog;
@@ -148,6 +150,14 @@ public class ParametersDialog extends javax.swing.JDialog {
 
         ArrayList<JourFerie> jours = (ArrayList<JourFerie>) ParametersUtils.get(ParametersUtils.PARAM_JOURS_FERIES);
         if (jours != null && jours.size() > 0) {
+            Collections.sort(jours, new Comparator<JourFerie>() {
+
+                @Override
+                public int compare(JourFerie o1, JourFerie o2) {
+                    return o1.getDate().compareTo(o2.getDate());
+                }
+            });
+
             ((JourFerieTableModel) this.tableFeries.getModel()).setData(jours, true);
         }
     }
@@ -506,7 +516,18 @@ public class ParametersDialog extends javax.swing.JDialog {
 
         JourFerieTableModel model = (JourFerieTableModel) this.tableFeries.getModel();
         model.setData(null, true);
-        ParametersUtils.set(ParametersUtils.PARAM_JOURS_FERIES, (ArrayList<JourFerie>) model.getDatas());
+
+        ArrayList<JourFerie> jours = (ArrayList<JourFerie>) model.getDatas();
+
+        Collections.sort(jours, new Comparator<JourFerie>() {
+
+            @Override
+            public int compare(JourFerie o1, JourFerie o2) {
+                return o1.getDate().compareTo(o2.getDate());
+            }
+        });
+
+        ParametersUtils.set(ParametersUtils.PARAM_JOURS_FERIES, jours);
 
         // Afficher pop-up ?
         this.spinnerSeuilJour.setValue(DEFAULT_SEUIL_JOUR);
@@ -555,7 +576,11 @@ public class ParametersDialog extends javax.swing.JDialog {
 
         cal.set(Calendar.MILLISECOND, 0);
 
-        cal.set(cal.get(Calendar.YEAR), 7, 14, 0, 0, 0);
+        cal.set(cal.get(Calendar.YEAR), 4, 1, 0, 0, 0);
+        jours.add(new JourFerie("Fête du Travail", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 0, 1, 0, 0, 0);
+        jours.add(new JourFerie("Jour de l'an", cal.getTime()));
+        cal.set(cal.get(Calendar.YEAR), 6, 14, 0, 0, 0);
         jours.add(new JourFerie("Fête Nationale", cal.getTime()));
         cal.set(cal.get(Calendar.YEAR), 10, 11, 0, 0, 0);
         jours.add(new JourFerie("Armistice", cal.getTime()));
@@ -575,6 +600,14 @@ public class ParametersDialog extends javax.swing.JDialog {
         if (tableFeries.isEditing()) {
             tableFeries.getCellEditor().stopCellEditing();
         }
+
+        Collections.sort(jours, new Comparator<JourFerie>() {
+
+            @Override
+            public int compare(JourFerie o1, JourFerie o2) {
+                return o1.getDate().compareTo(o2.getDate());
+            }
+        });
 
         model.setData(jours, true);
     }//GEN-LAST:event_loadJourFerieActionPerformed

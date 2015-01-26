@@ -61,6 +61,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/nomoreline/img/video.png"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="Syst&#xe8;me de d&#xe9;tection par cam&#xe9;ra"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JToggleButton" name="excelButton">
@@ -68,6 +69,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/nomoreline/img/excel.png"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="Fr&#xe9;quentations journali&#xe8;res"/>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[104, 29]"/>
         </Property>
@@ -84,6 +86,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/nomoreline/img/plane.png"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="Liste des vols"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JToggleButton" name="carnetAdressesButton">
@@ -91,11 +94,15 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/nomoreline/img/directory.png"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="Carnet d&apos;adresses"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JToggleButton" name="planButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Plan"/>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/nomoreline/img/map.png"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" value="Plan de l&apos;a&#xe9;roport"/>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[64, 72]"/>
         </Property>

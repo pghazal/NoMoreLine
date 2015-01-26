@@ -8,6 +8,7 @@ import java.awt.Component;
 import java.util.ArrayList;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -34,6 +35,15 @@ public class PlanCameraDialog extends javax.swing.JDialog {
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             selectedRow = row;
+
+            Camera c = model.getDatas().get(row);
+
+            if (c.getPosition() == null || c.getPosition().equals(" - ")) {
+                comboBox.setSelectedItem(" - ");
+            } else {
+                comboBox.setSelectedItem(c.getPosition());
+            }
+
             return super.getTableCellEditorComponent(table, value, isSelected, row, column);
         }
 
@@ -41,14 +51,29 @@ public class PlanCameraDialog extends javax.swing.JDialog {
         public Object getCellEditorValue() {
             String pos = this.comboBox.getSelectedItem().toString();
             System.out.println("getCellEditorValue : " + pos);
-            
-            Camera c = model.getDatas().get(selectedRow);
-            c.setPosition(pos);
 
-            // Update DB
-            // Update other combobox
-            
-            return pos;
+            Boolean success = true;
+
+            Camera selectedCamera = model.getDatas().get(selectedRow);
+            ArrayList<Camera> cameras = DatabaseHelper.getAllCamera();
+
+            if (cameras != null) {
+                for (Camera c : cameras) {
+                    if (c.getPosition() != null && c.getPosition().equals(pos) && !c.getId().equals(selectedCamera.getId())) {
+                        success = false;
+                    }
+                }
+            }
+
+            if (success) {
+                selectedCamera.setPosition(pos);
+                DatabaseHelper.updateCamera(selectedCamera.getId(), selectedCamera);
+
+                return pos;
+            } else {
+                JOptionPane.showMessageDialog(PlanCameraDialog.this, "Une caméra occupe actuellement la position sélectionnée.", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+                return selectedCamera.getPosition();
+            }
         }
     }
 
@@ -66,18 +91,8 @@ public class PlanCameraDialog extends javax.swing.JDialog {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-            c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
-
-            if (isSelected) {
-                c.setBackground(Color.BLUE);
-                c.setForeground(Color.WHITE);
-            } else {
-                c.setForeground(Color.BLACK);
-            }
-
-            comboBox.setSelectedItem(value);
+            String pos = DatabaseHelper.getAllCamera().get(row).getPosition();
+            comboBox.setSelectedItem(pos);
 
             return comboBox;
         }
@@ -111,11 +126,7 @@ public class PlanCameraDialog extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(null);
 
-        ArrayList<Camera> list = new ArrayList<Camera>();
-
-        for (int i = 1; i < 4; i++) {
-            list.add(new Camera(i));
-        }
+        ArrayList<Camera> list = DatabaseHelper.getAllCamera();
 
         model = new CameraPlanTableModel(list);
 

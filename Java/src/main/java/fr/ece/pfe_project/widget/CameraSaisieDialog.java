@@ -54,6 +54,9 @@ public class CameraSaisieDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Ajouter caméra");
         setAlwaysOnTop(true);
+        setMaximumSize(new java.awt.Dimension(239, 83));
+        setMinimumSize(new java.awt.Dimension(239, 83));
+        setSize(new java.awt.Dimension(239, 83));
 
         cancelButton.setText("Annuler");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {

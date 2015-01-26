@@ -1,6 +1,7 @@
 package fr.ece.pfe_project.panel;
 
 import fr.ece.pfe_project.database.DatabaseHelper;
+import static fr.ece.pfe_project.database.DatabaseHelper.carnetAdresseExists;
 import fr.ece.pfe_project.editor.CameraCellEditor;
 import fr.ece.pfe_project.interfaces.ToolbarActionsListener;
 import fr.ece.pfe_project.interfaces.ToolbarEntityListener;
@@ -164,14 +165,13 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         }
     }
 
-    private final ArrayList<Camera> cameras;
-    private final ArrayList<CarnetAdresses> carnetAdressesA;
+    private ArrayList<Camera> cameras;
     private boolean isCameraActive;
 
-    MyTableModel model;
+    private MyTableModel model;
 
-    FaceDetectorListener faceDetectorListener;
-    ToolbarsListener toolbarsListener;
+    private FaceDetectorListener faceDetectorListener;
+    private ToolbarsListener toolbarsListener;
 
     private PlanPanel planPanel;
 
@@ -202,10 +202,8 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         addMouseMotionListener(this);
 
         //Initialisation du carnet d'adresses
-        carnetAdressesA = new ArrayList<CarnetAdresses>();
         //carnetAdressesA.add(new CarnetAdresses("Air France", 3, "AIR FRANCE", "0 970 808 816", 1));
         //carnetAdressesA.add(new CarnetAdresses("Brussels Airlines", 2, "AVIAPARTNER", "03 88 64 73 11", 2));
-
         //setVisibility false pour rendre invisible les 2 combobox au démarrage
         setExcelButtonVisibility(false);
         setMonthComboboxItems();
@@ -216,11 +214,9 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
         //SetcameraButtonVisibility false pour rendre invisible le bouton caméra au démmarage
         setCameraButtonVisibility(false);
-        
-        setPlanButtonVisibility(false);
+        cameras = DatabaseHelper.getAllCamera();
 
-        cameras = new ArrayList<Camera>();
-        cameras.add(new Camera(1));
+        setPlanButtonVisibility(false);
 
         //cameras[1].setState(Camera.CAMERA_STATE.ALERT); // SET THE 2ND CAMERA AS DECTECTING CROWD
         isCameraActive = false;
@@ -263,8 +259,16 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                             // Ne rien ajouter
                         } else {
                             System.out.println("Camera : " + cameraToAdd.getId());
-                            cameras.add(cameraToAdd);
-                            model.setData(cameras, true);
+
+                            if (DatabaseHelper.cameraExists(cameraToAdd) == false) {
+                                DatabaseHelper.addCamera(cameraToAdd);
+                                ((ArrayList<Camera>) model.getData()).add(cameraToAdd);
+                                cameras.add(cameraToAdd);
+                                model.fireTableDataChanged();
+                            } else {
+                                cameraToAdd = null;
+                                JOptionPane.showMessageDialog(this, "L'élément que vous voulez enregistrer existe déjà en base de donnée", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+                            }
                         }
 
                         break;
@@ -276,11 +280,16 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                         if (carnetToAdd == null) {
                             System.err.println("Excel NULL");
                         } else {
-                            System.out.println("Carnet d'adresses : " + carnetToAdd.getCompagnieca());
-                            carnetAdressesA.add(carnetToAdd);
-                            //model.setData(carnetAdressesA, true);
-                            ((ArrayList<CarnetAdresses>) model.getData()).add(carnetToAdd);
-                            model.fireTableDataChanged();
+                            //Enregistrement dans la bdd
+                            if (carnetAdresseExists(carnetToAdd) == false) {
+                                DatabaseHelper.addCarnetAdresses(carnetToAdd);
+
+                                ((ArrayList<CarnetAdresses>) model.getData()).add(carnetToAdd);
+                                model.fireTableDataChanged();
+                            } else {
+                                carnetToAdd = null;
+                                JOptionPane.showMessageDialog(this, "L'élément que vous voulez enregistrer existe déjà en base de donnée", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+                            }
                         }
                         break;
                     case EXCELROW:
@@ -291,9 +300,16 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                         if (excelToAdd == null) {
                             System.err.println("Excel NULL");
                         } else {
-                            System.out.println("Frequentation journaliere de " + excelToAdd.getFrequentation() + " Pour le " + excelToAdd.getDate());
-                            ((ArrayList<FrequentationJournaliere>) model.getData()).add(excelToAdd);
-                            model.fireTableDataChanged();
+
+                            if (DatabaseHelper.frequentationJournaliereExists(excelToAdd.getDate()) == false) {
+                                DatabaseHelper.addFrequentationJournaliere(excelToAdd.getDate(), excelToAdd.getFrequentation());
+                                System.out.println("Frequentation journaliere de " + excelToAdd.getFrequentation() + " Pour le " + excelToAdd.getDate());
+                                ((ArrayList<FrequentationJournaliere>) model.getData()).add(excelToAdd);
+                                model.fireTableDataChanged();
+                            } else {
+                                carnetToAdd = null;
+                                JOptionPane.showMessageDialog(this, "L'élément que vous voulez enregistrer existe déjà en base de donnée", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+                            }
                         }
                         break;
                     default:
@@ -308,8 +324,10 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                         if (itemsTable.getSelectedRowCount() > 0) {
                             Camera selectedCamera = (Camera) model.getDataAtRow(itemsTable.getSelectedRow());
                             if (selectedCamera != null) {
+                                DatabaseHelper.deleteCamera(selectedCamera);
+                                ((ArrayList<Camera>) model.getData()).remove(selectedCamera);
                                 cameras.remove(selectedCamera);
-                                model.setData(cameras, true);
+                                model.fireTableDataChanged();
                             }
                         } else {
                             JOptionPane.showMessageDialog(this,
@@ -324,10 +342,8 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                             CarnetAdresses selectedCarnet = (CarnetAdresses) model.getDataAtRow(itemsTable.getSelectedRow());
                             if (selectedCarnet != null) {
                                 DatabaseHelper.deleteCarnetAdresse(selectedCarnet);
-                                carnetAdressesA.remove(selectedCarnet);
                                 ((ArrayList<CarnetAdresses>) model.getData()).remove(selectedCarnet);
                                 model.fireTableDataChanged();
-                                //model.setData(carnetAdressesA, true);
                             }
                         } else {
                             JOptionPane.showMessageDialog(this,
@@ -367,10 +383,15 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                                 csd.setCamera(selectedCamera);
                                 csd.setVisible(true);
 
-                                selectedCamera = csd.getCamera();
+                                Camera newCamera = csd.getCamera();
+                                if (DatabaseHelper.cameraExists(selectedCamera)) {
+                                    Integer oldId = selectedCamera.getId();
 
-                                cameras.set(itemsTable.getSelectedRow(), selectedCamera);
-                                model.setData(cameras, true);
+                                    DatabaseHelper.updateCamera(oldId, newCamera);
+                                    ((ArrayList<Camera>) model.getData()).set(itemsTable.getSelectedRow(), newCamera);
+                                    cameras.set(itemsTable.getSelectedRow(), newCamera);
+                                    model.fireTableDataChanged();
+                                }
                             }
                         } else {
                             JOptionPane.showMessageDialog(this,
@@ -388,11 +409,19 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                                 cad.setCa(selectedCarnet);
                                 cad.setVisible(true);
 
-                                selectedCarnet = cad.getCa();
-                                DatabaseHelper.updateCarnetAdresses(selectedCarnet);
-                                carnetAdressesA.set(itemsTable.getSelectedRow(), selectedCarnet);
-                                model.setData(carnetAdressesA, true);
-                                model.fireTableDataChanged();
+                                CarnetAdresses newCarnet = cad.getCa();
+
+                                //Enregistrement dans la bdd
+                                if (carnetAdresseExists(selectedCarnet)) {
+                                    Integer oldId = selectedCarnet.getId();
+                                    DatabaseHelper.updateCarnetAdresses(oldId, newCarnet);
+
+                                    ((ArrayList<CarnetAdresses>) model.getData()).set(itemsTable.getSelectedRow(), newCarnet);
+                                    model.fireTableDataChanged();
+                                } else {
+                                    selectedCarnet = null;
+                                    JOptionPane.showMessageDialog(this, "L'élément que vous voulez enregistrer existe déjà en base de donnée", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+                                }
                             }
                         } else {
                             JOptionPane.showMessageDialog(this,
@@ -402,17 +431,23 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                         }
                         break;
                     case EXCELROW:
-                        if (itemsTable.getSelectedRowCount() > 0){
+                        if (itemsTable.getSelectedRowCount() > 0) {
                             FrequentationJournaliere selectedFreq = (FrequentationJournaliere) model.getDataAtRow(itemsTable.getSelectedRow());
-                            if(selectedFreq != null){
+                            if (selectedFreq != null) {
                                 ExcelSaisieDialog esd = new ExcelSaisieDialog(null, true);
                                 esd.setFj(selectedFreq);
                                 esd.setVisible(true);
-                                selectedFreq = esd.getFj();
-                                DatabaseHelper.updateFrequentationJournaliere(selectedFreq.getDate(), selectedFreq.getFrequentation());
-                                ((ArrayList<FrequentationJournaliere>) model.getData()).remove(selectedFreq);
-                                ((ArrayList<FrequentationJournaliere>) model.getData()).add(selectedFreq);
-                                model.fireTableDataChanged();
+                                FrequentationJournaliere newFreq = esd.getFj();
+
+                                if (DatabaseHelper.frequentationJournaliereExists(selectedFreq.getDate())) {
+                                    DatabaseHelper.updateFrequentationJournaliere(selectedFreq.getDate(), newFreq.getDate(), newFreq.getFrequentation());
+
+                                    ((ArrayList<FrequentationJournaliere>) model.getData()).set(itemsTable.getSelectedRow(), newFreq);
+                                    model.fireTableDataChanged();
+                                } else {
+                                    selectedFreq = null;
+                                    JOptionPane.showMessageDialog(this, "L'élément que vous voulez enregistrer existe déjà en base de donnée", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+                                }
                             }
                         } else {
                             JOptionPane.showMessageDialog(this,
@@ -446,7 +481,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                 setCameraButtonVisibility(true);
                 setPlanButtonVisibility(false);
                 itemsTable.setRowHeight(new CameraCellComponent().getPreferredSize().height);
-                model.setData(cameras, false);
+                model.setData(DatabaseHelper.getAllCamera(), false);
                 cl.show(cardPanel, "table");
                 break;
 
@@ -496,7 +531,6 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                 setCameraButtonVisibility(false);
                 setPlanButtonVisibility(false);
                 itemsTable.setRowHeight(16);
-                //model.setData(carnetAdressesA, false);
                 model.setData((ArrayList) DatabaseHelper.getAllCarnetAdresses(), true);
                 cl.show(cardPanel, "table");
                 break;
@@ -547,7 +581,6 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
             cameraButton.setOpaque(false);
             cameraButton.setContentAreaFilled(false);
             cameraButton.setBorderPainted(false);
-            //cameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
         }
     }
 
@@ -564,7 +597,6 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                 cameraInterface(!isCameraActive);
                 cameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
                 toolbarsListener.changeCameraStatus(isCameraActive);
-                // cameraButton.setText("Activer caméra");
             } else //On change le label du bouton (de "activer caméra" à "désactiver caméra) et sa couleur
             {
                 cameraInterface(!isCameraActive);
@@ -640,6 +672,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
             @Override
             public void run() {
+
                 // On souhaite lancer l'activation des cameras
                 if (on) {
                     for (int i = 0; i < cameras.size(); i++) {
@@ -696,12 +729,11 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         System.out.println("List Panel NB FACES : " + number_of_faces);
         System.out.println("List Panel PERCENT : " + percentage_of_differences);
         System.out.println("List Panel ID CAM : " + id_camera);
-        
+
         Integer seuilCamera = (Integer) ParametersUtils.get(ParametersUtils.PARAM_SUEIL_CAMERA);
-        
-        if ( number_of_faces >= seuilCamera && percentage_of_differences > 10)
-        {
-            JOptionPane.showMessageDialog(null, "Caméra " +id_camera+ ": Détection de formation file d'attente" , " WARNING ", JOptionPane.WARNING_MESSAGE);
+
+        if (number_of_faces >= seuilCamera && percentage_of_differences > 10) {
+            JOptionPane.showMessageDialog(null, "Caméra " + id_camera + ": Détection de formation file d'attente", " WARNING ", JOptionPane.WARNING_MESSAGE);
         }
     }
 
