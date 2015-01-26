@@ -165,12 +165,13 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         }
     }
 
+    private ArrayList<Camera> cameras;
     private boolean isCameraActive;
 
-    MyTableModel model;
+    private MyTableModel model;
 
-    FaceDetectorListener faceDetectorListener;
-    ToolbarsListener toolbarsListener;
+    private FaceDetectorListener faceDetectorListener;
+    private ToolbarsListener toolbarsListener;
 
     private PlanPanel planPanel;
 
@@ -213,6 +214,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
         //SetcameraButtonVisibility false pour rendre invisible le bouton caméra au démmarage
         setCameraButtonVisibility(false);
+        cameras = DatabaseHelper.getAllCamera();
 
         setPlanButtonVisibility(false);
 
@@ -261,6 +263,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                             if (DatabaseHelper.cameraExists(cameraToAdd) == false) {
                                 DatabaseHelper.addCamera(cameraToAdd);
                                 ((ArrayList<Camera>) model.getData()).add(cameraToAdd);
+                                cameras.add(cameraToAdd);
                                 model.fireTableDataChanged();
                             } else {
                                 cameraToAdd = null;
@@ -323,6 +326,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                             if (selectedCamera != null) {
                                 DatabaseHelper.deleteCamera(selectedCamera);
                                 ((ArrayList<Camera>) model.getData()).remove(selectedCamera);
+                                cameras.remove(selectedCamera);
                                 model.fireTableDataChanged();
                             }
                         } else {
@@ -385,6 +389,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
                                     DatabaseHelper.updateCamera(oldId, newCamera);
                                     ((ArrayList<Camera>) model.getData()).set(itemsTable.getSelectedRow(), newCamera);
+                                    cameras.set(itemsTable.getSelectedRow(), newCamera);
                                     model.fireTableDataChanged();
                                 }
                             }
@@ -576,7 +581,6 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
             cameraButton.setOpaque(false);
             cameraButton.setContentAreaFilled(false);
             cameraButton.setBorderPainted(false);
-            //cameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
         }
     }
 
@@ -593,7 +597,6 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                 cameraInterface(!isCameraActive);
                 cameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
                 toolbarsListener.changeCameraStatus(isCameraActive);
-                // cameraButton.setText("Activer caméra");
             } else //On change le label du bouton (de "activer caméra" à "désactiver caméra) et sa couleur
             {
                 cameraInterface(!isCameraActive);
@@ -669,7 +672,6 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
             @Override
             public void run() {
-                ArrayList<Camera> cameras = DatabaseHelper.getAllCamera();
 
                 // On souhaite lancer l'activation des cameras
                 if (on) {

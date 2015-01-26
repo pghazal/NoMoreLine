@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.ece.pfe_project.panel;
 
 import fr.ece.pfe_project.database.DatabaseHelper;
@@ -15,7 +10,6 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.JLabel;
 
 /**
  *
@@ -24,14 +18,15 @@ import javax.swing.JLabel;
 public class PlanPanel extends javax.swing.JPanel {
 
     private final List<String> alphabet
-            = Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N");
+            = Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
+                    "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z");
 
     private final List<String> numbers
-            = Arrays.asList("1", "2", "3");
+            = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
 
     private static final int COLUMN = 8;
     private static final int ROW = 2;
-    
+
     private Integer indexPanel = 0;
 
     /**
