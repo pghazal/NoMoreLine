@@ -317,14 +317,8 @@ public class Algorithm {
                                     .getPrevisionPassager();
 
                             algoResult.setPrevisionPassager(prevision - ((prevision * 25) / 100));
-                        } else {
-                            int prevision = process1(date)
-                                    .getPrevisionPassager();
-
-                            algoResult.setPrevisionPassager(prevision - ((prevision * 10) / 100));
-
-                        }
-
+                        } 
+                        
                         break;
                     }
 
@@ -389,7 +383,7 @@ public class Algorithm {
                 case Calendar.SATURDAY:
 
                     cal.add(Calendar.DAY_OF_MONTH, 1);
-
+                    
                     // Si le lendemain est ferie
                     if (isFerie(cal.getTime(), jours)) {
                         int prevision = process1(date)
@@ -397,12 +391,20 @@ public class Algorithm {
 
                         algoResult.setPrevisionPassager(prevision - ((prevision * 20) / 100));
                     }
+                    
+                    // Si le jeudi d'avant est férié
+                    cal.add(Calendar.DAY_OF_MONTH, -3);
+                    if (isFerie(cal.getTime(), jours)) {
+                        int prevision = process1(date)
+                                    .getPrevisionPassager();
 
+                            algoResult.setPrevisionPassager(prevision - ((prevision * 20) / 100));
+                    }
                     break;
                 case Calendar.SUNDAY:
 
-                    cal.add(Calendar.DAY_OF_MONTH, 1);
-
+                    cal.add(Calendar.DAY_OF_MONTH, 3);                    
+                    
                     // Si le lendemain est ferie
                     if (isFerie(cal.getTime(), jours)) {
 
