@@ -35,7 +35,7 @@
               <Component id="buttonDelete" min="-2" pref="48" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="buttonEdit" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="310" max="32767" attributes="0"/>
+              <EmptySpace pref="268" max="32767" attributes="0"/>
               <Component id="cameraState" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -43,19 +43,13 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" alignment="1" groupAlignment="3" attributes="0">
-                      <Component id="buttonAdd" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="buttonDelete" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="buttonEdit" alignment="0" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="cameraState" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-              </Group>
+          <Component id="buttonAdd" alignment="0" min="-2" max="-2" attributes="0"/>
+          <Component id="buttonDelete" alignment="0" min="-2" max="-2" attributes="0"/>
+          <Component id="buttonEdit" alignment="0" min="-2" max="-2" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="cameraState" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -64,8 +58,9 @@
     <Component class="javax.swing.JButton" name="buttonAdd">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/nomoreline/img/add-icon-disable.png"/>
+          <Image iconType="3" name="/nomoreline/img/add-icon.png"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="Ajouter un &#xe9;l&#xe9;ment"/>
         <Property name="borderPainted" type="boolean" value="false"/>
         <Property name="contentAreaFilled" type="boolean" value="false"/>
         <Property name="enabled" type="boolean" value="false"/>
@@ -84,8 +79,9 @@
     <Component class="javax.swing.JButton" name="buttonDelete">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/nomoreline/img/trash-icon-disable.png"/>
+          <Image iconType="3" name="/nomoreline/img/trash-icon.png"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="Supprimer un &#xe9;l&#xe9;ment"/>
         <Property name="borderPainted" type="boolean" value="false"/>
         <Property name="contentAreaFilled" type="boolean" value="false"/>
         <Property name="enabled" type="boolean" value="false"/>
@@ -103,14 +99,16 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/nomoreline/img/off_led_icon.png"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Status Camera"/>
+        <Property name="text" type="java.lang.String" value="Cam&#xe9;ras d&#xe9;sactiv&#xe9;es"/>
+        <Property name="iconTextGap" type="int" value="5"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="buttonEdit">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/nomoreline/img/edit-icon-disable.png"/>
+          <Image iconType="3" name="/nomoreline/img/edit-icon.png"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="Modifier un &#xe9;l&#xe9;ment"/>
         <Property name="borderPainted" type="boolean" value="false"/>
         <Property name="contentAreaFilled" type="boolean" value="false"/>
         <Property name="enabled" type="boolean" value="false"/>

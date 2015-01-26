@@ -33,10 +33,12 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
     @Override
     public void changeCameraStatus(boolean cameraStatus) {
         if (cameraStatus == true) {
+            cameraState.setText("Caméras activées");
             cameraState.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getonLedIcon());
             System.out.println("LED ON");
         } else {
             System.out.println("LED OFF");
+            cameraState.setText("Caméras désactivées");
             cameraState.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getoffLedIcon());
         }
     }
@@ -59,7 +61,8 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
         setMaximumSize(new java.awt.Dimension(32767, 50));
         setPreferredSize(new java.awt.Dimension(600, 50));
 
-        buttonAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/add-icon-disable.png"))); // NOI18N
+        buttonAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/add-icon.png"))); // NOI18N
+        buttonAdd.setToolTipText("Ajouter un élément");
         buttonAdd.setBorderPainted(false);
         buttonAdd.setContentAreaFilled(false);
         buttonAdd.setEnabled(false);
@@ -74,7 +77,8 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
             }
         });
 
-        buttonDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/trash-icon-disable.png"))); // NOI18N
+        buttonDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/trash-icon.png"))); // NOI18N
+        buttonDelete.setToolTipText("Supprimer un élément");
         buttonDelete.setBorderPainted(false);
         buttonDelete.setContentAreaFilled(false);
         buttonDelete.setEnabled(false);
@@ -89,9 +93,11 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
         });
 
         cameraState.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/off_led_icon.png"))); // NOI18N
-        cameraState.setText("Status Camera");
+        cameraState.setText("Caméras désactivées");
+        cameraState.setIconTextGap(5);
 
-        buttonEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/edit-icon-disable.png"))); // NOI18N
+        buttonEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/edit-icon.png"))); // NOI18N
+        buttonEdit.setToolTipText("Modifier un élément");
         buttonEdit.setBorderPainted(false);
         buttonEdit.setContentAreaFilled(false);
         buttonEdit.setEnabled(false);
@@ -115,22 +121,19 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
                 .addComponent(buttonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonEdit)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 310, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 268, Short.MAX_VALUE)
                 .addComponent(cameraState)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(buttonAdd)
-                        .addComponent(buttonDelete)
-                        .addComponent(buttonEdit))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(cameraState)
-                        .addContainerGap())))
+            .addComponent(buttonAdd)
+            .addComponent(buttonDelete)
+            .addComponent(buttonEdit)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cameraState)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -167,10 +170,6 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
                 buttonAdd.setEnabled(true);
                 buttonDelete.setEnabled(true);
                 buttonEdit.setEnabled(true);
-
-                buttonAdd.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getAddIcon());
-                buttonDelete.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getDeleteIcon());
-                buttonEdit.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getEditIcon());
                 break;
             case LISTINGVOLS:
             case PLAN:
@@ -179,10 +178,6 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
                 buttonAdd.setEnabled(false);
                 buttonDelete.setEnabled(false);
                 buttonEdit.setEnabled(false);
-
-                buttonAdd.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getAddDisableIcon());
-                buttonDelete.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getDeleteDisableIcon());
-                buttonEdit.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getEditDisableIcon());
                 break;
         }
     }

@@ -29,11 +29,8 @@ public class ComponentIconDefaults {
     private static final String EXCEL = "/nomoreline/img/excel.png";
 
     private static final String ADD = "/nomoreline/img/add-icon.png";
-    private static final String ADD_DISABLE = "/nomoreline/img/add-icon-disable.png";
     private static final String DELETE = "/nomoreline/img/trash-icon.png";
-    private static final String DELETE_DISABLE = "/nomoreline/img/trash-icon-disable.png";
     private static final String EDIT = "/nomoreline/img/edit-icon.png";
-    private static final String EDIT_DISABLE = "/nomoreline/img/edit-icon-disable.png";
 
     private Icon logoIcon;
     private Icon nextMonthIcon;
@@ -53,11 +50,8 @@ public class ComponentIconDefaults {
     private Icon excelIcon;
 
     private Icon addIcon;
-    private Icon addDisableIcon;
     private Icon deleteIcon;
-    private Icon deleteDisableIcon;
     private Icon editIcon;
-    private Icon editDisableIcon;
 
     public ComponentIconDefaults() {
         try {
@@ -76,11 +70,8 @@ public class ComponentIconDefaults {
             excelIcon = loadIcon(EXCEL);
 
             addIcon = loadIcon(ADD);
-            addDisableIcon = loadIcon(ADD_DISABLE);
             deleteIcon = loadIcon(DELETE);
-            deleteDisableIcon = loadIcon(DELETE_DISABLE);
             editIcon = loadIcon(EDIT);
-            editDisableIcon = loadIcon(EDIT_DISABLE);
 
             nextMonthIcon = new JNextIcon(4, 7, false);
             nextYearIcon = new JNextIcon(8, 7, true);
@@ -101,25 +92,13 @@ public class ComponentIconDefaults {
     public Icon getAddIcon() {
         return addIcon;
     }
-
-    public Icon getAddDisableIcon() {
-        return addDisableIcon;
-    }
-
+    
     public Icon getDeleteIcon() {
         return deleteIcon;
     }
 
-    public Icon getDeleteDisableIcon() {
-        return deleteDisableIcon;
-    }
-
     public Icon getEditIcon() {
         return editIcon;
-    }
-
-    public Icon getEditDisableIcon() {
-        return editDisableIcon;
     }
 
     public Icon getLogoIcon() {

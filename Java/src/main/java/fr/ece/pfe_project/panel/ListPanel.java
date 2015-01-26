@@ -669,7 +669,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
             @Override
             public void run() {
-                ArrayList< Camera> cameras = DatabaseHelper.getAllCamera();
+                ArrayList<Camera> cameras = DatabaseHelper.getAllCamera();
 
                 // On souhaite lancer l'activation des cameras
                 if (on) {
