@@ -147,7 +147,7 @@ public class ToolbarEntityPanel extends javax.swing.JPanel implements ActionList
 
         carnetAdressesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/directory.png"))); // NOI18N
 
-        planButton.setText("Plan");
+        planButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/map.png"))); // NOI18N
         planButton.setMaximumSize(new java.awt.Dimension(64, 72));
         planButton.setMinimumSize(new java.awt.Dimension(64, 72));
         planButton.setPreferredSize(new java.awt.Dimension(64, 72));

@@ -5,6 +5,7 @@
  */
 package fr.ece.pfe_project.widget;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -74,6 +75,9 @@ public class StartingProgressDialog extends ProgressDialog {
         setModal(true);
         setResizable(false);
         setUndecorated(true);
+
+        contentPane.setBackground(Color.WHITE);
+
         pack();
     }
 

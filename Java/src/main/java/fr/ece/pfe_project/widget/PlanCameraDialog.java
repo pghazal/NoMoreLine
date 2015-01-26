@@ -71,7 +71,7 @@ public class PlanCameraDialog extends javax.swing.JDialog {
 
                 return pos;
             } else {
-                JOptionPane.showMessageDialog(PlanCameraDialog.this, "Une caméra occupe actuellement la position choisie.", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(PlanCameraDialog.this, "Une caméra occupe actuellement la position sélectionnée.", "Erreur", JOptionPane.INFORMATION_MESSAGE);
                 return selectedCamera.getPosition();
             }
         }

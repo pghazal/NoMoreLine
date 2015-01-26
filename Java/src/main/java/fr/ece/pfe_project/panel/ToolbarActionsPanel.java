@@ -59,16 +59,29 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
         setMaximumSize(new java.awt.Dimension(32767, 50));
         setPreferredSize(new java.awt.Dimension(600, 50));
 
-        buttonAdd.setText("+");
+        buttonAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/add-icon-disable.png"))); // NOI18N
+        buttonAdd.setBorderPainted(false);
+        buttonAdd.setContentAreaFilled(false);
         buttonAdd.setEnabled(false);
+        buttonAdd.setFocusPainted(false);
+        buttonAdd.setFocusTraversalKeysEnabled(false);
+        buttonAdd.setFocusable(false);
+        buttonAdd.setIgnoreRepaint(true);
+        buttonAdd.setSize(new java.awt.Dimension(48, 44));
         buttonAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonAddActionPerformed(evt);
             }
         });
 
-        buttonDelete.setText("Delete");
+        buttonDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/trash-icon-disable.png"))); // NOI18N
+        buttonDelete.setBorderPainted(false);
+        buttonDelete.setContentAreaFilled(false);
         buttonDelete.setEnabled(false);
+        buttonDelete.setFocusPainted(false);
+        buttonDelete.setFocusTraversalKeysEnabled(false);
+        buttonDelete.setFocusable(false);
+        buttonDelete.setIgnoreRepaint(true);
         buttonDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonDeleteActionPerformed(evt);
@@ -78,8 +91,13 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
         cameraState.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/off_led_icon.png"))); // NOI18N
         cameraState.setText("Status Camera");
 
-        buttonEdit.setText("Edit");
+        buttonEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/edit-icon-disable.png"))); // NOI18N
+        buttonEdit.setBorderPainted(false);
+        buttonEdit.setContentAreaFilled(false);
         buttonEdit.setEnabled(false);
+        buttonEdit.setFocusPainted(false);
+        buttonEdit.setFocusTraversalKeysEnabled(false);
+        buttonEdit.setFocusable(false);
         buttonEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonEditActionPerformed(evt);
@@ -92,25 +110,27 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(buttonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonAdd)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonDelete)
+                .addComponent(buttonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonEdit)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 310, Short.MAX_VALUE)
                 .addComponent(cameraState)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonAdd)
-                    .addComponent(buttonDelete)
-                    .addComponent(cameraState)
-                    .addComponent(buttonEdit))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(buttonAdd)
+                        .addComponent(buttonDelete)
+                        .addComponent(buttonEdit))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(cameraState)
+                        .addContainerGap())))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -147,13 +167,22 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
                 buttonAdd.setEnabled(true);
                 buttonDelete.setEnabled(true);
                 buttonEdit.setEnabled(true);
+
+                buttonAdd.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getAddIcon());
+                buttonDelete.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getDeleteIcon());
+                buttonEdit.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getEditIcon());
                 break;
             case LISTINGVOLS:
+            case PLAN:
             case NONE:
             default:
                 buttonAdd.setEnabled(false);
                 buttonDelete.setEnabled(false);
                 buttonEdit.setEnabled(false);
+
+                buttonAdd.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getAddDisableIcon());
+                buttonDelete.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getDeleteDisableIcon());
+                buttonEdit.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getEditDisableIcon());
                 break;
         }
     }

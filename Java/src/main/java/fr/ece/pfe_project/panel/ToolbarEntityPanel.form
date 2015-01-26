@@ -95,7 +95,9 @@
     </Component>
     <Component class="javax.swing.JToggleButton" name="planButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Plan"/>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/nomoreline/img/map.png"/>
+        </Property>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[64, 72]"/>
         </Property>
