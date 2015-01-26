@@ -91,7 +91,7 @@ public class FaceDetectorThread extends Thread {
 
             FrameGrabber grabber = null;
             try {
-                grabber = FrameGrabber.createDefault(id_camera);
+                grabber = FrameGrabber.createDefault(0);
             } catch (FrameGrabber.Exception ex) {
                 Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -176,10 +176,9 @@ public class FaceDetectorThread extends Thread {
                 IplImage bitImage = IplImage.create(template_width, template_height, IPL_DEPTH_8U, 1);
                 cvThreshold(result, bitImage, 100, 255, CV_THRESH_BINARY);
                 Mat mat_changes = new Mat(bitImage);
-                
+
                 //CanvasFrame test_frame = new CanvasFrame("bitImage");
                 //test_frame.showImage(bitImage); // Display threshold image
-
                 // Percentage of differences calculation
                 int number_of_white_pixels = countNonZero(mat_changes); // Count changed pixel in Image
                 System.out.println(" Number of white pixels: " + number_of_white_pixels);

@@ -33,9 +33,9 @@ public class ToolbarActionsPanel extends javax.swing.JPanel implements
     @Override
     public void changeCameraStatus(boolean cameraStatus) {
         if (cameraStatus == true) {
+            System.out.println("LED ON");
             cameraState.setText("Caméras activées");
             cameraState.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getonLedIcon());
-            System.out.println("LED ON");
         } else {
             System.out.println("LED OFF");
             cameraState.setText("Caméras désactivées");

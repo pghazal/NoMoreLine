@@ -21,7 +21,6 @@ import static fr.ece.pfe_project.panel.ParametersDialog.msgbox;
 import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
 import fr.ece.pfe_project.utils.ExcelUtils;
-import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import fr.ece.pfe_project.widget.CameraCellComponent;
 import fr.ece.pfe_project.widget.CameraSaisieDialog;
@@ -36,9 +35,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -70,8 +66,7 @@ import real_time_image_processing.FaceDetectorThread;
  * @author pierreghazal
  */
 public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetectorInterface,
-        ToolbarEntityListener, ToolbarActionsListener,
-        MouseMotionListener, MouseListener, ActionListener {
+        ToolbarEntityListener, ToolbarActionsListener, ActionListener {
 
     SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -197,10 +192,6 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         this.faceDetectorListener = faceListener;
         this.toolbarsListener = toolbarsListener;
 
-        // Listener
-        addMouseListener(this);
-        addMouseMotionListener(this);
-
         //Initialisation du carnet d'adresses
         //carnetAdressesA.add(new CarnetAdresses("Air France", 3, "AIR FRANCE", "0 970 808 816", 1));
         //carnetAdressesA.add(new CarnetAdresses("Brussels Airlines", 2, "AVIAPARTNER", "03 88 64 73 11", 2));
@@ -238,6 +229,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
     }
 
     private void planPanelComponentResized(ComponentEvent evt) {
+        planPanel.setCameras(cameras);
         planPanel.repaint();
     }
 
@@ -250,25 +242,31 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
             case ACTION_ADD:
                 switch (entity) {
                     case CAMERA:
-                        CameraSaisieDialog csd = new CameraSaisieDialog(null, true);
-                        csd.setVisible(true);
+                        if (!isCameraActive) {
+                            CameraSaisieDialog csd = new CameraSaisieDialog(null, true);
+                            csd.setVisible(true);
 
-                        Camera cameraToAdd = csd.getCamera();
-                        if (cameraToAdd == null) {
-                            System.err.println("Camera NULL");
-                            // Ne rien ajouter
-                        } else {
-                            System.out.println("Camera : " + cameraToAdd.getId());
-
-                            if (DatabaseHelper.cameraExists(cameraToAdd) == false) {
-                                DatabaseHelper.addCamera(cameraToAdd);
-                                ((ArrayList<Camera>) model.getData()).add(cameraToAdd);
-                                cameras.add(cameraToAdd);
-                                model.fireTableDataChanged();
+                            Camera cameraToAdd = csd.getCamera();
+                            if (cameraToAdd == null) {
+                                System.err.println("Camera NULL");
+                                // Ne rien ajouter
                             } else {
-                                cameraToAdd = null;
-                                JOptionPane.showMessageDialog(this, "L'élément que vous voulez enregistrer existe déjà en base de donnée", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+                                System.out.println("Camera : " + cameraToAdd.getId());
+
+                                if (DatabaseHelper.cameraExists(cameraToAdd) == false) {
+                                    DatabaseHelper.addCamera(cameraToAdd);
+                                    ((ArrayList<Camera>) model.getData()).add(cameraToAdd);
+                                    cameras.add(cameraToAdd);
+                                    model.fireTableDataChanged();
+                                } else {
+                                    cameraToAdd = null;
+                                    JOptionPane.showMessageDialog(this, "L'élément que vous voulez enregistrer existe déjà en base de donnée", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+                                }
                             }
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    "Veuillez avant tout désactiver la détection par caméra.",
+                                    "WARNING", JOptionPane.WARNING_MESSAGE);
                         }
 
                         break;
@@ -320,20 +318,26 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
             case ACTION_DELETE:
                 switch (entity) {
                     case CAMERA:
-                        // Si il y a une ligne selectionnée dans la Table
-                        if (itemsTable.getSelectedRowCount() > 0) {
-                            Camera selectedCamera = (Camera) model.getDataAtRow(itemsTable.getSelectedRow());
-                            if (selectedCamera != null) {
-                                DatabaseHelper.deleteCamera(selectedCamera);
-                                ((ArrayList<Camera>) model.getData()).remove(selectedCamera);
-                                cameras.remove(selectedCamera);
-                                model.fireTableDataChanged();
+                        if (!isCameraActive) {
+                            // Si il y a une ligne selectionnée dans la Table
+                            if (itemsTable.getSelectedRowCount() > 0) {
+                                Camera selectedCamera = (Camera) model.getDataAtRow(itemsTable.getSelectedRow());
+                                if (selectedCamera != null) {
+                                    DatabaseHelper.deleteCamera(selectedCamera);
+                                    ((ArrayList<Camera>) model.getData()).remove(selectedCamera);
+                                    cameras.remove(selectedCamera);
+                                    model.fireTableDataChanged();
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(this,
+                                        "Aucun élément sélectionné dans la liste",
+                                        "Erreur",
+                                        JOptionPane.INFORMATION_MESSAGE);
                             }
                         } else {
                             JOptionPane.showMessageDialog(this,
-                                    "Aucun élément sélectionné dans la liste",
-                                    "Erreur",
-                                    JOptionPane.INFORMATION_MESSAGE);
+                                    "Veuillez avant tout désactiver la détection par caméra.",
+                                    "WARNING", JOptionPane.WARNING_MESSAGE);
                         }
 
                         break;
@@ -374,30 +378,35 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
             case ACTION_EDIT:
                 switch (entity) {
                     case CAMERA:
+                        if (!isCameraActive) {
+                            // Si il y a une ligne selectionnée dans la Table
+                            if (itemsTable.getSelectedRowCount() > 0) {
+                                Camera selectedCamera = (Camera) model.getDataAtRow(itemsTable.getSelectedRow());
+                                if (selectedCamera != null) {
+                                    CameraSaisieDialog csd = new CameraSaisieDialog(null, true);
+                                    csd.setCamera(selectedCamera);
+                                    csd.setVisible(true);
 
-                        // Si il y a une ligne selectionnée dans la Table
-                        if (itemsTable.getSelectedRowCount() > 0) {
-                            Camera selectedCamera = (Camera) model.getDataAtRow(itemsTable.getSelectedRow());
-                            if (selectedCamera != null) {
-                                CameraSaisieDialog csd = new CameraSaisieDialog(null, true);
-                                csd.setCamera(selectedCamera);
-                                csd.setVisible(true);
+                                    Camera newCamera = csd.getCamera();
+                                    if (DatabaseHelper.cameraExists(selectedCamera)) {
+                                        Integer oldId = selectedCamera.getId();
 
-                                Camera newCamera = csd.getCamera();
-                                if (DatabaseHelper.cameraExists(selectedCamera)) {
-                                    Integer oldId = selectedCamera.getId();
-
-                                    DatabaseHelper.updateCamera(oldId, newCamera);
-                                    ((ArrayList<Camera>) model.getData()).set(itemsTable.getSelectedRow(), newCamera);
-                                    cameras.set(itemsTable.getSelectedRow(), newCamera);
-                                    model.fireTableDataChanged();
+                                        DatabaseHelper.updateCamera(oldId, newCamera);
+                                        ((ArrayList<Camera>) model.getData()).set(itemsTable.getSelectedRow(), newCamera);
+                                        cameras.set(itemsTable.getSelectedRow(), newCamera);
+                                        model.fireTableDataChanged();
+                                    }
                                 }
+                            } else {
+                                JOptionPane.showMessageDialog(this,
+                                        "Aucun élément sélectionné dans la liste",
+                                        "Erreur",
+                                        JOptionPane.INFORMATION_MESSAGE);
                             }
                         } else {
                             JOptionPane.showMessageDialog(this,
-                                    "Aucun élément sélectionné dans la liste",
-                                    "Erreur",
-                                    JOptionPane.INFORMATION_MESSAGE);
+                                    "Veuillez avant tout désactiver la détection par caméra.",
+                                    "WARNING", JOptionPane.WARNING_MESSAGE);
                         }
 
                         break;
@@ -592,7 +601,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == cameraButton) {
-            if (isCameraActive == true) {
+            if (isCameraActive) {
                 //On désactive les caméras 
                 cameraInterface(!isCameraActive);
                 cameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getgreenCameraIcon());
@@ -679,14 +688,17 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                         Camera cam = cameras.get(i);
                         if (cam != null && cam.getFaceDetectorThread() != null
                                 && !cam.getFaceDetectorThread().isActive()) {
-                            cam.getFaceDetectorThread().launch(0);
+                            cam.setState(Camera.CAMERA_STATE.NORMAL);
+                            cam.getFaceDetectorThread().launch(cam.getId());
                         } else if (cam == null) {
                             cam = new Camera(i);
+                            cam.setState(Camera.CAMERA_STATE.NORMAL);
                             cam.setFaceDetectorThread(new FaceDetectorThread(faceDetectorListener));
-                            cam.getFaceDetectorThread().launch(0);
+                            cam.getFaceDetectorThread().launch(cam.getId());
                         } else if (cam.getFaceDetectorThread() == null) {
+                            cam.setState(Camera.CAMERA_STATE.NORMAL);
                             cam.setFaceDetectorThread(new FaceDetectorThread(faceDetectorListener));
-                            cam.getFaceDetectorThread().launch(0);
+                            cam.getFaceDetectorThread().launch(cam.getId());
                         } else if (cam.getFaceDetectorThread() != null
                                 && cam.getFaceDetectorThread().isActive()) {
                             // do nothing
@@ -696,7 +708,6 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                 else {
                     for (int i = 0; i < cameras.size(); i++) {
                         Camera cam = cameras.get(i);
-
                         if (cam != null && cam.getFaceDetectorThread() != null
                                 && !cam.getFaceDetectorThread().isActive()) {
                             // do nothing
@@ -706,6 +717,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                             // do nothing
                         } else if (cam.getFaceDetectorThread() != null
                                 && cam.getFaceDetectorThread().isActive()) {
+                            cam.setState(Camera.CAMERA_STATE.NONE);
                             cam.getFaceDetectorThread().stopFaceDetection();
                             cam.setFaceDetectorThread(null);
                         }
@@ -732,8 +744,22 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
         Integer seuilCamera = (Integer) ParametersUtils.get(ParametersUtils.PARAM_SUEIL_CAMERA);
 
+        // Alert !
         if (number_of_faces >= seuilCamera && percentage_of_differences > 10) {
-            JOptionPane.showMessageDialog(null, "Caméra " + id_camera + ": Détection de formation file d'attente", " WARNING ", JOptionPane.WARNING_MESSAGE);
+            Camera camAlert;
+            for (int i = 0; i < cameras.size(); i++) {
+                camAlert = cameras.get(i);
+
+                if (camAlert.getId().equals(id_camera)
+                        && camAlert.getState() != Camera.CAMERA_STATE.ALERT) {
+                    camAlert.setState(Camera.CAMERA_STATE.ALERT);
+                    planPanelComponentResized(null);
+                    JOptionPane.showMessageDialog(null, "Caméra " + id_camera
+                            + " : Détection de formation de file d'attente en position "
+                            + camAlert.getPosition(), "WARNING", JOptionPane.WARNING_MESSAGE);
+                    break;
+                }
+            }
         }
     }
 
@@ -789,12 +815,10 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                             default:
                                 break;
                         }
-
                     }
                     nb = 0;
                     ensembleDesVols.add(listingVols);
                 }
-
             }
 
             return ensembleDesVols;
@@ -880,8 +904,13 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
     }// </editor-fold>//GEN-END:initComponents
 
     private void parameterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parameterButtonActionPerformed
-        PlanCameraDialog pcd = new PlanCameraDialog(null, true);
-        pcd.setVisible(true);
+        if (!isCameraActive) {
+            PlanCameraDialog pcd = new PlanCameraDialog(null, true);
+            pcd.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez désactiver la détection "
+                    + "par caméra afin de pouvoir les paramétrer.", "WARNING", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_parameterButtonActionPerformed
 
 
@@ -898,34 +927,4 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
     private javax.swing.JScrollPane scrollPaneTable;
     private javax.swing.JComboBox yearComboBox;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
 }
