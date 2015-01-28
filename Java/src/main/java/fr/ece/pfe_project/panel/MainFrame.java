@@ -161,7 +161,7 @@ public class MainFrame extends javax.swing.JFrame {
         setTitle("No More Line");
         setMinimumSize(new java.awt.Dimension(810, 600));
         setName("No More Line"); // NOI18N
-        setSize(new java.awt.Dimension(1024, 768));
+        setPreferredSize(new java.awt.Dimension(2147483647, 2147483647));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);

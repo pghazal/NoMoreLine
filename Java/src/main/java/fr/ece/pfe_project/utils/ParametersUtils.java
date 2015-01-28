@@ -1,6 +1,7 @@
 package fr.ece.pfe_project.utils;
 
 import fr.ece.pfe_project.database.DatabaseHelper;
+import fr.ece.pfe_project.panel.ParametersDialog;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -68,6 +69,14 @@ public class ParametersUtils {
         }
     }
 
+    private static void loadDefaultParameters() {
+        ParametersUtils.set(ParametersUtils.PARAM_SUEIL_JOUR, ParametersDialog.DEFAULT_SEUIL_JOUR);
+        ParametersUtils.set(ParametersUtils.PARAM_SUEIL_CAMERA, ParametersDialog.DEFAULT_SEUIL_CAMERA);
+
+        // Saving parameters in file parameter
+        ParametersUtils.saveParameters();
+    }
+
     private static void loadParameters() {
         try {
             FileInputStream fis = new FileInputStream(FILENAME_PARAMETERS);
@@ -79,6 +88,7 @@ public class ParametersUtils {
             fnfe.printStackTrace();
             paramsMap = new HashMap<String, Object>();
             System.out.println("HashMap does not exist, allocating memory...");
+            loadDefaultParameters();
             return;
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -96,16 +106,16 @@ public class ParametersUtils {
 
         // Si l'année precente est complete, agrege et ajouter à la BDD
         ArrayList<Integer> yearsComplete = DatabaseHelper.getYearsComplete();
-        for(Integer year : yearsComplete) {
+        for (Integer year : yearsComplete) {
             DatabaseHelper.aggregateFrequentationOfYear(year);
         }
-        
+
         GlobalVariableUtils.getFrequentationAnnuelleMap().
                 putAll(DatabaseHelper.getAllFrequentationAnnuelle());
 
         GlobalVariableUtils.getExcelMap().
                 putAll(DatabaseHelper.getAllFrequentationJournaliere());
-        
+
         GlobalVariableUtils.getCarnetA().addAll(DatabaseHelper.getAllCarnetAdresses());
     }
 }

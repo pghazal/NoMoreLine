@@ -98,6 +98,7 @@ public class PlanCameraDialog extends javax.swing.JDialog {
         }
     }
 
+    final static Color ORANGE_CUSTOM = new Color(235, 206, 157);
     public class StringRenderer extends DefaultTableCellRenderer {
 
         @Override
@@ -106,7 +107,7 @@ public class PlanCameraDialog extends javax.swing.JDialog {
 
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
 
-            c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+            c.setBackground(row % 2 == 0 ? ORANGE_CUSTOM : Color.WHITE);
 
             if (isSelected) {
                 c.setBackground(Color.BLUE);

@@ -8,8 +8,9 @@ import javax.swing.JOptionPane;
  * @author Presentation
  */
 public class CarnetAdressesDialog extends javax.swing.JDialog {
-    
+
     private CarnetAdresses ca;
+
     /**
      * Creates new form CarnetAdressesDialog
      */
@@ -18,38 +19,37 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(null);
     }
-    
-    public CarnetAdresses getCa(){
+
+    public CarnetAdresses getCa() {
         return ca;
     }
-    
-    public void setCa(CarnetAdresses ca){
+
+    public void setCa(CarnetAdresses ca) {
         this.ca = ca;
         this.nomCompagnieButton.setText(ca.getCompagnieca());
         this.nbGuichet.setValue(ca.getNombreGuichet());
         this.societeAssistance.setText(ca.getSocieteAssistance());
         this.telephone.setText(ca.getTelephone());
     }
-    
+
     public static boolean verifierInt(String entier) {
         boolean v = false;
         try {
             //split du numero
             String[] num = entier.split(" ");
-            for(int i=0; i<num.length;i++){
+            for (int i = 0; i < num.length; i++) {
                 //on essaie de convertir la chaîne en nombre entier
-            Integer.parseInt(num[i]);
+                Integer.parseInt(num[i]);
             }
             //conversion aboutie, v prend la valeur true
             v = true;
-            } catch (Exception e) {
+        } catch (Exception e) {
             //conversion échouée, levée d'une exception, v prend false
             v = false;
         }
         //on retourne v
         return v;
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -97,11 +97,7 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
 
         nbGuichet.setModel(new javax.swing.SpinnerNumberModel(1, 0, 50, 1));
 
-        try {
-            telephone.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##########")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
+        telephone.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##########"))));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -170,27 +166,25 @@ public class CarnetAdressesDialog extends javax.swing.JDialog {
 
     private void validateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateButtonActionPerformed
         try {
-            String compagnieCa = this.nomCompagnieButton.getText();
-            String strSocieteAssistance = this.societeAssistance.getText();
-            String strTelephone = this.telephone.getText();
-            Integer nbGuichets = (Integer)this.nbGuichet.getValue();
+            String compagnieCa = this.nomCompagnieButton.getText().trim();
+            String strSocieteAssistance = this.societeAssistance.getText().trim();
+            String strTelephone = this.telephone.getText().trim();
+            Integer nbGuichets = (Integer) this.nbGuichet.getValue();
             //Vérification dans la base pour attribuer un id unique
-            
+
             //Vérification du téléphone
-            if(verifierInt(strTelephone) == false){
+            if (verifierInt(strTelephone) == false) {
                 JOptionPane.showMessageDialog(this, "Le numéro de téléphone ne doit contenir que des caractères numériques", "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            else if(verifierInt(strTelephone) == true && strTelephone.length() != 10){
+            } else if (verifierInt(strTelephone) == true && strTelephone.length() != 10) {
                 System.out.println("Taille : " + strTelephone.length());
                 JOptionPane.showMessageDialog(this, "Le numéro de téléphone est incorrecte", "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            else{
+            } else {
                 ca = new CarnetAdresses();
                 ca.setCompagnieca(compagnieCa);
                 ca.setSocieteAssistance(strSocieteAssistance);
                 ca.setTelephone(strTelephone);
                 ca.setNombreGuichet(nbGuichets);
-                
+
                 this.dispose();
             }
         } catch (NumberFormatException e) {
