@@ -179,11 +179,11 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
      */
     public ListPanel(FaceDetectorListener faceListener, ToolbarsListener toolbarsListener) {
         initComponents();
-        
+
         parameterButton.setText("");
         parameterButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getParameterIcon());
         parameterButton.setToolTipText("Paramétrer");
-        
+
         planPanel = new PlanPanel();
         planPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
@@ -618,9 +618,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                 cameraButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getredCameraIcon());
                 //On lance l'activation des caméras une fois qu'on appuie sur le bouton
             }
-        }
-
-        if (e.getSource() == refreshButton) {
+        } else if (e.getSource() == refreshButton) {
 
             System.out.println("Button Refresh clicked");
             Runnable r = new Runnable() {
@@ -751,18 +749,22 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
         // Alert !
         if (number_of_faces >= seuilCamera && percentage_of_differences > 10) {
-            Camera camAlert;
-            for (int i = 0; i < cameras.size(); i++) {
-                camAlert = cameras.get(i);
+            if (cameras != null && cameras.size() > 0) {
+                Camera camAlert;
+                for (int i = 0; i < cameras.size(); i++) {
+                    camAlert = cameras.get(i);
 
-                if (camAlert.getId().equals(id_camera)
-                        && camAlert.getState() != Camera.CAMERA_STATE.ALERT) {
-                    camAlert.setState(Camera.CAMERA_STATE.ALERT);
-                    planPanelComponentResized(null);
-                    JOptionPane.showMessageDialog(null, "Caméra " + id_camera
-                            + " : Détection de formation de file d'attente en position "
-                            + camAlert.getPosition(), "WARNING", JOptionPane.WARNING_MESSAGE);
-                    break;
+                    if (camAlert.getFaceDetectorThread().isActive()) {
+                        if (camAlert.getId().equals(id_camera)
+                                && camAlert.getState() != Camera.CAMERA_STATE.ALERT) {
+                            camAlert.setState(Camera.CAMERA_STATE.ALERT);
+                            planPanelComponentResized(null);
+                            JOptionPane.showMessageDialog(null, "Caméra " + id_camera
+                                    + " : Détection de formation de file d'attente en position "
+                                    + camAlert.getPosition(), "WARNING", JOptionPane.WARNING_MESSAGE);
+                            break;
+                        }
+                    }
                 }
             }
         }

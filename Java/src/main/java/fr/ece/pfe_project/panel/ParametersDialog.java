@@ -34,8 +34,8 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class ParametersDialog extends javax.swing.JDialog {
 
-    private final Integer DEFAULT_SEUIL_JOUR = 4000;
-    private final Integer DEFAULT_SEUIL_CAMERA = 70;
+    public final static Integer DEFAULT_SEUIL_JOUR = 4000;
+    public final static Integer DEFAULT_SEUIL_CAMERA = 70;
 
     private static JDialog dialog;
 
