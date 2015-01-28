@@ -7,12 +7,26 @@ import fr.ece.pfe_project.model.JourFerie;
 import fr.ece.pfe_project.utils.ExcelUtils;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.utils.ParametersUtils;
+import fr.ece.pfe_project.weather.YWeather;
+import fr.ece.pfe_project.weather.model.Units;
+import fr.ece.pfe_project.weather.model.WeatherInfo;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 /**
  *
@@ -204,8 +218,7 @@ public class Algorithm {
 
     public static AlgoResult process2(Date date, AlgoResult algoResult) {
         ArrayList<JourFerie> jours = (ArrayList<JourFerie>) ParametersUtils.get(ParametersUtils.PARAM_JOURS_FERIES);
-        
-        
+
         if (jours != null && jours.size() > 0) {
 
             Calendar cal = Calendar.getInstance();
@@ -224,12 +237,105 @@ public class Algorithm {
                     cal.add(Calendar.DAY_OF_MONTH, 1);
 
                     if (isFerie) {
+                                                            
                         // Si le lendemain est ferie
                         if (isFerie(cal.getTime(), jours)) {
                             int prevision = process1(cal.getTime())
                                     .getPrevisionPassager();
 
                             algoResult.setPrevisionPassager(prevision - ((prevision * 10) / 100));
+                            
+                            // Si la météo est bonne: 
+                            // voir si le jours recherché est dans moins de 24h
+                            Calendar recherche = Calendar.getInstance();
+                            recherche.setTime(date);
+                            System.out.println("date du jours recherche : " + recherche);
+                            System.out.println("date du jours recheche : " + recherche.getTimeInMillis());
+                            Calendar aujourdhui = Calendar.getInstance();
+                            System.out.println("Aujourdhui : " + aujourdhui);
+                            System.out.println("Aujourdhui : " + aujourdhui.getTimeInMillis());
+                            long test_meteo = (recherche.getTimeInMillis()- aujourdhui.getTimeInMillis());
+                            
+                            if (test_meteo < 86400000) { // 24h en millisecond
+                                try{
+//                                        long start;
+//                                        start = System.nanoTime();
+
+                                        //-------------------------------------//
+                                        //Récupération des destinations du jour//
+                                        //-------------------------------------//
+
+                                        FileWriter fw = new FileWriter("voldujour",false);
+                                        BufferedWriter output = new BufferedWriter(fw);
+                                        //On se connecte au site et on charge le document html
+                                        Document doc = Jsoup.connect("http://www.strasbourg.aeroport.fr/destinations/vols").get();
+                                        //On récupère dans ce document la premiere balise ayant comme nom td et pour attribut class="center"
+                                        int i = 1;
+                                        int nbDest = 0;
+                                        int el = doc.select("td .center").size();
+                                        for(i=1;i<el;i+=5){
+                                        Element element = doc.select("td .center").get(i);
+                                        String element1 =  element.text();
+                                        String[] tab = element1.split("\\s");
+                                        output.write(tab[0] + "\r\n");
+                                        nbDest++;
+                                        //System.out.println(element1);
+                                        output.flush();
+                                        }
+                                        output.close();
+
+                                        //----------------------------------------------------//
+                                        //Récupération de la météo liée à chaque destinations//
+                                        //----------------------------------------------------//
+
+                                        String chaine = "";
+                                        int nbDestGoodWeather = 0;
+                                        YWeather weather = new YWeather();
+                                        InputStream ips=new FileInputStream("voldujour"); 
+                                                InputStreamReader ipsr=new InputStreamReader(ips);
+                                                BufferedReader br=new BufferedReader(ipsr);
+                                                String ligne;
+                                                FileWriter fw1 = new FileWriter("VoldujourEtMeteo",false);
+                                                BufferedWriter output1 = new BufferedWriter(fw1);
+                                                while ((ligne=br.readLine())!=null){
+                                                        System.out.println(ligne);
+                                                        chaine+=ligne+"\n";
+                                                        WeatherInfo info = weather.getWeatherForPlace(ligne, Units.TEMP_C);
+                                                        output1.write(ligne + "--" + info.getItem().getCondtition().getConditionByCode(info.getItem().getCondtition().getCode()) + "--" + info.getItem().getCondtition().getTemp() + "\r\n");
+                                                        output1.flush();
+                                                        int code = info.getItem().getCondtition().getCode();
+                                                        if(code == 32 || code == 33 || code == 34 || code == 36){
+                                                                System.out.println("Il fait beau à " + ligne + " et il fait " + info.getItem().getCondtition().getTemp() + "°c, les vols vont suremennt être plein pour ces destinations");
+                                                                nbDestGoodWeather++;
+                                                        }
+                                                }
+                                                br.close();
+                                                output1.close();
+                                                // Si le temps est bon dans la majorité des destination, on ajoute 5%
+                                                if(nbDestGoodWeather > nbDest/2){
+                                                    System.out.println("Meteo ok");
+                                                    algoResult.setPrevisionPassager(prevision + ((prevision * 5) / 100));
+                                                }
+                                 }
+
+                                //--------------------------------------------//
+                                //gestion des différentes exceptions possibles//
+                                //--------------------------------------------//
+                                 catch(MalformedURLException e){
+                                 System.out.println(e);
+                                 }
+                                 catch(IOException e){
+                                 System.out.println(e);
+                                 }
+                                catch(NumberFormatException ex){
+                                        System.out.println(ex);
+                                }
+                                catch(java.lang.ArrayIndexOutOfBoundsException exce){
+                                        System.out.println(exce);
+                                }
+                            }
+                            
+
                         } else {
                             algoResult.setPrevisionPassager(process1(cal.getTime())
                                     .getPrevisionPassager());
@@ -240,16 +346,16 @@ public class Algorithm {
                         algoResult.setPrevisionPassager(process1(cal.getTime())
                                 .getPrevisionPassager());
                     }
-                    
+
                     // Si le J-4 est férié (le jeudi précédent
                     cal.add(Calendar.DAY_OF_MONTH, -5);
-                    
+
                     if (isFerie(cal.getTime(), jours)) {
-                            int prevision = process1(date)
+                        int prevision = process1(date)
                                 .getPrevisionPassager();
 
-                            algoResult.setPrevisionPassager(prevision + ((prevision * 25) / 100));
-                            }
+                        algoResult.setPrevisionPassager(prevision + ((prevision * 25) / 100));
+                    }
 
                     break;
                 case Calendar.TUESDAY:
@@ -262,6 +368,98 @@ public class Algorithm {
                         if (isFerie(cal.getTime(), jours)) {
                             algoResult.setPrevisionPassager(process1(cal.getTime())
                                     .getPrevisionPassager());
+                            
+                            // Si la météo est bonne: 
+                            // voir si le jours recherché est dans moins de 24h
+                            Calendar recherche = Calendar.getInstance();
+                            recherche.setTime(date);
+                            System.out.println("date du jours recherche : " + recherche);
+                            System.out.println("date du jours recheche : " + recherche.getTimeInMillis());
+                            Calendar aujourdhui = Calendar.getInstance();
+                            System.out.println("Aujourdhui : " + aujourdhui);
+                            System.out.println("Aujourdhui : " + aujourdhui.getTimeInMillis());
+                            long test_meteo = (recherche.getTimeInMillis()- aujourdhui.getTimeInMillis());
+                            
+                            if (test_meteo < 86400000) { // 24h en millisecond
+                                try{
+//                                        long start;
+//                                        start = System.nanoTime();
+
+                                        //-------------------------------------//
+                                        //Récupération des destinations du jour//
+                                        //-------------------------------------//
+
+                                        FileWriter fw = new FileWriter("voldujour",false);
+                                        BufferedWriter output = new BufferedWriter(fw);
+                                        //On se connecte au site et on charge le document html
+                                        Document doc = Jsoup.connect("http://www.strasbourg.aeroport.fr/destinations/vols").get();
+                                        //On récupère dans ce document la premiere balise ayant comme nom td et pour attribut class="center"
+                                        int i = 1;
+                                        int nbDest = 0;
+                                        int el = doc.select("td .center").size();
+                                        for(i=1;i<el;i+=5){
+                                        Element element = doc.select("td .center").get(i);
+                                        String element1 =  element.text();
+                                        String[] tab = element1.split("\\s");
+                                        output.write(tab[0] + "\r\n");
+                                        nbDest++;
+                                        //System.out.println(element1);
+                                        output.flush();
+                                        }
+                                        output.close();
+
+                                        //----------------------------------------------------//
+                                        //Récupération de la météo liée à chaque destinations//
+                                        //----------------------------------------------------//
+
+                                        String chaine = "";
+                                        int nbDestGoodWeather = 0;
+                                        YWeather weather = new YWeather();
+                                        InputStream ips=new FileInputStream("voldujour"); 
+                                                InputStreamReader ipsr=new InputStreamReader(ips);
+                                                BufferedReader br=new BufferedReader(ipsr);
+                                                String ligne;
+                                                FileWriter fw1 = new FileWriter("VoldujourEtMeteo",false);
+                                                BufferedWriter output1 = new BufferedWriter(fw1);
+                                                while ((ligne=br.readLine())!=null){
+                                                        System.out.println(ligne);
+                                                        chaine+=ligne+"\n";
+                                                        WeatherInfo info = weather.getWeatherForPlace(ligne, Units.TEMP_C);
+                                                        output1.write(ligne + "--" + info.getItem().getCondtition().getConditionByCode(info.getItem().getCondtition().getCode()) + "--" + info.getItem().getCondtition().getTemp() + "\r\n");
+                                                        output1.flush();
+                                                        int code = info.getItem().getCondtition().getCode();
+                                                        if(code == 32 || code == 33 || code == 34 || code == 36){
+                                                                System.out.println("Il fait beau à " + ligne + " et il fait " + info.getItem().getCondtition().getTemp() + "°c, les vols vont suremennt être plein pour ces destinations");
+                                                                nbDestGoodWeather++;
+                                                        }
+                                                }
+                                                br.close();
+                                                output1.close();
+                                                // Si le temps est bon dans la majorité des destination, on ajoute 5%
+                                                if(nbDestGoodWeather > nbDest/2){
+                                                    System.out.println("Meteo ok");
+                                                    int prevision = process1(date)
+                                                    .getPrevisionPassager();
+                                                    algoResult.setPrevisionPassager(prevision + ((prevision * 5) / 100));
+                                                }
+                                 }
+
+                                //--------------------------------------------//
+                                //gestion des différentes exceptions possibles//
+                                //--------------------------------------------//
+                                 catch(MalformedURLException e){
+                                 System.out.println(e);
+                                 }
+                                 catch(IOException e){
+                                 System.out.println(e);
+                                 }
+                                catch(NumberFormatException ex){
+                                        System.out.println(ex);
+                                }
+                                catch(java.lang.ArrayIndexOutOfBoundsException exce){
+                                        System.out.println(exce);
+                                }
+                            }
                         } else {
                             // do nothing
                         }
@@ -270,6 +468,98 @@ public class Algorithm {
                     else if (isFerie(cal.getTime(), jours)) {
                         algoResult.setPrevisionPassager(process1(cal.getTime())
                                 .getPrevisionPassager());
+                        
+                        // Si la météo est bonne: 
+                            // voir si le jours recherché est dans moins de 24h
+                            Calendar recherche = Calendar.getInstance();
+                            recherche.setTime(date);
+                            System.out.println("date du jours recherche : " + recherche);
+                            System.out.println("date du jours recheche : " + recherche.getTimeInMillis());
+                            Calendar aujourdhui = Calendar.getInstance();
+                            System.out.println("Aujourdhui : " + aujourdhui);
+                            System.out.println("Aujourdhui : " + aujourdhui.getTimeInMillis());
+                            long test_meteo = (recherche.getTimeInMillis()- aujourdhui.getTimeInMillis());
+                            
+                            if (test_meteo < 86400000) { // 24h en millisecond
+                                try{
+//                                        long start;
+//                                        start = System.nanoTime();
+
+                                        //-------------------------------------//
+                                        //Récupération des destinations du jour//
+                                        //-------------------------------------//
+
+                                        FileWriter fw = new FileWriter("voldujour",false);
+                                        BufferedWriter output = new BufferedWriter(fw);
+                                        //On se connecte au site et on charge le document html
+                                        Document doc = Jsoup.connect("http://www.strasbourg.aeroport.fr/destinations/vols").get();
+                                        //On récupère dans ce document la premiere balise ayant comme nom td et pour attribut class="center"
+                                        int i = 1;
+                                        int nbDest = 0;
+                                        int el = doc.select("td .center").size();
+                                        for(i=1;i<el;i+=5){
+                                        Element element = doc.select("td .center").get(i);
+                                        String element1 =  element.text();
+                                        String[] tab = element1.split("\\s");
+                                        output.write(tab[0] + "\r\n");
+                                        nbDest++;
+                                        //System.out.println(element1);
+                                        output.flush();
+                                        }
+                                        output.close();
+
+                                        //----------------------------------------------------//
+                                        //Récupération de la météo liée à chaque destinations//
+                                        //----------------------------------------------------//
+
+                                        String chaine = "";
+                                        int nbDestGoodWeather = 0;
+                                        YWeather weather = new YWeather();
+                                        InputStream ips=new FileInputStream("voldujour"); 
+                                                InputStreamReader ipsr=new InputStreamReader(ips);
+                                                BufferedReader br=new BufferedReader(ipsr);
+                                                String ligne;
+                                                FileWriter fw1 = new FileWriter("VoldujourEtMeteo",false);
+                                                BufferedWriter output1 = new BufferedWriter(fw1);
+                                                while ((ligne=br.readLine())!=null){
+                                                        System.out.println(ligne);
+                                                        chaine+=ligne+"\n";
+                                                        WeatherInfo info = weather.getWeatherForPlace(ligne, Units.TEMP_C);
+                                                        output1.write(ligne + "--" + info.getItem().getCondtition().getConditionByCode(info.getItem().getCondtition().getCode()) + "--" + info.getItem().getCondtition().getTemp() + "\r\n");
+                                                        output1.flush();
+                                                        int code = info.getItem().getCondtition().getCode();
+                                                        if(code == 32 || code == 33 || code == 34 || code == 36){
+                                                                System.out.println("Il fait beau à " + ligne + " et il fait " + info.getItem().getCondtition().getTemp() + "°c, les vols vont suremennt être plein pour ces destinations");
+                                                                nbDestGoodWeather++;
+                                                        }
+                                                }
+                                                br.close();
+                                                output1.close();
+                                                // Si le temps est bon dans la majorité des destination, on ajoute 5%
+                                                if(nbDestGoodWeather > nbDest/2){
+                                                    System.out.println("Meteo ok");
+                                                    int prevision = process1(date)
+                                                    .getPrevisionPassager();
+                                                    algoResult.setPrevisionPassager(prevision + ((prevision * 5) / 100));
+                                                }
+                                 }
+
+                                //--------------------------------------------//
+                                //gestion des différentes exceptions possibles//
+                                //--------------------------------------------//
+                                 catch(MalformedURLException e){
+                                 System.out.println(e);
+                                 }
+                                 catch(IOException e){
+                                 System.out.println(e);
+                                 }
+                                catch(NumberFormatException ex){
+                                        System.out.println(ex);
+                                }
+                                catch(java.lang.ArrayIndexOutOfBoundsException exce){
+                                        System.out.println(exce);
+                                }
+                            }
                     }
 
                     break;
@@ -301,6 +591,98 @@ public class Algorithm {
                         if (isFerie(cal.getTime(), jours)) {
                             algoResult.setPrevisionPassager(process1(cal.getTime())
                                     .getPrevisionPassager());
+                            
+                            // Si la météo est bonne: 
+                            // voir si le jours recherché est dans moins de 24h
+                            Calendar recherche = Calendar.getInstance();
+                            recherche.setTime(date);
+                            System.out.println("date du jours recherche : " + recherche);
+                            System.out.println("date du jours recheche : " + recherche.getTimeInMillis());
+                            Calendar aujourdhui = Calendar.getInstance();
+                            System.out.println("Aujourdhui : " + aujourdhui);
+                            System.out.println("Aujourdhui : " + aujourdhui.getTimeInMillis());
+                            long test_meteo = (recherche.getTimeInMillis()- aujourdhui.getTimeInMillis());
+                            
+                            if (test_meteo < 86400000) { // 24h en millisecond
+                                try{
+//                                        long start;
+//                                        start = System.nanoTime();
+
+                                        //-------------------------------------//
+                                        //Récupération des destinations du jour//
+                                        //-------------------------------------//
+
+                                        FileWriter fw = new FileWriter("voldujour",false);
+                                        BufferedWriter output = new BufferedWriter(fw);
+                                        //On se connecte au site et on charge le document html
+                                        Document doc = Jsoup.connect("http://www.strasbourg.aeroport.fr/destinations/vols").get();
+                                        //On récupère dans ce document la premiere balise ayant comme nom td et pour attribut class="center"
+                                        int i = 1;
+                                        int nbDest = 0;
+                                        int el = doc.select("td .center").size();
+                                        for(i=1;i<el;i+=5){
+                                        Element element = doc.select("td .center").get(i);
+                                        String element1 =  element.text();
+                                        String[] tab = element1.split("\\s");
+                                        output.write(tab[0] + "\r\n");
+                                        nbDest++;
+                                        //System.out.println(element1);
+                                        output.flush();
+                                        }
+                                        output.close();
+
+                                        //----------------------------------------------------//
+                                        //Récupération de la météo liée à chaque destinations//
+                                        //----------------------------------------------------//
+
+                                        String chaine = "";
+                                        int nbDestGoodWeather = 0;
+                                        YWeather weather = new YWeather();
+                                        InputStream ips=new FileInputStream("voldujour"); 
+                                                InputStreamReader ipsr=new InputStreamReader(ips);
+                                                BufferedReader br=new BufferedReader(ipsr);
+                                                String ligne;
+                                                FileWriter fw1 = new FileWriter("VoldujourEtMeteo",false);
+                                                BufferedWriter output1 = new BufferedWriter(fw1);
+                                                while ((ligne=br.readLine())!=null){
+                                                        System.out.println(ligne);
+                                                        chaine+=ligne+"\n";
+                                                        WeatherInfo info = weather.getWeatherForPlace(ligne, Units.TEMP_C);
+                                                        output1.write(ligne + "--" + info.getItem().getCondtition().getConditionByCode(info.getItem().getCondtition().getCode()) + "--" + info.getItem().getCondtition().getTemp() + "\r\n");
+                                                        output1.flush();
+                                                        int code = info.getItem().getCondtition().getCode();
+                                                        if(code == 32 || code == 33 || code == 34 || code == 36){
+                                                                System.out.println("Il fait beau à " + ligne + " et il fait " + info.getItem().getCondtition().getTemp() + "°c, les vols vont suremennt être plein pour ces destinations");
+                                                                nbDestGoodWeather++;
+                                                        }
+                                                }
+                                                br.close();
+                                                output1.close();
+                                                // Si le temps est bon dans la majorité des destination, on ajoute 5%
+                                                if(nbDestGoodWeather > nbDest/2){
+                                                    System.out.println("Meteo ok");
+                                                    int prevision = process1(date)
+                                                    .getPrevisionPassager();
+                                                    algoResult.setPrevisionPassager(prevision + ((prevision * 5) / 100));
+                                                }
+                                 }
+
+                                //--------------------------------------------//
+                                //gestion des différentes exceptions possibles//
+                                //--------------------------------------------//
+                                 catch(MalformedURLException e){
+                                 System.out.println(e);
+                                 }
+                                 catch(IOException e){
+                                 System.out.println(e);
+                                 }
+                                catch(NumberFormatException ex){
+                                        System.out.println(ex);
+                                }
+                                catch(java.lang.ArrayIndexOutOfBoundsException exce){
+                                        System.out.println(exce);
+                                }
+                            }
                         }
                     }
 
@@ -317,8 +699,8 @@ public class Algorithm {
                                     .getPrevisionPassager();
 
                             algoResult.setPrevisionPassager(prevision - ((prevision * 25) / 100));
-                        } 
-                        
+                        }
+
                         break;
                     }
 
@@ -337,10 +719,103 @@ public class Algorithm {
                     // Si le lendemain est ferie
                     if (isFerie(cal.getTime(), jours)) {
                         cal.add(Calendar.DAY_OF_MONTH, 3);
+                                             
                         // Si le lundi suivant est ferie
                         if (isFerie(cal.getTime(), jours)) {
                             algoResult.setPrevisionPassager(process1(JPlus1)
                                     .getPrevisionPassager());
+                            
+                            // Si la météo est bonne: 
+                            // voir si le jours recherché est dans moins de 24h
+                            Calendar recherche = Calendar.getInstance();
+                            recherche.setTime(date);
+                            System.out.println("date du jours recherche : " + recherche);
+                            System.out.println("date du jours recheche : " + recherche.getTimeInMillis());
+                            Calendar aujourdhui = Calendar.getInstance();
+                            System.out.println("Aujourdhui : " + aujourdhui);
+                            System.out.println("Aujourdhui : " + aujourdhui.getTimeInMillis());
+                            long test_meteo = (recherche.getTimeInMillis()- aujourdhui.getTimeInMillis());
+                            
+                            if (test_meteo < 86400000) { // 24h en millisecond
+                                try{
+//                                        long start;
+//                                        start = System.nanoTime();
+
+                                        //-------------------------------------//
+                                        //Récupération des destinations du jour//
+                                        //-------------------------------------//
+
+                                        FileWriter fw = new FileWriter("voldujour",false);
+                                        BufferedWriter output = new BufferedWriter(fw);
+                                        //On se connecte au site et on charge le document html
+                                        Document doc = Jsoup.connect("http://www.strasbourg.aeroport.fr/destinations/vols").get();
+                                        //On récupère dans ce document la premiere balise ayant comme nom td et pour attribut class="center"
+                                        int i = 1;
+                                        int nbDest = 0;
+                                        int el = doc.select("td .center").size();
+                                        for(i=1;i<el;i+=5){
+                                        Element element = doc.select("td .center").get(i);
+                                        String element1 =  element.text();
+                                        String[] tab = element1.split("\\s");
+                                        output.write(tab[0] + "\r\n");
+                                        nbDest++;
+                                        //System.out.println(element1);
+                                        output.flush();
+                                        }
+                                        output.close();
+
+                                        //----------------------------------------------------//
+                                        //Récupération de la météo liée à chaque destinations//
+                                        //----------------------------------------------------//
+
+                                        String chaine = "";
+                                        int nbDestGoodWeather = 0;
+                                        YWeather weather = new YWeather();
+                                        InputStream ips=new FileInputStream("voldujour"); 
+                                                InputStreamReader ipsr=new InputStreamReader(ips);
+                                                BufferedReader br=new BufferedReader(ipsr);
+                                                String ligne;
+                                                FileWriter fw1 = new FileWriter("VoldujourEtMeteo",false);
+                                                BufferedWriter output1 = new BufferedWriter(fw1);
+                                                while ((ligne=br.readLine())!=null){
+                                                        System.out.println(ligne);
+                                                        chaine+=ligne+"\n";
+                                                        WeatherInfo info = weather.getWeatherForPlace(ligne, Units.TEMP_C);
+                                                        output1.write(ligne + "--" + info.getItem().getCondtition().getConditionByCode(info.getItem().getCondtition().getCode()) + "--" + info.getItem().getCondtition().getTemp() + "\r\n");
+                                                        output1.flush();
+                                                        int code = info.getItem().getCondtition().getCode();
+                                                        if(code == 32 || code == 33 || code == 34 || code == 36){
+                                                                System.out.println("Il fait beau à " + ligne + " et il fait " + info.getItem().getCondtition().getTemp() + "°c, les vols vont suremennt être plein pour ces destinations");
+                                                                nbDestGoodWeather++;
+                                                        }
+                                                }
+                                                br.close();
+                                                output1.close();
+                                                // Si le temps est bon dans la majorité des destination, on ajoute 5%
+                                                if(nbDestGoodWeather > nbDest/2){
+                                                    System.out.println("Meteo ok");
+                                                    int prevision = process1(date)
+                                                    .getPrevisionPassager();
+                                                    algoResult.setPrevisionPassager(prevision + ((prevision * 5) / 100));
+                                                }
+                                 }
+
+                                //--------------------------------------------//
+                                //gestion des différentes exceptions possibles//
+                                //--------------------------------------------//
+                                 catch(MalformedURLException e){
+                                 System.out.println(e);
+                                 }
+                                 catch(IOException e){
+                                 System.out.println(e);
+                                 }
+                                catch(NumberFormatException ex){
+                                        System.out.println(ex);
+                                }
+                                catch(java.lang.ArrayIndexOutOfBoundsException exce){
+                                        System.out.println(exce);
+                                }
+                            }
                         } else {
                             int prevision = process1(date)
                                     .getPrevisionPassager();
@@ -361,11 +836,191 @@ public class Algorithm {
                                     .getPrevisionPassager();
 
                             algoResult.setPrevisionPassager(prevision - ((prevision * 30) / 100));
+                            
+                            // Si la météo est bonne: 
+                            // voir si le jours recherché est dans moins de 24h
+                            Calendar recherche = Calendar.getInstance();
+                            recherche.setTime(date);
+                            System.out.println("date du jours recherche : " + recherche);
+                            System.out.println("date du jours recheche : " + recherche.getTimeInMillis());
+                            Calendar aujourdhui = Calendar.getInstance();
+                            System.out.println("Aujourdhui : " + aujourdhui);
+                            System.out.println("Aujourdhui : " + aujourdhui.getTimeInMillis());
+                            long test_meteo = (recherche.getTimeInMillis()- aujourdhui.getTimeInMillis());
+                            
+                            if (test_meteo < 86400000) { // 24h en millisecond
+                                try{
+//                                        long start;
+//                                        start = System.nanoTime();
+
+                                        //-------------------------------------//
+                                        //Récupération des destinations du jour//
+                                        //-------------------------------------//
+
+                                        FileWriter fw = new FileWriter("voldujour",false);
+                                        BufferedWriter output = new BufferedWriter(fw);
+                                        //On se connecte au site et on charge le document html
+                                        Document doc = Jsoup.connect("http://www.strasbourg.aeroport.fr/destinations/vols").get();
+                                        //On récupère dans ce document la premiere balise ayant comme nom td et pour attribut class="center"
+                                        int i = 1;
+                                        int nbDest = 0;
+                                        int el = doc.select("td .center").size();
+                                        for(i=1;i<el;i+=5){
+                                        Element element = doc.select("td .center").get(i);
+                                        String element1 =  element.text();
+                                        String[] tab = element1.split("\\s");
+                                        output.write(tab[0] + "\r\n");
+                                        nbDest++;
+                                        //System.out.println(element1);
+                                        output.flush();
+                                        }
+                                        output.close();
+
+                                        //----------------------------------------------------//
+                                        //Récupération de la météo liée à chaque destinations//
+                                        //----------------------------------------------------//
+
+                                        String chaine = "";
+                                        int nbDestGoodWeather = 0;
+                                        YWeather weather = new YWeather();
+                                        InputStream ips=new FileInputStream("voldujour"); 
+                                                InputStreamReader ipsr=new InputStreamReader(ips);
+                                                BufferedReader br=new BufferedReader(ipsr);
+                                                String ligne;
+                                                FileWriter fw1 = new FileWriter("VoldujourEtMeteo",false);
+                                                BufferedWriter output1 = new BufferedWriter(fw1);
+                                                while ((ligne=br.readLine())!=null){
+                                                        System.out.println(ligne);
+                                                        chaine+=ligne+"\n";
+                                                        WeatherInfo info = weather.getWeatherForPlace(ligne, Units.TEMP_C);
+                                                        output1.write(ligne + "--" + info.getItem().getCondtition().getConditionByCode(info.getItem().getCondtition().getCode()) + "--" + info.getItem().getCondtition().getTemp() + "\r\n");
+                                                        output1.flush();
+                                                        int code = info.getItem().getCondtition().getCode();
+                                                        if(code == 32 || code == 33 || code == 34 || code == 36){
+                                                                System.out.println("Il fait beau à " + ligne + " et il fait " + info.getItem().getCondtition().getTemp() + "°c, les vols vont suremennt être plein pour ces destinations");
+                                                                nbDestGoodWeather++;
+                                                        }
+                                                }
+                                                br.close();
+                                                output1.close();
+                                                // Si le temps est bon dans la majorité des destination, on ajoute 5%
+                                                if(nbDestGoodWeather > nbDest/2){
+                                                    System.out.println("Meteo ok");
+                                                    algoResult.setPrevisionPassager(prevision + ((prevision * 5) / 100));
+                                                }
+                                 }
+
+                                //--------------------------------------------//
+                                //gestion des différentes exceptions possibles//
+                                //--------------------------------------------//
+                                 catch(MalformedURLException e){
+                                 System.out.println(e);
+                                 }
+                                 catch(IOException e){
+                                 System.out.println(e);
+                                 }
+                                catch(NumberFormatException ex){
+                                        System.out.println(ex);
+                                }
+                                catch(java.lang.ArrayIndexOutOfBoundsException exce){
+                                        System.out.println(exce);
+                                }
+                            }
                         } else {
                             int prevision = process1(date)
                                     .getPrevisionPassager();
 
                             algoResult.setPrevisionPassager(prevision - ((prevision * 20) / 100));
+                            
+                            // Si la météo est bonne: 
+                            // voir si le jours recherché est dans moins de 24h
+                            Calendar recherche = Calendar.getInstance();
+                            recherche.setTime(date);
+                            System.out.println("date du jours recherche : " + recherche);
+                            System.out.println("date du jours recheche : " + recherche.getTimeInMillis());
+                            Calendar aujourdhui = Calendar.getInstance();
+                            System.out.println("Aujourdhui : " + aujourdhui);
+                            System.out.println("Aujourdhui : " + aujourdhui.getTimeInMillis());
+                            long test_meteo = (recherche.getTimeInMillis()- aujourdhui.getTimeInMillis());
+                            
+                            if (test_meteo < 86400000) { // 24h en millisecond
+                                try{
+//                                        long start;
+//                                        start = System.nanoTime();
+
+                                        //-------------------------------------//
+                                        //Récupération des destinations du jour//
+                                        //-------------------------------------//
+
+                                        FileWriter fw = new FileWriter("voldujour",false);
+                                        BufferedWriter output = new BufferedWriter(fw);
+                                        //On se connecte au site et on charge le document html
+                                        Document doc = Jsoup.connect("http://www.strasbourg.aeroport.fr/destinations/vols").get();
+                                        //On récupère dans ce document la premiere balise ayant comme nom td et pour attribut class="center"
+                                        int i = 1;
+                                        int nbDest = 0;
+                                        int el = doc.select("td .center").size();
+                                        for(i=1;i<el;i+=5){
+                                        Element element = doc.select("td .center").get(i);
+                                        String element1 =  element.text();
+                                        String[] tab = element1.split("\\s");
+                                        output.write(tab[0] + "\r\n");
+                                        nbDest++;
+                                        //System.out.println(element1);
+                                        output.flush();
+                                        }
+                                        output.close();
+
+                                        //----------------------------------------------------//
+                                        //Récupération de la météo liée à chaque destinations//
+                                        //----------------------------------------------------//
+
+                                        String chaine = "";
+                                        int nbDestGoodWeather = 0;
+                                        YWeather weather = new YWeather();
+                                        InputStream ips=new FileInputStream("voldujour"); 
+                                                InputStreamReader ipsr=new InputStreamReader(ips);
+                                                BufferedReader br=new BufferedReader(ipsr);
+                                                String ligne;
+                                                FileWriter fw1 = new FileWriter("VoldujourEtMeteo",false);
+                                                BufferedWriter output1 = new BufferedWriter(fw1);
+                                                while ((ligne=br.readLine())!=null){
+                                                        System.out.println(ligne);
+                                                        chaine+=ligne+"\n";
+                                                        WeatherInfo info = weather.getWeatherForPlace(ligne, Units.TEMP_C);
+                                                        output1.write(ligne + "--" + info.getItem().getCondtition().getConditionByCode(info.getItem().getCondtition().getCode()) + "--" + info.getItem().getCondtition().getTemp() + "\r\n");
+                                                        output1.flush();
+                                                        int code = info.getItem().getCondtition().getCode();
+                                                        if(code == 32 || code == 33 || code == 34 || code == 36){
+                                                                System.out.println("Il fait beau à " + ligne + " et il fait " + info.getItem().getCondtition().getTemp() + "°c, les vols vont suremennt être plein pour ces destinations");
+                                                                nbDestGoodWeather++;
+                                                        }
+                                                }
+                                                br.close();
+                                                output1.close();
+                                                // Si le temps est bon dans la majorité des destination, on ajoute 5%
+                                                if(nbDestGoodWeather > nbDest/2){
+                                                    System.out.println("Meteo ok");
+                                                    algoResult.setPrevisionPassager(prevision + ((prevision * 5) / 100));
+                                                }
+                                 }
+
+                                //--------------------------------------------//
+                                //gestion des différentes exceptions possibles//
+                                //--------------------------------------------//
+                                 catch(MalformedURLException e){
+                                 System.out.println(e);
+                                 }
+                                 catch(IOException e){
+                                 System.out.println(e);
+                                 }
+                                catch(NumberFormatException ex){
+                                        System.out.println(ex);
+                                }
+                                catch(java.lang.ArrayIndexOutOfBoundsException exce){
+                                        System.out.println(exce);
+                                }
+                            }
                         }
                         break;
                     }
@@ -383,7 +1038,7 @@ public class Algorithm {
                 case Calendar.SATURDAY:
 
                     cal.add(Calendar.DAY_OF_MONTH, 1);
-                    
+
                     // Si le lendemain est ferie
                     if (isFerie(cal.getTime(), jours)) {
                         int prevision = process1(date)
@@ -391,20 +1046,20 @@ public class Algorithm {
 
                         algoResult.setPrevisionPassager(prevision - ((prevision * 20) / 100));
                     }
-                    
+
                     // Si le jeudi d'avant est férié
                     cal.add(Calendar.DAY_OF_MONTH, -3);
                     if (isFerie(cal.getTime(), jours)) {
                         int prevision = process1(date)
-                                    .getPrevisionPassager();
+                                .getPrevisionPassager();
 
-                            algoResult.setPrevisionPassager(prevision - ((prevision * 20) / 100));
+                        algoResult.setPrevisionPassager(prevision - ((prevision * 20) / 100));
                     }
                     break;
                 case Calendar.SUNDAY:
 
-                    cal.add(Calendar.DAY_OF_MONTH, 3);                    
-                    
+                    cal.add(Calendar.DAY_OF_MONTH, 3);
+
                     // Si le lendemain est ferie
                     if (isFerie(cal.getTime(), jours)) {
 
@@ -465,7 +1120,7 @@ public class Algorithm {
 
             System.out.println("Date : " + cal.getTime() + " => " + freq);
         }
-        
+
         cal.setTime(dateSelected);
         cal.set(Calendar.YEAR, yearSelected - (gap - 1));
         cal.set(Calendar.WEEK_OF_YEAR, getWeekOfYear(dateSelected));
@@ -477,7 +1132,6 @@ public class Algorithm {
         System.out.println("Frequentation Annuelle " + cal.get(Calendar.YEAR)
                 + " : " + freqAnnuelleGapped);
 
-        
         ArrayList<Integer> yearsComplete = DatabaseHelper.getYearsComplete();
         yearsComplete.add(yearGapped);
         Collections.sort(yearsComplete);
