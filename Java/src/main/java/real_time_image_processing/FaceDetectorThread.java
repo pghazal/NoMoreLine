@@ -34,10 +34,19 @@ public class FaceDetectorThread extends Thread {
 
     private boolean active = false;
     private int cameraID = -1;
+    private int hardwareID = -1;
     private FaceDetectorListener faceDetectorListener;
 
     public boolean isActive() {
         return active;
+    }
+
+    public int getHardwareID() {
+        return hardwareID;
+    }
+
+    public void setHardwareID(int hardwareID) {
+        this.hardwareID = hardwareID;
     }
 
     public void setCameraID(int id) {
@@ -48,7 +57,8 @@ public class FaceDetectorThread extends Thread {
         return this.cameraID;
     }
 
-    public void launch(int id) {
+    public void launch(int hardware_id, int id) {
+        setHardwareID(hardware_id);
         setCameraID(id);
         start();
     }
@@ -57,10 +67,10 @@ public class FaceDetectorThread extends Thread {
     public void run() {
         System.err.println("RUN");
         this.active = true;
-        faceDetectionThread(this.cameraID);
+        faceDetectionThread(getHardwareID(), getCameraID());
     }
 
-    public void faceDetectionThread(int id_camera) {
+    public void faceDetectionThread(int hardware_id, int id_camera) {
 
         System.err.println("START FACE DETECT #" + id_camera);
         int number_of_faces_detected = 0;
@@ -91,7 +101,8 @@ public class FaceDetectorThread extends Thread {
 
             FrameGrabber grabber = null;
             try {
-                grabber = FrameGrabber.createDefault(0);
+                System.out.println("HARD ID : " + hardware_id);
+                grabber = FrameGrabber.createDefault(hardware_id);
             } catch (FrameGrabber.Exception ex) {
                 Logger.getLogger(FaceDetectorThread.class.getName()).log(Level.SEVERE, null, ex);
             }
