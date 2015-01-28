@@ -70,7 +70,7 @@ public class ParametersUtils {
     }
 
     private static void loadDefaultParameters() {
-        ParametersUtils.set(ParametersUtils.PARAM_SUEIL_JOUR, ParametersDialog.DEFAULT_SEUIL_CAMERA);
+        ParametersUtils.set(ParametersUtils.PARAM_SUEIL_JOUR, ParametersDialog.DEFAULT_SEUIL_JOUR);
         ParametersUtils.set(ParametersUtils.PARAM_SUEIL_CAMERA, ParametersDialog.DEFAULT_SEUIL_CAMERA);
 
         // Saving parameters in file parameter

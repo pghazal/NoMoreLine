@@ -183,6 +183,8 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         parameterButton.setText("");
         parameterButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getParameterIcon());
         parameterButton.setToolTipText("Paramétrer");
+        parameterButton.setBorderPainted(false);
+        parameterButton.setContentAreaFilled(false);
 
         planPanel = new PlanPanel();
         planPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -747,16 +749,39 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
         Integer seuilCamera = (Integer) ParametersUtils.get(ParametersUtils.PARAM_SUEIL_CAMERA);
 
-        // Alert !
-        if (number_of_faces >= seuilCamera && percentage_of_differences > 10) {
+        // NOT Alert !
+        if (number_of_faces < seuilCamera && percentage_of_differences < 10) {
             if (cameras != null && cameras.size() > 0) {
                 Camera camAlert;
                 for (int i = 0; i < cameras.size(); i++) {
                     camAlert = cameras.get(i);
 
-                    if (camAlert.getFaceDetectorThread().isActive()) {
+                    if (camAlert.getFaceDetectorThread() != null
+                            && camAlert.getFaceDetectorThread().isActive()) {
                         if (camAlert.getId().equals(id_camera)
-                                && camAlert.getState() != Camera.CAMERA_STATE.ALERT) {
+                                && camAlert.getState() == Camera.CAMERA_STATE.ALERT
+                                && camAlert.getPosition() != null
+                                && !camAlert.getPosition().equals(" - ")) {
+                            camAlert.setState(Camera.CAMERA_STATE.NORMAL);
+                            planPanelComponentResized(null);
+                            break;
+                        }
+                    }
+                }
+            }
+        } // Alert !
+        else {
+            if (cameras != null && cameras.size() > 0) {
+                Camera camAlert;
+                for (int i = 0; i < cameras.size(); i++) {
+                    camAlert = cameras.get(i);
+
+                    if (camAlert.getFaceDetectorThread() != null
+                            && camAlert.getFaceDetectorThread().isActive()) {
+                        if (camAlert.getId().equals(id_camera)
+                                && camAlert.getState() != Camera.CAMERA_STATE.ALERT
+                                && camAlert.getPosition() != null
+                                && !camAlert.getPosition().equals(" - ")) {
                             camAlert.setState(Camera.CAMERA_STATE.ALERT);
                             planPanelComponentResized(null);
                             JOptionPane.showMessageDialog(null, "Caméra " + id_camera
