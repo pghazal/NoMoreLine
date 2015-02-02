@@ -32,6 +32,9 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -49,8 +52,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -161,6 +167,42 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         }
     }
 
+    private class ImageLabel extends JLabel {
+
+        private Image _myimage;
+
+        public ImageLabel(String text) {
+            super(text);
+        }
+
+        @Override
+        public void setIcon(Icon icon) {
+            super.setIcon(icon);
+            if (icon instanceof ImageIcon) {
+                _myimage = ((ImageIcon) icon).getImage();
+            }
+        }
+
+        @Override
+        public void paint(Graphics g) {
+            System.out.println(this.getWidth());
+            System.out.println(this.getHeight());
+            g.drawImage(_myimage, 0, 0, getParent().getWidth(), getParent().getHeight(), null);
+        }
+
+//        @Override
+//        protected void paintComponent(Graphics g) {
+//            super.paintComponent(g);
+//
+//            Graphics2D g2d = (Graphics2D) g;
+//
+//            System.out.println(ListPanel.this.getWidth());
+//            System.out.println(ListPanel.this.getHeight());
+//
+//            g2d.drawImage(_myimage, 0, 0, ListPanel.this.getWidth(), ListPanel.this.getHeight(), null);
+//        }
+    }
+
     private ArrayList<Camera> cameras;
     private boolean isCameraActive;
 
@@ -170,6 +212,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
     private ToolbarsListener toolbarsListener;
 
     private PlanPanel planPanel;
+    private ImageLabel tutoImg;
 
     /**
      * Creates new form DrawingPanel
@@ -179,6 +222,12 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
      */
     public ListPanel(FaceDetectorListener faceListener, ToolbarsListener toolbarsListener) {
         initComponents();
+
+        tutoImg = new ImageLabel("tuto");
+        tutoImg.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getTutoIcon());
+        scrollPaneTuto.setViewportView(tutoImg);
+        tutoImg.repaint();
+        ((CardLayout) (cardPanel.getLayout())).show(cardPanel, "tuto");
 
         parameterButton.setText("");
         parameterButton.setIcon(ComponentManager.getInstance().getComponentIconDefaults().getParameterIcon());
@@ -564,10 +613,11 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                 setVisibilityRefresh(false);
                 setPlanButtonVisibility(false);
                 setCameraButtonVisibility(false);
-                cl.show(cardPanel, "table");
+                cl.show(cardPanel, "tuto");
                 break;
 
             default:
+                cl.show(cardPanel, "tuto");
                 break;
         }
 
@@ -695,15 +745,15 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                                 && !cam.getFaceDetectorThread().isActive()) {
                             cam.setState(Camera.CAMERA_STATE.NORMAL);
                             cam.getFaceDetectorThread().launch(i, cam.getId());
-                            
+
                             System.out.println("##### ID. : " + i);
-                            
+
                         } else if (cam == null) {
                             cam = new Camera(i);
                             cam.setState(Camera.CAMERA_STATE.NORMAL);
                             cam.setFaceDetectorThread(new FaceDetectorThread(faceDetectorListener));
                             cam.getFaceDetectorThread().launch(i, cam.getId());
-                            
+
                             System.out.println("##### ID.. : " + i);
                         } else if (cam.getFaceDetectorThread() == null) {
                             cam.setState(Camera.CAMERA_STATE.NORMAL);
@@ -889,6 +939,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         scrollPaneTable = new javax.swing.JScrollPane();
         itemsTable = new javax.swing.JTable();
         scrollPanePlans = new javax.swing.JScrollPane();
+        scrollPaneTuto = new javax.swing.JScrollPane();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -907,12 +958,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         yearComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jSpinnerPanel.add(yearComboBox);
 
-        parameterButton.setText("Paramétrer");
-        parameterButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                parameterButtonActionPerformed(evt);
-            }
-        });
+        parameterButton.setText("jButton1");
         jSpinnerPanel.add(parameterButton);
 
         refreshButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/refresh.png"))); // NOI18N
@@ -925,6 +971,11 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
         add(jSpinnerPanel, java.awt.BorderLayout.PAGE_START);
 
+        cardPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                cardPanelComponentResized(evt);
+            }
+        });
         cardPanel.setLayout(new java.awt.CardLayout());
 
         itemsTable.setModel(new MyTableModel());
@@ -937,6 +988,10 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
         cardPanel.add(scrollPaneTable, "table");
         cardPanel.add(scrollPanePlans, "plans");
+
+        scrollPaneTuto.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPaneTuto.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        cardPanel.add(scrollPaneTuto, "tuto");
 
         add(cardPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -951,6 +1006,10 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         }
     }//GEN-LAST:event_parameterButtonActionPerformed
 
+    private void cardPanelComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_cardPanelComponentResized
+        tutoImg.repaint();
+    }//GEN-LAST:event_cardPanelComponentResized
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cameraButton;
@@ -963,6 +1022,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
     private javax.swing.JButton refreshButton;
     private javax.swing.JScrollPane scrollPanePlans;
     private javax.swing.JScrollPane scrollPaneTable;
+    private javax.swing.JScrollPane scrollPaneTuto;
     private javax.swing.JComboBox yearComboBox;
     // End of variables declaration//GEN-END:variables
 }

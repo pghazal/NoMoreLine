@@ -31,6 +31,7 @@ public class ComponentIconDefaults {
     private static final String DELETE = "/nomoreline/img/trash-icon.png";
     private static final String EDIT = "/nomoreline/img/edit-icon.png";
     private static final String PARAMETRE = "/nomoreline/img/parameter-icon.png";
+    private static final String TUTO = "/nomoreline/img/tuto.png";
 
     private Icon logoIcon;
     private Icon nextMonthIcon;
@@ -52,6 +53,7 @@ public class ComponentIconDefaults {
     private Icon deleteIcon;
     private Icon editIcon;
     private Icon parameterIcon;
+    private ImageIcon tutoIcon;
 
     public ComponentIconDefaults() {
         try {
@@ -74,6 +76,8 @@ public class ComponentIconDefaults {
             editIcon = loadIcon(EDIT);
             parameterIcon = loadIcon(PARAMETRE);
 
+            tutoIcon = loadIcon(TUTO);
+
             nextMonthIcon = new JNextIcon(4, 7, false);
             nextYearIcon = new JNextIcon(8, 7, true);
             previousMonthIcon = new JPreviousIcon(4, 7, false);
@@ -84,7 +88,7 @@ public class ComponentIconDefaults {
         }
     }
 
-    private static Icon loadIcon(String path) throws IOException {
+    private static ImageIcon loadIcon(String path) throws IOException {
         InputStream stream = ComponentIconDefaults.class.getResourceAsStream(path);
         BufferedImage image = ImageIO.read(stream);
         return new ImageIcon(image);
@@ -214,4 +218,7 @@ public class ComponentIconDefaults {
         return logoIcon;
     }
 
+    public Icon getTutoIcon() {
+        return tutoIcon;
+    }
 }
