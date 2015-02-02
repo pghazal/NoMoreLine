@@ -18,6 +18,7 @@ import fr.ece.pfe_project.model.ListingVols;
 import fr.ece.pfe_project.panel.MainPanel.FaceDetectorListener;
 import fr.ece.pfe_project.panel.MainPanel.ToolbarsListener;
 import static fr.ece.pfe_project.panel.ParametersDialog.msgbox;
+import fr.ece.pfe_project.parse.ParseUtils;
 import fr.ece.pfe_project.renderer.CameraCellRenderer;
 import fr.ece.pfe_project.tablemodel.MyTableModel;
 import fr.ece.pfe_project.utils.ExcelUtils;
@@ -33,7 +34,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -185,22 +185,8 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 
         @Override
         public void paint(Graphics g) {
-            System.out.println(this.getWidth());
-            System.out.println(this.getHeight());
             g.drawImage(_myimage, 0, 0, getParent().getWidth(), getParent().getHeight(), null);
         }
-
-//        @Override
-//        protected void paintComponent(Graphics g) {
-//            super.paintComponent(g);
-//
-//            Graphics2D g2d = (Graphics2D) g;
-//
-//            System.out.println(ListPanel.this.getWidth());
-//            System.out.println(ListPanel.this.getHeight());
-//
-//            g2d.drawImage(_myimage, 0, 0, ListPanel.this.getWidth(), ListPanel.this.getHeight(), null);
-//        }
     }
 
     private ArrayList<Camera> cameras;
@@ -840,9 +826,14 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                                 && !camAlert.getPosition().equals(" - ")) {
                             camAlert.setState(Camera.CAMERA_STATE.ALERT);
                             planPanelComponentResized(null);
+                            
+                            ParseUtils.sendPush(camAlert.getPosition());
+                            
                             JOptionPane.showMessageDialog(null, "Caméra " + id_camera
                                     + " : Détection de formation de file d'attente en position "
                                     + camAlert.getPosition(), "WARNING", JOptionPane.WARNING_MESSAGE);
+                            
+                            
                             break;
                         }
                     }
