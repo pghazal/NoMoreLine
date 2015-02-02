@@ -2,6 +2,7 @@ package fr.ece.pfe_project.parse;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.parse4j.Parse;
 import org.parse4j.ParseException;
 import org.parse4j.ParsePush;
 
@@ -10,6 +11,13 @@ import org.parse4j.ParsePush;
  * @author pierreghazal
  */
 public class ParseUtils {
+    
+    private final static String APP_ID = "";
+    private final static String API_ID = "";
+    
+    public static void initialize() {
+        Parse.initialize(APP_ID, API_ID);
+    }
 
     public static void sendPush(String pos) {
         try {

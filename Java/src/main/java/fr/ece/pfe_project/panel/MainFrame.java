@@ -4,6 +4,7 @@ import fr.ece.pfe_project.algo.Algorithm;
 import fr.ece.pfe_project.database.DatabaseHelper;
 import fr.ece.pfe_project.model.JourFerie;
 import fr.ece.pfe_project.model.Plan;
+import fr.ece.pfe_project.parse.ParseUtils;
 import fr.ece.pfe_project.utils.GlobalVariableUtils;
 import fr.ece.pfe_project.utils.ParametersUtils;
 import javax.swing.JOptionPane;
@@ -82,6 +83,7 @@ public class MainFrame extends javax.swing.JFrame {
                     public void run() {
                         DatabaseHelper.initialize();
                         ParametersUtils.loadDatabase();
+                        ParseUtils.initialize();
 
                         loadJourFerieDefaut();
 
