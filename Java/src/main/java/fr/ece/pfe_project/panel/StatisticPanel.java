@@ -1,14 +1,15 @@
 package fr.ece.pfe_project.panel;
 
 import fr.ece.pfe_project.model.AlgoResult;
-import java.awt.FlowLayout;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JSeparator;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import org.jdatepicker.ComponentManager;
 import org.jdatepicker.DefaultComponentFactory;
@@ -21,105 +22,102 @@ import org.jdatepicker.impl.UtilCalendarModel;
  * @author pierreghazal
  */
 public class StatisticPanel extends javax.swing.JPanel {
-    
+
     private static JDatePickerImpl datePicker;
     private static AlgoResult algoResult;
-    
+
     private static JLabel labelPassagerPrevu;
-    
+
     public StatisticPanel() {
         initComponents();
         initDatePicker();
-        
-        setLayout(new FlowLayout());
-        
-        Box vBox2 = Box.createVerticalBox();
-        
-        labelPassagerPrevu = new JLabel("Nombre de passagers prévu", SwingConstants.CENTER);
 
-        JLabel label2 = new JLabel("Autres", SwingConstants.CENTER);
-        
-        add((JComponent) datePicker.getJDateInstantPanel());
+        //Box vBox2 = Box.createVerticalBox();
+        JPanel jPanel1 = new JPanel();
+        jPanel1.setLayout(new BorderLayout());
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Fréquentation journalière"));
 
-        //vBox2.add(Box.createRigidArea(new Dimension(0, 10)));
-        vBox2.add(new JSeparator(SwingConstants.HORIZONTAL));
-        vBox2.add(labelPassagerPrevu);
-        vBox2.add(new JSeparator(SwingConstants.HORIZONTAL));
-        vBox2.add(label2);
-        vBox2.add(new JSeparator(SwingConstants.HORIZONTAL));
-        
-        add(vBox2);
+        JLabel jLabel1 = new JLabel();
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nomoreline/img/logo_small2.png"))); // NOI18N
+
+        labelPassagerPrevu = new JLabel("N/A", SwingConstants.CENTER);
+        jPanel1.add(labelPassagerPrevu, BorderLayout.CENTER);
+
+        GridBagConstraints cons = new GridBagConstraints();
+
+        cons.fill = GridBagConstraints.BOTH;
+        cons.weightx = 1.0;
+        cons.gridwidth = GridBagConstraints.REMAINDER;
+        cons.gridheight = 1;
+
+        cons.gridx = 0;
+        cons.gridy = 0;
+        cons.insets = new Insets(0, 0, 0, 5);
+        add((JComponent) datePicker.getJDateInstantPanel(), cons);
+
+        cons.gridx = 0;
+        cons.gridy = 1;
+        cons.gridheight = 1;
+        cons.ipady = 30;
+        cons.insets = new Insets(10, 5, 0, 5);
+        add(jPanel1, cons);
+
+        cons.gridx = 0;
+        cons.gridy = 2;
+        cons.ipady = 0;
+        cons.fill = GridBagConstraints.HORIZONTAL;
+        cons.weighty = 1.0;   //request any extra vertical space
+        cons.anchor = GridBagConstraints.PAGE_END; //bottom of space
+        cons.gridheight = GridBagConstraints.REMAINDER;
+        cons.insets = new Insets(0, 0, 20, 0);
+        add(jLabel1, cons);
     }
-    
+
     private void initDatePicker() {
-        
+
         UtilCalendarModel model = new UtilCalendarModel();
         model.setSelected(true);
         DefaultComponentFactory componentFactory = new DefaultComponentFactory();
         datePicker = (JDatePickerImpl) componentFactory.createJDatePicker();
         datePicker.setDoubleClickAction(false);
         datePicker.setButtonFocusable(false);
-
-//        datePicker.addActionListener(new ActionListener() {
-//
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//
-//                Date date = getDate();
-//
-//                if (date != null) {
-//                    // Do stuff
-//                    System.out.println("Action Valid : " + date);
-//
-//                }
-//
-//                System.out.println("Action : " + date);
-//            }
-//        });
-//
-//        datePicker.getModel().addPropertyChangeListener(new PropertyChangeListener() {
-//
-//            @Override
-//            public void propertyChange(PropertyChangeEvent evt) {
-//                System.out.println("Property : " + getStringDate());
-//            }
-//        });
     }
-    
+
     public static Date getDate() {
         Calendar cal = (Calendar) datePicker.getModel().getValue();
         cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-        
+
         return cal.getTime();
     }
-    
+
     public String getStringDate() {
         try {
             Calendar selectedValue = (Calendar) datePicker.getModel().getValue();
-            
+
             return (new DateComponentFormatter(
                     ComponentManager.getInstance().getComponentFormatDefaults().getSelectedDateFormat()))
                     .valueToString(selectedValue);
-            
+
         } catch (ParseException ex) {
             ex.printStackTrace();
         }
-        
+
         return null;
     }
-    
+
     public static AlgoResult getAlgoResult() {
         return algoResult;
     }
-    
+
     public static void setAlgoResult(AlgoResult algoResult) {
         StatisticPanel.algoResult = algoResult;
-        
+
         updatePanel();
     }
-    
+
     private static void updatePanel() {
-        labelPassagerPrevu.setText("Nb prévu :\n" + algoResult.getPrevisionPassager());
+        labelPassagerPrevu.setText(Integer.toString(algoResult.getPrevisionPassager()));
     }
 
     /**
@@ -134,17 +132,7 @@ public class StatisticPanel extends javax.swing.JPanel {
         setMaximumSize(new java.awt.Dimension(260, 32767));
         setMinimumSize(new java.awt.Dimension(260, 0));
         setPreferredSize(new java.awt.Dimension(260, 600));
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 260, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 600, Short.MAX_VALUE)
-        );
+        setLayout(new java.awt.GridBagLayout());
     }// </editor-fold>//GEN-END:initComponents
 
 
