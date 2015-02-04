@@ -827,7 +827,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                             camAlert.setState(Camera.CAMERA_STATE.ALERT);
                             planPanelComponentResized(null);
                             
-                            ParseUtils.sendPush(camAlert.getPosition());
+                            //ParseUtils.sendPush(camAlert.getPosition());
                             
                             JOptionPane.showMessageDialog(null, "Caméra " + id_camera
                                     + " : Détection de formation de file d'attente en position "

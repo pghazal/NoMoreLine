@@ -10,7 +10,6 @@ import fr.ece.pfe_project.utils.ParametersUtils;
 import javax.swing.JOptionPane;
 import fr.ece.pfe_project.widget.StartingProgressDialog;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -83,7 +82,7 @@ public class MainFrame extends javax.swing.JFrame {
                     public void run() {
                         DatabaseHelper.initialize();
                         ParametersUtils.loadDatabase();
-                        ParseUtils.initialize();
+                        //ParseUtils.initialize();
 
                         loadJourFerieDefaut();
 
