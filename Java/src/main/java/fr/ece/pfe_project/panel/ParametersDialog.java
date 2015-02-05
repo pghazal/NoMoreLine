@@ -157,14 +157,14 @@ public class ParametersDialog extends javax.swing.JDialog {
 //            this.textFieldPathExcel.setText(paramPathExcel);
 //        }
 
-        Integer seuilJour = (Integer) ParametersUtils.get(ParametersUtils.PARAM_SUEIL_JOUR);
+        //Integer seuilJour = (Integer) ParametersUtils.get(ParametersUtils.PARAM_SUEIL_JOUR);
         Integer seuilCamera = (Integer) ParametersUtils.get(ParametersUtils.PARAM_SUEIL_CAMERA);
 
-        if (seuilJour != null) {
-            this.spinnerSeuilJour.setValue(seuilJour);
-        } else {
-            this.spinnerSeuilJour.setValue(DEFAULT_SEUIL_JOUR);
-        }
+//        if (seuilJour != null) {
+//            this.spinnerSeuilJour.setValue(seuilJour);
+//        } else {
+//            this.spinnerSeuilJour.setValue(DEFAULT_SEUIL_JOUR);
+//        }
 
         if (seuilCamera != null) {
             this.spinnerSeuilCamera.setValue(seuilCamera);
@@ -204,8 +204,6 @@ public class ParametersDialog extends javax.swing.JDialog {
         buttonCancel = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        spinnerSeuilJour = new javax.swing.JSpinner();
         jLabel3 = new javax.swing.JLabel();
         spinnerSeuilCamera = new javax.swing.JSpinner();
         jPanel4 = new javax.swing.JPanel();
@@ -245,10 +243,6 @@ public class ParametersDialog extends javax.swing.JDialog {
                 buttonCancelActionPerformed(evt);
             }
         });
-
-        jLabel2.setText("Seuil d'alerte journalier :");
-
-        spinnerSeuilJour.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(4000), Integer.valueOf(0), null, Integer.valueOf(100)));
 
         jLabel3.setText("Seuil d'alerte par caméras :");
 
@@ -309,7 +303,7 @@ public class ParametersDialog extends javax.swing.JDialog {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 98, Short.MAX_VALUE)
+                .addGap(0, 125, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addJourFerieButton)
                     .addComponent(deleteJourFerieButton)
@@ -317,8 +311,8 @@ public class ParametersDialog extends javax.swing.JDialog {
             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel4Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(33, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(34, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -330,23 +324,15 @@ public class ParametersDialog extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(spinnerSeuilJour, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
-                            .addComponent(spinnerSeuilCamera))))
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(spinnerSeuilCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(184, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(spinnerSeuilJour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(13, 13, 13)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(spinnerSeuilCamera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -509,8 +495,8 @@ public class ParametersDialog extends javax.swing.JDialog {
                     isSuccess = ExcelUtils.loadExcel(textFieldPathExcel.getText());
                 }
 
-                if ((int) spinnerSeuilJour.getValue() >= 0 && (int) spinnerSeuilCamera.getValue() >= 0) {
-                    ParametersUtils.set(ParametersUtils.PARAM_SUEIL_JOUR, (int) spinnerSeuilJour.getValue());
+                if ((int) spinnerSeuilCamera.getValue() >= 0) {
+                    //ParametersUtils.set(ParametersUtils.PARAM_SUEIL_JOUR, (int) spinnerSeuilJour.getValue());
                     ParametersUtils.set(ParametersUtils.PARAM_SUEIL_CAMERA, (int) spinnerSeuilCamera.getValue());
 
                     isSuccess = true;
@@ -554,10 +540,10 @@ public class ParametersDialog extends javax.swing.JDialog {
         ParametersUtils.set(ParametersUtils.PARAM_JOURS_FERIES, jours);
 
         // Afficher pop-up ?
-        this.spinnerSeuilJour.setValue(DEFAULT_SEUIL_JOUR);
+        //this.spinnerSeuilJour.setValue(DEFAULT_SEUIL_JOUR);
         this.spinnerSeuilCamera.setValue(DEFAULT_SEUIL_CAMERA);
 
-        ParametersUtils.set(ParametersUtils.PARAM_SUEIL_JOUR, (int) spinnerSeuilJour.getValue());
+        //ParametersUtils.set(ParametersUtils.PARAM_SUEIL_JOUR, (int) spinnerSeuilJour.getValue());
         ParametersUtils.set(ParametersUtils.PARAM_SUEIL_CAMERA, (int) spinnerSeuilCamera.getValue());
 
         // Saving parameters in file parameter
@@ -681,7 +667,6 @@ public class ParametersDialog extends javax.swing.JDialog {
     private javax.swing.JButton deleteJourFerieButton;
     private javax.swing.JButton exportExcelButton;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
@@ -692,7 +677,6 @@ public class ParametersDialog extends javax.swing.JDialog {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton loadJourFerie;
     private javax.swing.JSpinner spinnerSeuilCamera;
-    private javax.swing.JSpinner spinnerSeuilJour;
     private javax.swing.JTable tableFeries;
     private javax.swing.JTextField textFieldPathExcel;
     // End of variables declaration//GEN-END:variables

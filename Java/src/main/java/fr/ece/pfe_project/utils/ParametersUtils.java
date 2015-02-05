@@ -21,7 +21,7 @@ public class ParametersUtils {
     private final static String FILENAME_PARAMETERS = "parameters.pfe";
 
     public final static String PARAM_JOURS_FERIES = "PARAM_JOURS_FERIES";
-    public final static String PARAM_SUEIL_JOUR = "PARAM_SUEIL_JOUR";
+    //public final static String PARAM_SUEIL_JOUR = "PARAM_SUEIL_JOUR";
     public final static String PARAM_SUEIL_CAMERA = "PARAM_SUEIL_CAMERA";
 
     private static HashMap<String, Object> paramsMap;
@@ -70,7 +70,7 @@ public class ParametersUtils {
     }
 
     private static void loadDefaultParameters() {
-        ParametersUtils.set(ParametersUtils.PARAM_SUEIL_JOUR, ParametersDialog.DEFAULT_SEUIL_JOUR);
+        //ParametersUtils.set(ParametersUtils.PARAM_SUEIL_JOUR, ParametersDialog.DEFAULT_SEUIL_JOUR);
         ParametersUtils.set(ParametersUtils.PARAM_SUEIL_CAMERA, ParametersDialog.DEFAULT_SEUIL_CAMERA);
 
         // Saving parameters in file parameter
