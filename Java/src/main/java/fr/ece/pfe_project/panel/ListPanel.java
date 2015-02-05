@@ -730,7 +730,7 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                         if (cam != null && cam.getFaceDetectorThread() != null
                                 && !cam.getFaceDetectorThread().isActive()) {
                             cam.setState(Camera.CAMERA_STATE.NORMAL);
-                            cam.getFaceDetectorThread().launch(i, cam.getId());
+                            cam.getFaceDetectorThread().launch(1, cam.getId());
 
                             System.out.println("##### ID. : " + i);
 
@@ -738,14 +738,14 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                             cam = new Camera(i);
                             cam.setState(Camera.CAMERA_STATE.NORMAL);
                             cam.setFaceDetectorThread(new FaceDetectorThread(faceDetectorListener));
-                            cam.getFaceDetectorThread().launch(i, cam.getId());
+                            cam.getFaceDetectorThread().launch(1, cam.getId());
 
                             System.out.println("##### ID.. : " + i);
                         } else if (cam.getFaceDetectorThread() == null) {
                             cam.setState(Camera.CAMERA_STATE.NORMAL);
                             cam.setFaceDetectorThread(new FaceDetectorThread(faceDetectorListener));
                             System.out.println("##### ID... : " + i);
-                            cam.getFaceDetectorThread().launch(i, cam.getId());
+                            cam.getFaceDetectorThread().launch(1, cam.getId());
                         } else if (cam.getFaceDetectorThread() != null
                                 && cam.getFaceDetectorThread().isActive()) {
                             // do nothing
