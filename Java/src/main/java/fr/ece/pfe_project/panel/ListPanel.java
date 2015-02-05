@@ -241,7 +241,6 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 //        setExcelButtonVisibility(false);
 //        setMonthComboboxItems();
 //        setYearComboboxItems();
-
         //Rendre invisible au démarrage le bouton refresh
         setVisibilityRefresh(false);
 
@@ -623,7 +622,6 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 //            yearComboBox.setVisible(true);
 //        }
 //    }
-
     private void setCameraButtonVisibility(boolean bool) {
 
         if (bool == false) {
@@ -694,7 +692,6 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
 //
 //        yearComboBox.setModel(new DefaultComboBoxModel(years));
 //    }
-
     public boolean testConnexion() {
         boolean internet = false;
         URL url;
@@ -792,25 +789,28 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
         Integer seuilCamera = (Integer) ParametersUtils.get(ParametersUtils.PARAM_SUEIL_CAMERA);
 
         // NOT Alert !
-        if (number_of_faces < seuilCamera && percentage_of_differences < 10) {
-            if (cameras != null && cameras.size() > 0) {
-                Camera camAlert;
-                for (int i = 0; i < cameras.size(); i++) {
-                    camAlert = cameras.get(i);
+        if (number_of_faces < seuilCamera) {
+            if (percentage_of_differences < 10) {
+                if (cameras != null && cameras.size() > 0) {
+                    Camera camAlert;
+                    for (int i = 0; i < cameras.size(); i++) {
+                        camAlert = cameras.get(i);
 
-                    if (camAlert.getFaceDetectorThread() != null
-                            && camAlert.getFaceDetectorThread().isActive()) {
-                        if (camAlert.getId().equals(id_camera)
-                                && camAlert.getState() == Camera.CAMERA_STATE.ALERT
-                                && camAlert.getPosition() != null
-                                && !camAlert.getPosition().equals(" - ")) {
-                            camAlert.setState(Camera.CAMERA_STATE.NORMAL);
-                            planPanelComponentResized(null);
-                            break;
+                        if (camAlert.getFaceDetectorThread() != null
+                                && camAlert.getFaceDetectorThread().isActive()) {
+                            if (camAlert.getId().equals(id_camera)
+                                    && camAlert.getState() == Camera.CAMERA_STATE.ALERT
+                                    && camAlert.getPosition() != null
+                                    && !camAlert.getPosition().equals(" - ")) {
+                                camAlert.setState(Camera.CAMERA_STATE.NORMAL);
+                                planPanelComponentResized(null);
+                                break;
+                            }
                         }
                     }
                 }
             }
+
         } // Alert !
         else {
             if (cameras != null && cameras.size() > 0) {
@@ -826,14 +826,12 @@ public class ListPanel extends JPanel implements FaceDetectorThread.FaceDetector
                                 && !camAlert.getPosition().equals(" - ")) {
                             camAlert.setState(Camera.CAMERA_STATE.ALERT);
                             planPanelComponentResized(null);
-                            
+
                             //ParseUtils.sendPush(camAlert.getPosition());
-                            
                             JOptionPane.showMessageDialog(null, "Caméra " + id_camera
                                     + " : Détection de formation de file d'attente en position "
                                     + camAlert.getPosition(), "WARNING", JOptionPane.WARNING_MESSAGE);
-                            
-                            
+
                             break;
                         }
                     }
